@@ -20,7 +20,7 @@ jobs:
           {
             echo "## Serwer"; echo "- IP serwera FTP: \`$IP\`"; echo "- IP lumioagency.pl: \`$LUM\`"; echo "- IP uxaudyt.pl (DNS, Framer): \`$DNS\`"
             echo "## Katalogi FTP"; echo '```'
-            lftp -c "set ftp:ssl-force true; set ssl:verify-certificate no; open -u \"$U\",\"$P\" $S; echo '[/]'; cls -1; echo '[domains]'; cls -1 domains/; echo '[domains/uxaudyt.pl]'; cls -1 domains/uxaudyt.pl/; echo '[public_html]'; cls -1 domains/uxaudyt.pl/public_html/ | head -40" 2>&1 | sed "s/$U/<login>/g"
+            lftp -c "set ftp:ssl-force true; set ssl:verify-certificate no; open -u \"$U\",\"$P\" $S; echo '[public_html - ls -la]'; ls -la public_html/; echo '[private_html]'; ls -la private_html; echo '[public_html subdirs]'; cls -1 public_html/*/ | head -60" 2>&1 | sed "s/$U/<login>/g"
             echo '```'
             echo "## Strona z serwera FTP (Host: www.uxaudyt.pl)"; echo '```'
             for u in / /audyt-ux /fonts/fonts.css; do curl -sk -o /tmp/o -w "$u -> %{http_code} %{size_download}B\n" --resolve www.uxaudyt.pl:443:$IP "https://www.uxaudyt.pl$u"; done
