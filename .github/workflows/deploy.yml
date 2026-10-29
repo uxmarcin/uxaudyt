@@ -1,6 +1,6 @@
 name: Wdrożenie na cyber_Folks (FTPS)
 
-# Każdy push na main wysyła katalog public/ do domains/uxaudyt.pl/public_html/
+# Każdy push na main wysyła katalog public/ do public_html/ (HTTP) i private_html/ (HTTPS) konta uxaudyt.pl
 # Sekrety repo: FTP_SERVER, FTP_USERNAME, FTP_PASSWORD (te same co w lumio)
 
 on:
@@ -23,7 +23,7 @@ jobs:
         run: test -n "${{ secrets.FTP_USERNAME }}"
       - name: Sekret FTP_PASSWORD ustawiony
         run: test -n "${{ secrets.FTP_PASSWORD }}"
-      - name: Wyślij public/ przez FTPS
+      - name: Wyślij do public_html (HTTP)
         uses: SamKirkland/FTP-Deploy-Action@v4.3.5
         with:
           server: ${{ secrets.FTP_SERVER }}
@@ -31,4 +31,13 @@ jobs:
           password: ${{ secrets.FTP_PASSWORD }}
           protocol: ftps
           local-dir: ./public/
-          server-dir: ./domains/uxaudyt.pl/public_html/
+          server-dir: ./public_html/
+      - name: Wyślij do private_html (HTTPS)
+        uses: SamKirkland/FTP-Deploy-Action@v4.3.5
+        with:
+          server: ${{ secrets.FTP_SERVER }}
+          username: ${{ secrets.FTP_USERNAME }}
+          password: ${{ secrets.FTP_PASSWORD }}
+          protocol: ftps
+          local-dir: ./public/
+          server-dir: ./private_html/

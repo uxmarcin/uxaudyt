@@ -23,7 +23,7 @@ npm run build       # przebudowuje public/
 npm run dev         # podgląd: http://127.0.0.1:8090
 ```
 
-Commit + push na `main` → GitHub Actions wysyła `public/` przez FTPS do `domains/uxaudyt.pl/public_html/`.
+Commit + push na `main` → GitHub Actions wysyła `public/` przez FTPS do `public_html/` i `private_html/` konta uxaudyt.pl.
 
 ## Integracje (bez zmian względem Framera)
 
