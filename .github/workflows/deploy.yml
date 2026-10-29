@@ -17,6 +17,16 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+      - name: Sekret FTP_SERVER ustawiony
+        run: test -n "${{ secrets.FTP_SERVER }}"
+      - name: Sekret FTP_USERNAME ustawiony
+        run: test -n "${{ secrets.FTP_USERNAME }}"
+      - name: Sekret FTP_PASSWORD ustawiony
+        run: test -n "${{ secrets.FTP_PASSWORD }}"
+      - name: Logowanie FTPS działa
+        run: curl -sS --ssl-reqd -k --max-time 30 -u "${{ secrets.FTP_USERNAME }}:${{ secrets.FTP_PASSWORD }}" "ftp://${{ secrets.FTP_SERVER }}/" -l > /tmp/root.txt
+      - name: Katalog domains/uxaudyt.pl istnieje
+        run: curl -sS --ssl-reqd -k --max-time 30 -u "${{ secrets.FTP_USERNAME }}:${{ secrets.FTP_PASSWORD }}" "ftp://${{ secrets.FTP_SERVER }}/domains/" -l | tee /tmp/d.txt | grep -qx 'uxaudyt.pl'
       - name: Wyślij public/ przez FTPS
         uses: SamKirkland/FTP-Deploy-Action@v4.3.5
         with:
@@ -24,5 +34,7 @@ jobs:
           username: ${{ secrets.FTP_USERNAME }}
           password: ${{ secrets.FTP_PASSWORD }}
           protocol: ftps
+          port: 21
+          security: loose
           local-dir: ./public/
           server-dir: ./domains/uxaudyt.pl/public_html/
