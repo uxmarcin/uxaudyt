@@ -43,7 +43,6 @@ jobs:
           O=$GITHUB_WORKSPACE/out; R="MAP www.uxaudyt.pl $IP, MAP uxaudyt.pl $IP"
           node probe.cjs $O/probe-framer.json https://www.uxaudyt.pl
           RULES="$R" node probe.cjs $O/probe-server.json https://www.uxaudyt.pl
-          mkdir -p $O/shots && RULES="$R" node shots.cjs $O/shots https://www.uxaudyt.pl > $O/console.txt 2>&1 || true
-          { echo '## Konsola przeglądarki (serwer)'; echo '```'; cat $O/console.txt; echo '```'; } >> $GITHUB_STEP_SUMMARY
+          { echo '## Różnice układu: Framer → serwer (ta sama maszyna)'; echo '```'; python3 $GITHUB_WORKSPACE/tools/probe-diff.py $O/probe-framer.json $O/probe-server.json | head -150; echo '```'; } >> $GITHUB_STEP_SUMMARY
       - uses: actions/upload-artifact@v4
         with: { name: wyniki, path: out, retention-days: 3 }
