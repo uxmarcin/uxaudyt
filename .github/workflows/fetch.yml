@@ -1,0 +1,27 @@
+name: Pobierz fonty i grafiki (jednorazowo)
+on:
+  push:
+    branches: [fetch-assets]
+jobs:
+  fetch:
+    if: github.actor != 'github-actions[bot]'
+    runs-on: ubuntu-latest
+    permissions: { contents: write }
+    steps:
+      - uses: actions/checkout@v4
+      - name: Fonty
+        run: |
+          mkdir -p public/fonts public/img
+          UA="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/130.0 Safari/537.36"
+          curl -sSL -A "$UA" "https://fonts.googleapis.com/css2?family=Figtree:ital,wght@0,300..900;1,300..900&family=DM+Mono:wght@400;500&display=swap" -o public/fonts/google.css
+          cat public/fonts/google.css | head -50
+          grep -oE 'https://fonts.gstatic.com/[^)]+' public/fonts/google.css | sort -u | while read u; do curl -sSL "$u" -o "public/fonts/$(basename "$u")"; done
+          ls -la public/fonts
+      - name: Grafiki
+        run: |
+          while read -r u; do curl -sSL "$u" -o "public/img/$(basename "$u")"; done < imgs.txt
+          ls -la public/img
+      - name: Commit
+        run: |
+          git config user.name "github-actions[bot]"; git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add public && git commit -qm "Fonty i grafiki z Framera" && git push
