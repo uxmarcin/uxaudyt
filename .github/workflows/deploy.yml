@@ -23,16 +23,6 @@ jobs:
         run: test -n "${{ secrets.FTP_USERNAME }}"
       - name: Sekret FTP_PASSWORD ustawiony
         run: test -n "${{ secrets.FTP_PASSWORD }}"
-      - name: Logowanie (dry-run)
-        uses: SamKirkland/FTP-Deploy-Action@v4.3.5
-        with:
-          server: ${{ secrets.FTP_SERVER }}
-          username: ${{ secrets.FTP_USERNAME }}
-          password: ${{ secrets.FTP_PASSWORD }}
-          protocol: ftps
-          local-dir: ./public/
-          server-dir: ./domains/uxaudyt.pl/public_html/
-          dry-run: true
       - name: Wyślij public/ przez FTPS
         uses: SamKirkland/FTP-Deploy-Action@v4.3.5
         with:
