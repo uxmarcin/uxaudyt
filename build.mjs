@@ -24,6 +24,11 @@ const res = await esbuild.build({
   outdir: path.join(OUT, 'js'), entryNames: '[name]-[hash]', chunkNames: 'c-[hash]',
   define: { 'process.env.NODE_ENV': '"production"' }, legalComments: 'none', metafile: true,
   nodePaths: [path.join(ROOT, 'node_modules')],
+  // W przeglądarce Preact zamiast Reacta (ten sam kod, ~20x mniejszy)
+  alias: process.env.NO_PREACT ? {} : {
+    'react/jsx-runtime': 'preact/jsx-runtime', 'react-dom/client': 'preact/compat/client',
+    'react-dom': 'preact/compat', react: 'preact/compat',
+  },
 });
 for (const f of fs.readdirSync(path.join(OUT, 'js'))) {
   const full = path.join(OUT, 'js', f);

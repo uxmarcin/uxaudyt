@@ -10,6 +10,7 @@ Strona przeniesiona z Framera na własny hosting (cyber_Folks, domena `uxaudyt.p
 - `src/fw/` — małe adaptery zastępujące API Framera i Reacta (komponenty działają bez Framera).
 - `src/pages.mjs` + `src/props.json` — lista stron i ich ustawienia (FAQ, linki płatności, adresy formularzy).
 - `src/meta.json` — tytuły, opisy i adresy kanoniczne (SEO 1:1 z Framera).
+- W przeglądarce działa Preact (lekki zamiennik Reacta, ten sam kod), na etapie budowania React renderuje HTML.
 - `build.mjs` — renderuje każdą stronę do statycznego HTML (treść widoczna dla Google bez JS)
   i buduje skrypty w `public/js/`, które ożywiają interakcje (menu, kalkulator, formularze, FAQ).
 - `public/` — gotowa strona. To ten katalog trafia na serwer.

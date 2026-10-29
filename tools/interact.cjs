@@ -47,7 +47,7 @@ const S = process.argv[3];
   log('checkout pakiet z URL:', (await c.locator('.uxc-opt.is-on').innerText()).split('\n')[0]);
   await c.click('.uxc-cta'); await c.waitForTimeout(500); log('walidacja błędów:', await c.locator('.uxc-errtxt').count());
   await c.fill('input[data-f=url]', 'example.com'); await c.fill('input[data-f=name]', 'Jan Test'); await c.fill('input[data-f=email]', 'jan@example.com');
-  await c.click('.uxc-check'); 
+  await c.click('[data-f=terms]'); 
   const [nav] = await Promise.all([c.waitForRequest(r => /stripe\.com/.test(r.url()), { timeout: 5000 }).catch(() => null), c.click('.uxc-cta')]);
   log('przekierowanie do Stripe:', nav ? nav.url().replace(/prefilled_email=[^&]+/, 'prefilled_email=…').slice(0, 110) : 'BRAK');
   // raport
