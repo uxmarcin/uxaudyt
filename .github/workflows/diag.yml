@@ -35,6 +35,9 @@ jobs:
           J=$(curl -sk --resolve www.uxaudyt.pl:443:$IP https://www.uxaudyt.pl/ | grep -o '/js/v7-[^"]*' | head -1)
           { curl -skI --resolve www.uxaudyt.pl:443:$IP -H 'Accept-Encoding: gzip, br' https://www.uxaudyt.pl/; curl -skI --resolve www.uxaudyt.pl:443:$IP -H 'Accept-Encoding: gzip, br' "https://www.uxaudyt.pl$J"; } > out/headers.txt
           { echo '## Serwer'; echo '```'; cat out/curl.txt; echo; grep -iE '^(HTTP|cache-control|content-encoding|content-type|x-)' out/headers.txt; echo '```'; } >> $GITHUB_STEP_SUMMARY
+      - name: Obecne DNS (przed przepięciem)
+        run: |
+          { echo '## DNS'; echo '```'; for d in uxaudyt.pl creative-vision.pl; do for t in NS A AAAA MX TXT; do echo "$d $t: $(dig +short $d $t | tr '\n' ' ')"; done; echo "www.$d: $(dig +short www.$d | tr '\n' ' ')"; echo "_dmarc.$d: $(dig +short _dmarc.$d TXT | tr '\n' ' ')"; done; echo '```'; } >> $GITHUB_STEP_SUMMARY
       - name: Pomiary i zrzuty (serwer vs Framer)
         run: |
           mkdir -p /tmp/pw && cd /tmp/pw && npm init -y >/dev/null && npm i playwright@1.48.2 >/dev/null && npx playwright install --with-deps chromium >/dev/null
