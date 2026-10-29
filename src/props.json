@@ -1,0 +1,1019 @@
+{
+ "audyt-sklepu-internetowego": {
+  "main": [
+   {
+    "faq": "Czym właściwie jest audyt UX?\nTo przejście Twojego sklepu albo strony oczami klienta i wskazanie miejsc, w których może się zawahać lub zrezygnować, razem z konkretnymi poprawkami. Więcej przeczytasz w poradniku [Audyt UX: co to jest, jak wygląda i ile kosztuje](/audyt-ux).\n\nCzy potrzebujesz dostępu do panelu sklepu?\nNie. Patrzę na sklep oczami klienta, na działającej stronie. Wystarczy mi jej adres.\n\nKto wykonuje audyt?\nJa, osobiście. Nie korzystam z narzędzi, które generują raporty automatycznie. Każdy sklep przechodzę sam, krok po kroku, na desktopie oraz urządzeniach mobilnych.\n\nCzy raport będzie zrozumiały, jeśli nie znam się na UX?\nTak. Piszę prostym językiem, bez żargonu. Każdy problem ma zrzut ekranu, wyjaśnienie, dlaczego przeszkadza klientom, i konkretną poprawkę do przekazania developerowi.\n\nCzy audyt opłaca się małemu sklepowi?\nNie zawsze. Jeśli masz mniej niż ok. 50 zamówień miesięcznie, pełny audyt może się jeszcze nie zwrócić. Zacznij wtedy od bezpłatnej wstępnej oceny. Szczerze napiszę, czy audyt ma u Ciebie sens.\n\nCzy audytujesz też strony firmowe?\nTak. Sprawdzam strony firmowe do ok. 20 podstron: ofertę, nawigację, przyciski kontaktu, formularze i wersję mobilną. Taki audyt kosztuje 1990 zł netto, a raport otrzymasz w 5 dni roboczych.\n\nNa jakich platformach działasz?\nNa każdej: PrestaShop (jestem oficjalnym partnerem), Shopify, WooCommerce, Shoper, IdoSell, Magento i innych. Sprawdzam to, co widzi klient, więc platforma nie ma znaczenia. Na co zwracam uwagę w sklepach na PrestaShop, opisuję w [osobnym poradniku](/audyt-ux-prestashop).\n\nIle trwa audyt?\nRaport otrzymasz w 5 dni roboczych od zaksięgowania płatności. W pakiecie z opieką warsztat umawiamy zaraz po wysłaniu raportu, w terminie, który Ci pasuje.\n\nA jeśli mój sklep nie ma wielu problemów?\nTo dobra wiadomość. A jeśli nie znajdę nic, co realnie wpływa na sprzedaż, zwrócę Ci całą kwotę.\n\nCzy pomagasz we wdrożeniu poprawek?\nTak. Zaprojektuję poprawki w Figmie i wdrożę je na Twojej platformie albo poprowadzę Twojego developera. Przygotuję wycenę po napisaniu raportu UX, gdy będzie wiadomo, co jest do zrobienia. Szczegóły znajdziesz na stronie [wdrożenia poprawek](/wdrozenie-poprawek).\n\nJak wygląda płatność?\nPłacisz z góry BLIK-iem, Przelewy24 albo kartą, przez bezpieczną bramkę Stripe. Od razu otrzymasz potwierdzenie na e-mail, a ja zaczynam pracę.",
+    "heroImage": "/img/kiuxUOb2lrGdwdGmEcpzZuxzr4s.png",
+    "hook": "https://hook.eu1.make.com/lgkd2whbcqhyffb9a2cm6s9icpppdctp",
+    "linkedin": "",
+    "orderHref": "/zamowienie",
+    "orderProHref": "/zamowienie-plan",
+    "page": "sklep",
+    "price": 2990,
+    "reportHref": "/przykladowy-raport",
+    "showNav": true
+   }
+  ],
+  "footer": [
+   {
+    "clConsent": "Zapisując się, zgadzasz się na otrzymywanie maili od uxaudyt.pl. Możesz zrezygnować w każdej chwili jednym kliknięciem.",
+    "clCta": "Wyślij mi checklistę",
+    "clLead": "Ta sama lista, od której zaczynam każdy audyt. Przejdź ją w 20 minut i sprawdź, czy Twój sklep nie gubi klientów.",
+    "clTag": "10 · Checklista za darmo",
+    "clTitle": "w swoim koszyku sam",
+    "clTitleMuted": "25 punktów, które sprawdzisz",
+    "email": "kontakt@uxaudyt.pl",
+    "endpoint": "",
+    "showChecklist": false,
+    "tagline": "Audyty UX sklepów internetowych. Każdy raport piszę osobiście.",
+    "year": "2026"
+   }
+  ],
+  "sheet": [
+   {
+    "endpoint": "https://formspree.io/f/xwlvonnj"
+   }
+  ],
+  "cookie": [
+   {
+    "clarityId": "",
+    "gaId": "",
+    "policyHref": "/polityka-cookies"
+   }
+  ],
+  "fx": [
+   {
+    "hoverFx": true,
+    "maxMs": 1500,
+    "minMs": 500,
+    "overlay": false
+   }
+  ]
+ },
+ "audyt-sklepu-z-opieka": {
+  "main": [
+   {
+    "faq": "Czym właściwie jest audyt UX?\nTo przejście Twojego sklepu albo strony oczami klienta i wskazanie miejsc, w których może się zawahać lub zrezygnować, razem z konkretnymi poprawkami. Więcej przeczytasz w poradniku [Audyt UX: co to jest, jak wygląda i ile kosztuje](/audyt-ux).\n\nCzy potrzebujesz dostępu do panelu sklepu?\nNie. Patrzę na sklep oczami klienta, na działającej stronie. Wystarczy mi jej adres.\n\nKto wykonuje audyt?\nJa, osobiście. Nie korzystam z narzędzi, które generują raporty automatycznie. Każdy sklep przechodzę sam, krok po kroku, na desktopie oraz urządzeniach mobilnych.\n\nCzy raport będzie zrozumiały, jeśli nie znam się na UX?\nTak. Piszę prostym językiem, bez żargonu. Każdy problem ma zrzut ekranu, wyjaśnienie, dlaczego przeszkadza klientom, i konkretną poprawkę do przekazania developerowi.\n\nCzy audyt opłaca się małemu sklepowi?\nNie zawsze. Jeśli masz mniej niż ok. 50 zamówień miesięcznie, pełny audyt może się jeszcze nie zwrócić. Zacznij wtedy od bezpłatnej wstępnej oceny. Szczerze napiszę, czy audyt ma u Ciebie sens.\n\nCzy audytujesz też strony firmowe?\nTak. Sprawdzam strony firmowe do ok. 20 podstron: ofertę, nawigację, przyciski kontaktu, formularze i wersję mobilną. Taki audyt kosztuje 1990 zł netto, a raport otrzymasz w 5 dni roboczych.\n\nNa jakich platformach działasz?\nNa każdej: PrestaShop (jestem oficjalnym partnerem), Shopify, WooCommerce, Shoper, IdoSell, Magento i innych. Sprawdzam to, co widzi klient, więc platforma nie ma znaczenia. Na co zwracam uwagę w sklepach na PrestaShop, opisuję w [osobnym poradniku](/audyt-ux-prestashop).\n\nIle trwa audyt?\nRaport otrzymasz w 5 dni roboczych od zaksięgowania płatności. W pakiecie z opieką warsztat umawiamy zaraz po wysłaniu raportu, w terminie, który Ci pasuje.\n\nA jeśli mój sklep nie ma wielu problemów?\nTo dobra wiadomość. A jeśli nie znajdę nic, co realnie wpływa na sprzedaż, zwrócę Ci całą kwotę.\n\nCzy pomagasz we wdrożeniu poprawek?\nTak. Zaprojektuję poprawki w Figmie i wdrożę je na Twojej platformie albo poprowadzę Twojego developera. Przygotuję wycenę po napisaniu raportu UX, gdy będzie wiadomo, co jest do zrobienia. Szczegóły znajdziesz na stronie [wdrożenia poprawek](/wdrozenie-poprawek).\n\nJak wygląda płatność?\nPłacisz z góry BLIK-iem, Przelewy24 albo kartą, przez bezpieczną bramkę Stripe. Od razu otrzymasz potwierdzenie na e-mail, a ja zaczynam pracę.",
+    "heroImage": "/img/kiuxUOb2lrGdwdGmEcpzZuxzr4s.png",
+    "hook": "https://hook.eu1.make.com/lgkd2whbcqhyffb9a2cm6s9icpppdctp",
+    "linkedin": "",
+    "orderHref": "/zamowienie",
+    "orderProHref": "/zamowienie-plan",
+    "page": "opieka",
+    "price": 2990,
+    "reportHref": "/przykladowy-raport",
+    "showNav": true
+   }
+  ],
+  "footer": [
+   {
+    "clConsent": "Zapisując się, zgadzasz się na otrzymywanie maili od uxaudyt.pl. Możesz zrezygnować w każdej chwili jednym kliknięciem.",
+    "clCta": "Wyślij mi checklistę",
+    "clLead": "Ta sama lista, od której zaczynam każdy audyt. Przejdź ją w 20 minut i sprawdź, czy Twój sklep nie gubi klientów.",
+    "clTag": "10 · Checklista za darmo",
+    "clTitle": "w swoim koszyku sam",
+    "clTitleMuted": "25 punktów, które sprawdzisz",
+    "email": "kontakt@uxaudyt.pl",
+    "endpoint": "",
+    "showChecklist": false,
+    "tagline": "Audyty UX sklepów internetowych. Każdy raport piszę osobiście.",
+    "year": "2026"
+   }
+  ],
+  "sheet": [
+   {
+    "endpoint": "https://formspree.io/f/xwlvonnj"
+   }
+  ],
+  "cookie": [
+   {
+    "clarityId": "",
+    "gaId": "",
+    "policyHref": "/polityka-cookies"
+   }
+  ],
+  "fx": [
+   {
+    "hoverFx": true,
+    "maxMs": 1500,
+    "minMs": 500,
+    "overlay": false
+   }
+  ]
+ },
+ "audyt-strony-internetowej": {
+  "main": [
+   {
+    "faq": "Czym właściwie jest audyt UX?\nTo przejście Twojego sklepu albo strony oczami klienta i wskazanie miejsc, w których może się zawahać lub zrezygnować, razem z konkretnymi poprawkami. Więcej przeczytasz w poradniku [Audyt UX: co to jest, jak wygląda i ile kosztuje](/audyt-ux).\n\nCzy potrzebujesz dostępu do panelu sklepu?\nNie. Patrzę na sklep oczami klienta, na działającej stronie. Wystarczy mi jej adres.\n\nKto wykonuje audyt?\nJa, osobiście. Nie korzystam z narzędzi, które generują raporty automatycznie. Każdy sklep przechodzę sam, krok po kroku, na desktopie oraz urządzeniach mobilnych.\n\nCzy raport będzie zrozumiały, jeśli nie znam się na UX?\nTak. Piszę prostym językiem, bez żargonu. Każdy problem ma zrzut ekranu, wyjaśnienie, dlaczego przeszkadza klientom, i konkretną poprawkę do przekazania developerowi.\n\nCzy audyt opłaca się małemu sklepowi?\nNie zawsze. Jeśli masz mniej niż ok. 50 zamówień miesięcznie, pełny audyt może się jeszcze nie zwrócić. Zacznij wtedy od bezpłatnej wstępnej oceny. Szczerze napiszę, czy audyt ma u Ciebie sens.\n\nCzy audytujesz też strony firmowe?\nTak. Sprawdzam strony firmowe do ok. 20 podstron: ofertę, nawigację, przyciski kontaktu, formularze i wersję mobilną. Taki audyt kosztuje 1990 zł netto, a raport otrzymasz w 5 dni roboczych.\n\nNa jakich platformach działasz?\nNa każdej: PrestaShop (jestem oficjalnym partnerem), Shopify, WooCommerce, Shoper, IdoSell, Magento i innych. Sprawdzam to, co widzi klient, więc platforma nie ma znaczenia. Na co zwracam uwagę w sklepach na PrestaShop, opisuję w [osobnym poradniku](/audyt-ux-prestashop).\n\nIle trwa audyt?\nRaport otrzymasz w 5 dni roboczych od zaksięgowania płatności. W pakiecie z opieką warsztat umawiamy zaraz po wysłaniu raportu, w terminie, który Ci pasuje.\n\nA jeśli mój sklep nie ma wielu problemów?\nTo dobra wiadomość. A jeśli nie znajdę nic, co realnie wpływa na sprzedaż, zwrócę Ci całą kwotę.\n\nCzy pomagasz we wdrożeniu poprawek?\nTak. Zaprojektuję poprawki w Figmie i wdrożę je na Twojej platformie albo poprowadzę Twojego developera. Przygotuję wycenę po napisaniu raportu UX, gdy będzie wiadomo, co jest do zrobienia. Szczegóły znajdziesz na stronie [wdrożenia poprawek](/wdrozenie-poprawek).\n\nJak wygląda płatność?\nPłacisz z góry BLIK-iem, Przelewy24 albo kartą, przez bezpieczną bramkę Stripe. Od razu otrzymasz potwierdzenie na e-mail, a ja zaczynam pracę.",
+    "heroImage": "/img/kiuxUOb2lrGdwdGmEcpzZuxzr4s.png",
+    "hook": "https://hook.eu1.make.com/lgkd2whbcqhyffb9a2cm6s9icpppdctp",
+    "linkedin": "",
+    "orderHref": "/zamowienie",
+    "orderProHref": "/zamowienie-plan",
+    "page": "strona",
+    "price": 2990,
+    "reportHref": "/przykladowy-raport",
+    "showNav": true
+   }
+  ],
+  "footer": [
+   {
+    "clConsent": "Zapisując się, zgadzasz się na otrzymywanie maili od uxaudyt.pl. Możesz zrezygnować w każdej chwili jednym kliknięciem.",
+    "clCta": "Wyślij mi checklistę",
+    "clLead": "Ta sama lista, od której zaczynam każdy audyt. Przejdź ją w 20 minut i sprawdź, czy Twój sklep nie gubi klientów.",
+    "clTag": "10 · Checklista za darmo",
+    "clTitle": "w swoim koszyku sam",
+    "clTitleMuted": "25 punktów, które sprawdzisz",
+    "email": "kontakt@uxaudyt.pl",
+    "endpoint": "",
+    "showChecklist": false,
+    "tagline": "Audyty UX sklepów internetowych. Każdy raport piszę osobiście.",
+    "year": "2026"
+   }
+  ],
+  "sheet": [
+   {
+    "endpoint": "https://formspree.io/f/xwlvonnj"
+   }
+  ],
+  "cookie": [
+   {
+    "clarityId": "",
+    "gaId": "",
+    "policyHref": "/polityka-cookies"
+   }
+  ],
+  "fx": [
+   {
+    "hoverFx": true,
+    "maxMs": 1500,
+    "minMs": 500,
+    "overlay": false
+   }
+  ]
+ },
+ "audyt-ux-a-audyt-seo": {
+  "main": [
+   {
+    "faq": "Czy potrzebujesz dostępu do panelu sklepu?\nNie. Patrzę na sklep oczami klienta, na działającej stronie. Wystarczy mi jej adres.\n\nKto wykonuje audyt?\nJa, osobiście. Nie korzystam z narzędzi, które generują raporty automatycznie. Każdy sklep przechodzę sam, krok po kroku, na desktopie oraz urządzeniach mobilnych.\n\nCzy raport będzie zrozumiały, jeśli nie znam się na UX?\nTak. Piszę prostym językiem, bez żargonu. Każdy problem ma zrzut ekranu, wyjaśnienie, dlaczego przeszkadza klientom, i konkretną poprawkę do przekazania developerowi.\n\nCzy audyt opłaca się małemu sklepowi?\nNie zawsze. Jeśli masz mniej niż ok. 50 zamówień miesięcznie, pełny audyt może się jeszcze nie zwrócić. Zacznij wtedy od bezpłatnej wstępnej oceny. Szczerze napiszę, czy audyt ma u Ciebie sens.\n\nCzy audytujesz też strony firmowe?\nTak. Sprawdzam strony firmowe do ok. 20 podstron: ofertę, nawigację, przyciski kontaktu, formularze i wersję mobilną. Taki audyt kosztuje 1990 zł netto, a raport otrzymasz w 5 dni roboczych.\n\nNa jakich platformach działasz?\nNa każdej: PrestaShop (jestem oficjalnym partnerem), Shopify, WooCommerce, Shoper, IdoSell, Magento i innych. Sprawdzam to, co widzi klient, więc platforma nie ma znaczenia.\n\nIle trwa audyt?\nRaport otrzymasz w 5 dni roboczych od zaksięgowania płatności. W pakiecie z opieką warsztat umawiamy zaraz po wysłaniu raportu, w terminie, który Ci pasuje.\n\nA jeśli mój sklep nie ma wielu problemów?\nTo dobra wiadomość. A jeśli nie znajdę nic, co realnie wpływa na sprzedaż, zwrócę Ci całą kwotę.\n\nCzy pomagasz we wdrożeniu poprawek?\nTak. Zaprojektuję poprawki w Figmie i wdrożę je na Twojej platformie albo poprowadzę Twojego developera. Przygotuję wycenę po napisaniu raportu UX, gdy będzie wiadomo, co jest do zrobienia.\n\nJak wygląda płatność?\nPłacisz z góry BLIK-iem, Przelewy24 albo kartą, przez bezpieczną bramkę Stripe. Od razu otrzymasz potwierdzenie na e-mail, a ja zaczynam pracę.",
+    "heroImage": "/img/kiuxUOb2lrGdwdGmEcpzZuxzr4s.png",
+    "hook": "https://hook.eu1.make.com/lgkd2whbcqhyffb9a2cm6s9icpppdctp",
+    "linkedin": "",
+    "orderHref": "/zamowienie",
+    "orderProHref": "/zamowienie-plan",
+    "page": "audyt-ux-a-audyt-seo",
+    "price": 2990,
+    "reportHref": "/przykladowy-raport",
+    "showNav": true
+   }
+  ],
+  "footer": [
+   {
+    "clConsent": "Zapisując się, zgadzasz się na otrzymywanie maili od uxaudyt.pl. Możesz zrezygnować w każdej chwili jednym kliknięciem.",
+    "clCta": "Wyślij mi checklistę",
+    "clLead": "Ta sama lista, od której zaczynam każdy audyt. Przejdź ją w 20 minut i sprawdź, czy Twój sklep nie gubi klientów.",
+    "clTag": "10 · Checklista za darmo",
+    "clTitle": "w swoim koszyku sam",
+    "clTitleMuted": "25 punktów, które sprawdzisz",
+    "email": "kontakt@uxaudyt.pl",
+    "endpoint": "",
+    "showChecklist": false,
+    "tagline": "Audyty UX sklepów internetowych. Każdy raport piszę osobiście.",
+    "year": "2026"
+   }
+  ],
+  "sheet": [
+   {
+    "endpoint": "https://formspree.io/f/xwlvonnj"
+   }
+  ],
+  "cookie": [
+   {
+    "clarityId": "",
+    "gaId": "",
+    "policyHref": "/polityka-cookies"
+   }
+  ],
+  "fx": [
+   {
+    "hoverFx": true,
+    "maxMs": 1500,
+    "minMs": 500,
+    "overlay": false
+   }
+  ]
+ },
+ "audyt-ux-prestashop": {
+  "main": [
+   {
+    "faq": "Czy potrzebujesz dostępu do panelu sklepu?\nNie. Patrzę na sklep oczami klienta, na działającej stronie. Wystarczy mi jej adres.\n\nKto wykonuje audyt?\nJa, osobiście. Nie korzystam z narzędzi, które generują raporty automatycznie. Każdy sklep przechodzę sam, krok po kroku, na desktopie oraz urządzeniach mobilnych.\n\nCzy raport będzie zrozumiały, jeśli nie znam się na UX?\nTak. Piszę prostym językiem, bez żargonu. Każdy problem ma zrzut ekranu, wyjaśnienie, dlaczego przeszkadza klientom, i konkretną poprawkę do przekazania developerowi.\n\nCzy audyt opłaca się małemu sklepowi?\nNie zawsze. Jeśli masz mniej niż ok. 50 zamówień miesięcznie, pełny audyt może się jeszcze nie zwrócić. Zacznij wtedy od bezpłatnej wstępnej oceny. Szczerze napiszę, czy audyt ma u Ciebie sens.\n\nCzy audytujesz też strony firmowe?\nTak. Sprawdzam strony firmowe do ok. 20 podstron: ofertę, nawigację, przyciski kontaktu, formularze i wersję mobilną. Taki audyt kosztuje 1990 zł netto, a raport otrzymasz w 5 dni roboczych.\n\nNa jakich platformach działasz?\nNa każdej: PrestaShop (jestem oficjalnym partnerem), Shopify, WooCommerce, Shoper, IdoSell, Magento i innych. Sprawdzam to, co widzi klient, więc platforma nie ma znaczenia.\n\nIle trwa audyt?\nRaport otrzymasz w 5 dni roboczych od zaksięgowania płatności. W pakiecie z opieką warsztat umawiamy zaraz po wysłaniu raportu, w terminie, który Ci pasuje.\n\nA jeśli mój sklep nie ma wielu problemów?\nTo dobra wiadomość. A jeśli nie znajdę nic, co realnie wpływa na sprzedaż, zwrócę Ci całą kwotę.\n\nCzy pomagasz we wdrożeniu poprawek?\nTak. Zaprojektuję poprawki w Figmie i wdrożę je na Twojej platformie albo poprowadzę Twojego developera. Przygotuję wycenę po napisaniu raportu UX, gdy będzie wiadomo, co jest do zrobienia.\n\nJak wygląda płatność?\nPłacisz z góry BLIK-iem, Przelewy24 albo kartą, przez bezpieczną bramkę Stripe. Od razu otrzymasz potwierdzenie na e-mail, a ja zaczynam pracę.",
+    "heroImage": "/img/kiuxUOb2lrGdwdGmEcpzZuxzr4s.png",
+    "hook": "https://hook.eu1.make.com/lgkd2whbcqhyffb9a2cm6s9icpppdctp",
+    "linkedin": "",
+    "orderHref": "/zamowienie",
+    "orderProHref": "/zamowienie-plan",
+    "page": "audyt-ux-prestashop",
+    "price": 2990,
+    "reportHref": "/przykladowy-raport",
+    "showNav": true
+   }
+  ],
+  "footer": [
+   {
+    "clConsent": "Zapisując się, zgadzasz się na otrzymywanie maili od uxaudyt.pl. Możesz zrezygnować w każdej chwili jednym kliknięciem.",
+    "clCta": "Wyślij mi checklistę",
+    "clLead": "Ta sama lista, od której zaczynam każdy audyt. Przejdź ją w 20 minut i sprawdź, czy Twój sklep nie gubi klientów.",
+    "clTag": "10 · Checklista za darmo",
+    "clTitle": "w swoim koszyku sam",
+    "clTitleMuted": "25 punktów, które sprawdzisz",
+    "email": "kontakt@uxaudyt.pl",
+    "endpoint": "",
+    "showChecklist": false,
+    "tagline": "Audyty UX sklepów internetowych. Każdy raport piszę osobiście.",
+    "year": "2026"
+   }
+  ],
+  "sheet": [
+   {
+    "endpoint": "https://formspree.io/f/xwlvonnj"
+   }
+  ],
+  "cookie": [
+   {
+    "clarityId": "",
+    "gaId": "",
+    "policyHref": "/polityka-cookies"
+   }
+  ],
+  "fx": [
+   {
+    "hoverFx": true,
+    "maxMs": 1500,
+    "minMs": 500,
+    "overlay": false
+   }
+  ]
+ },
+ "audyt-ux-shopify": {
+  "fx": [
+   {
+    "hoverFx": true,
+    "maxMs": 1500,
+    "minMs": 500,
+    "overlay": false
+   }
+  ],
+  "sheet": [
+   {
+    "endpoint": "https://formspree.io/f/xwlvonnj"
+   }
+  ],
+  "cookie": [
+   {
+    "clarityId": "",
+    "gaId": "",
+    "policyHref": "/polityka-cookies"
+   }
+  ],
+  "main": [
+   {
+    "faq": "Czy potrzebujesz dostępu do panelu sklepu?\nNie. Patrzę na sklep oczami klienta, na działającej stronie. Wystarczy mi jej adres.\n\nKto wykonuje audyt?\nJa, osobiście. Nie korzystam z narzędzi, które generują raporty automatycznie. Każdy sklep przechodzę sam, krok po kroku, na desktopie oraz urządzeniach mobilnych.\n\nCzy raport będzie zrozumiały, jeśli nie znam się na UX?\nTak. Piszę prostym językiem, bez żargonu. Każdy problem ma zrzut ekranu, wyjaśnienie, dlaczego przeszkadza klientom, i konkretną poprawkę do przekazania developerowi.\n\nCzy audyt opłaca się małemu sklepowi?\nNie zawsze. Jeśli masz mniej niż ok. 50 zamówień miesięcznie, pełny audyt może się jeszcze nie zwrócić. Zacznij wtedy od bezpłatnej wstępnej oceny. Szczerze napiszę, czy audyt ma u Ciebie sens.\n\nCzy audytujesz też strony firmowe?\nTak. Sprawdzam strony firmowe do ok. 20 podstron: ofertę, nawigację, przyciski kontaktu, formularze i wersję mobilną. Taki audyt kosztuje 1990 zł netto, a raport otrzymasz w 5 dni roboczych.\n\nNa jakich platformach działasz?\nNa każdej: PrestaShop (jestem oficjalnym partnerem), Shopify, WooCommerce, Shoper, IdoSell, Magento i innych. Sprawdzam to, co widzi klient, więc platforma nie ma znaczenia.\n\nIle trwa audyt?\nRaport otrzymasz w 5 dni roboczych od zaksięgowania płatności. W pakiecie z opieką warsztat umawiamy zaraz po wysłaniu raportu, w terminie, który Ci pasuje.\n\nA jeśli mój sklep nie ma wielu problemów?\nTo dobra wiadomość. A jeśli nie znajdę nic, co realnie wpływa na sprzedaż, zwrócę Ci całą kwotę.\n\nCzy pomagasz we wdrożeniu poprawek?\nTak. Zaprojektuję poprawki w Figmie i wdrożę je na Twojej platformie albo poprowadzę Twojego developera. Przygotuję wycenę po napisaniu raportu UX, gdy będzie wiadomo, co jest do zrobienia.\n\nJak wygląda płatność?\nPłacisz z góry BLIK-iem, Przelewy24 albo kartą, przez bezpieczną bramkę Stripe. Od razu otrzymasz potwierdzenie na e-mail, a ja zaczynam pracę.",
+    "heroImage": "/img/kiuxUOb2lrGdwdGmEcpzZuxzr4s.png",
+    "hook": "https://hook.eu1.make.com/lgkd2whbcqhyffb9a2cm6s9icpppdctp",
+    "linkedin": "",
+    "orderHref": "/zamowienie",
+    "orderProHref": "/zamowienie-plan",
+    "page": "audyt-ux-shopify",
+    "price": 2990,
+    "reportHref": "/przykladowy-raport",
+    "showNav": true
+   }
+  ],
+  "footer": [
+   {
+    "clConsent": "Zapisując się, zgadzasz się na otrzymywanie maili od uxaudyt.pl. Możesz zrezygnować w każdej chwili jednym kliknięciem.",
+    "clCta": "Wyślij mi checklistę",
+    "clLead": "Ta sama lista, od której zaczynam każdy audyt. Przejdź ją w 20 minut i sprawdź, czy Twój sklep nie gubi klientów.",
+    "clTag": "10 · Checklista za darmo",
+    "clTitle": "w swoim koszyku sam",
+    "clTitleMuted": "25 punktów, które sprawdzisz",
+    "email": "kontakt@uxaudyt.pl",
+    "endpoint": "",
+    "showChecklist": false,
+    "tagline": "Audyty UX sklepów internetowych. Każdy raport piszę osobiście.",
+    "year": "2026"
+   }
+  ]
+ },
+ "audyt-ux-woocommerce": {
+  "fx": [
+   {
+    "hoverFx": true,
+    "maxMs": 1500,
+    "minMs": 500,
+    "overlay": false
+   }
+  ],
+  "sheet": [
+   {
+    "endpoint": "https://formspree.io/f/xwlvonnj"
+   }
+  ],
+  "cookie": [
+   {
+    "clarityId": "",
+    "gaId": "",
+    "policyHref": "/polityka-cookies"
+   }
+  ],
+  "main": [
+   {
+    "faq": "Czy potrzebujesz dostępu do panelu sklepu?\nNie. Patrzę na sklep oczami klienta, na działającej stronie. Wystarczy mi jej adres.\n\nKto wykonuje audyt?\nJa, osobiście. Nie korzystam z narzędzi, które generują raporty automatycznie. Każdy sklep przechodzę sam, krok po kroku, na desktopie oraz urządzeniach mobilnych.\n\nCzy raport będzie zrozumiały, jeśli nie znam się na UX?\nTak. Piszę prostym językiem, bez żargonu. Każdy problem ma zrzut ekranu, wyjaśnienie, dlaczego przeszkadza klientom, i konkretną poprawkę do przekazania developerowi.\n\nCzy audyt opłaca się małemu sklepowi?\nNie zawsze. Jeśli masz mniej niż ok. 50 zamówień miesięcznie, pełny audyt może się jeszcze nie zwrócić. Zacznij wtedy od bezpłatnej wstępnej oceny. Szczerze napiszę, czy audyt ma u Ciebie sens.\n\nCzy audytujesz też strony firmowe?\nTak. Sprawdzam strony firmowe do ok. 20 podstron: ofertę, nawigację, przyciski kontaktu, formularze i wersję mobilną. Taki audyt kosztuje 1990 zł netto, a raport otrzymasz w 5 dni roboczych.\n\nNa jakich platformach działasz?\nNa każdej: PrestaShop (jestem oficjalnym partnerem), Shopify, WooCommerce, Shoper, IdoSell, Magento i innych. Sprawdzam to, co widzi klient, więc platforma nie ma znaczenia.\n\nIle trwa audyt?\nRaport otrzymasz w 5 dni roboczych od zaksięgowania płatności. W pakiecie z opieką warsztat umawiamy zaraz po wysłaniu raportu, w terminie, który Ci pasuje.\n\nA jeśli mój sklep nie ma wielu problemów?\nTo dobra wiadomość. A jeśli nie znajdę nic, co realnie wpływa na sprzedaż, zwrócę Ci całą kwotę.\n\nCzy pomagasz we wdrożeniu poprawek?\nTak. Zaprojektuję poprawki w Figmie i wdrożę je na Twojej platformie albo poprowadzę Twojego developera. Przygotuję wycenę po napisaniu raportu UX, gdy będzie wiadomo, co jest do zrobienia.\n\nJak wygląda płatność?\nPłacisz z góry BLIK-iem, Przelewy24 albo kartą, przez bezpieczną bramkę Stripe. Od razu otrzymasz potwierdzenie na e-mail, a ja zaczynam pracę.",
+    "heroImage": "/img/kiuxUOb2lrGdwdGmEcpzZuxzr4s.png",
+    "hook": "https://hook.eu1.make.com/lgkd2whbcqhyffb9a2cm6s9icpppdctp",
+    "linkedin": "",
+    "orderHref": "/zamowienie",
+    "orderProHref": "/zamowienie-plan",
+    "page": "audyt-ux-woocommerce",
+    "price": 2990,
+    "reportHref": "/przykladowy-raport",
+    "showNav": true
+   }
+  ],
+  "footer": [
+   {
+    "clConsent": "Zapisując się, zgadzasz się na otrzymywanie maili od uxaudyt.pl. Możesz zrezygnować w każdej chwili jednym kliknięciem.",
+    "clCta": "Wyślij mi checklistę",
+    "clLead": "Ta sama lista, od której zaczynam każdy audyt. Przejdź ją w 20 minut i sprawdź, czy Twój sklep nie gubi klientów.",
+    "clTag": "10 · Checklista za darmo",
+    "clTitle": "w swoim koszyku sam",
+    "clTitleMuted": "25 punktów, które sprawdzisz",
+    "email": "kontakt@uxaudyt.pl",
+    "endpoint": "",
+    "showChecklist": false,
+    "tagline": "Audyty UX sklepów internetowych. Każdy raport piszę osobiście.",
+    "year": "2026"
+   }
+  ]
+ },
+ "audyt-ux": {
+  "main": [
+   {
+    "faq": "Czy potrzebujesz dostępu do panelu sklepu?\nNie. Patrzę na sklep oczami klienta, na działającej stronie. Wystarczy mi jej adres.\n\nKto wykonuje audyt?\nJa, osobiście. Nie korzystam z narzędzi, które generują raporty automatycznie. Każdy sklep przechodzę sam, krok po kroku, na desktopie oraz urządzeniach mobilnych.\n\nCzy raport będzie zrozumiały, jeśli nie znam się na UX?\nTak. Piszę prostym językiem, bez żargonu. Każdy problem ma zrzut ekranu, wyjaśnienie, dlaczego przeszkadza klientom, i konkretną poprawkę do przekazania developerowi.\n\nCzy audyt opłaca się małemu sklepowi?\nNie zawsze. Jeśli masz mniej niż ok. 50 zamówień miesięcznie, pełny audyt może się jeszcze nie zwrócić. Zacznij wtedy od bezpłatnej wstępnej oceny. Szczerze napiszę, czy audyt ma u Ciebie sens.\n\nCzy audytujesz też strony firmowe?\nTak. Sprawdzam strony firmowe do ok. 20 podstron: ofertę, nawigację, przyciski kontaktu, formularze i wersję mobilną. Taki audyt kosztuje 1990 zł netto, a raport otrzymasz w 5 dni roboczych.\n\nNa jakich platformach działasz?\nNa każdej: PrestaShop (jestem oficjalnym partnerem), Shopify, WooCommerce, Shoper, IdoSell, Magento i innych. Sprawdzam to, co widzi klient, więc platforma nie ma znaczenia.\n\nIle trwa audyt?\nRaport otrzymasz w 5 dni roboczych od zaksięgowania płatności. W pakiecie z opieką warsztat umawiamy zaraz po wysłaniu raportu, w terminie, który Ci pasuje.\n\nA jeśli mój sklep nie ma wielu problemów?\nTo dobra wiadomość. A jeśli nie znajdę nic, co realnie wpływa na sprzedaż, zwrócę Ci całą kwotę.\n\nCzy pomagasz we wdrożeniu poprawek?\nTak. Zaprojektuję poprawki w Figmie i wdrożę je na Twojej platformie albo poprowadzę Twojego developera. Przygotuję wycenę po napisaniu raportu UX, gdy będzie wiadomo, co jest do zrobienia.\n\nJak wygląda płatność?\nPłacisz z góry BLIK-iem, Przelewy24 albo kartą, przez bezpieczną bramkę Stripe. Od razu otrzymasz potwierdzenie na e-mail, a ja zaczynam pracę.",
+    "heroImage": "/img/kiuxUOb2lrGdwdGmEcpzZuxzr4s.png",
+    "hook": "https://hook.eu1.make.com/lgkd2whbcqhyffb9a2cm6s9icpppdctp",
+    "linkedin": "",
+    "orderHref": "/zamowienie",
+    "orderProHref": "/zamowienie-plan",
+    "page": "audyt-ux",
+    "price": 2990,
+    "reportHref": "/przykladowy-raport",
+    "showNav": true
+   }
+  ],
+  "footer": [
+   {
+    "clConsent": "Zapisując się, zgadzasz się na otrzymywanie maili od uxaudyt.pl. Możesz zrezygnować w każdej chwili jednym kliknięciem.",
+    "clCta": "Wyślij mi checklistę",
+    "clLead": "Ta sama lista, od której zaczynam każdy audyt. Przejdź ją w 20 minut i sprawdź, czy Twój sklep nie gubi klientów.",
+    "clTag": "10 · Checklista za darmo",
+    "clTitle": "w swoim koszyku sam",
+    "clTitleMuted": "25 punktów, które sprawdzisz",
+    "email": "kontakt@uxaudyt.pl",
+    "endpoint": "",
+    "showChecklist": false,
+    "tagline": "Audyty UX sklepów internetowych. Każdy raport piszę osobiście.",
+    "year": "2026"
+   }
+  ],
+  "sheet": [
+   {
+    "endpoint": "https://formspree.io/f/xwlvonnj"
+   }
+  ],
+  "cookie": [
+   {
+    "clarityId": "",
+    "gaId": "",
+    "policyHref": "/polityka-cookies"
+   }
+  ],
+  "fx": [
+   {
+    "hoverFx": true,
+    "maxMs": 1500,
+    "minMs": 500,
+    "overlay": false
+   }
+  ]
+ },
+ "darmowy-audyt-sklepu": {
+  "fx": [
+   {
+    "hoverFx": true,
+    "maxMs": 1500,
+    "minMs": 500,
+    "overlay": false
+   }
+  ],
+  "sheet": [
+   {
+    "endpoint": "https://formspree.io/f/xwlvonnj"
+   }
+  ],
+  "cookie": [
+   {
+    "clarityId": "",
+    "gaId": "",
+    "policyHref": "/polityka-cookies"
+   }
+  ],
+  "main": [
+   {
+    "faq": "Czy potrzebujesz dostępu do panelu sklepu?\nNie. Patrzę na sklep oczami klienta, na działającej stronie. Wystarczy mi jej adres.\n\nKto wykonuje audyt?\nJa, osobiście. Nie korzystam z narzędzi, które generują raporty automatycznie. Każdy sklep przechodzę sam, krok po kroku, na desktopie oraz urządzeniach mobilnych.\n\nCzy raport będzie zrozumiały, jeśli nie znam się na UX?\nTak. Piszę prostym językiem, bez żargonu. Każdy problem ma zrzut ekranu, wyjaśnienie, dlaczego przeszkadza klientom, i konkretną poprawkę do przekazania developerowi.\n\nCzy audyt opłaca się małemu sklepowi?\nNie zawsze. Jeśli masz mniej niż ok. 50 zamówień miesięcznie, pełny audyt może się jeszcze nie zwrócić. Zacznij wtedy od bezpłatnej wstępnej oceny. Szczerze napiszę, czy audyt ma u Ciebie sens.\n\nCzy audytujesz też strony firmowe?\nTak. Sprawdzam strony firmowe do ok. 20 podstron: ofertę, nawigację, przyciski kontaktu, formularze i wersję mobilną. Taki audyt kosztuje 1990 zł netto, a raport otrzymasz w 5 dni roboczych.\n\nNa jakich platformach działasz?\nNa każdej: PrestaShop (jestem oficjalnym partnerem), Shopify, WooCommerce, Shoper, IdoSell, Magento i innych. Sprawdzam to, co widzi klient, więc platforma nie ma znaczenia.\n\nIle trwa audyt?\nRaport otrzymasz w 5 dni roboczych od zaksięgowania płatności. W pakiecie z opieką warsztat umawiamy zaraz po wysłaniu raportu, w terminie, który Ci pasuje.\n\nA jeśli mój sklep nie ma wielu problemów?\nTo dobra wiadomość. A jeśli nie znajdę nic, co realnie wpływa na sprzedaż, zwrócę Ci całą kwotę.\n\nCzy pomagasz we wdrożeniu poprawek?\nTak. Zaprojektuję poprawki w Figmie i wdrożę je na Twojej platformie albo poprowadzę Twojego developera. Przygotuję wycenę po napisaniu raportu UX, gdy będzie wiadomo, co jest do zrobienia.\n\nJak wygląda płatność?\nPłacisz z góry BLIK-iem, Przelewy24 albo kartą, przez bezpieczną bramkę Stripe. Od razu otrzymasz potwierdzenie na e-mail, a ja zaczynam pracę.",
+    "heroImage": "/img/kiuxUOb2lrGdwdGmEcpzZuxzr4s.png",
+    "hook": "https://hook.eu1.make.com/lgkd2whbcqhyffb9a2cm6s9icpppdctp",
+    "linkedin": "",
+    "orderHref": "/zamowienie",
+    "orderProHref": "/zamowienie-plan",
+    "page": "darmowy-audyt-sklepu",
+    "price": 2990,
+    "reportHref": "/przykladowy-raport",
+    "showNav": true
+   }
+  ],
+  "footer": [
+   {
+    "clConsent": "Zapisując się, zgadzasz się na otrzymywanie maili od uxaudyt.pl. Możesz zrezygnować w każdej chwili jednym kliknięciem.",
+    "clCta": "Wyślij mi checklistę",
+    "clLead": "Ta sama lista, od której zaczynam każdy audyt. Przejdź ją w 20 minut i sprawdź, czy Twój sklep nie gubi klientów.",
+    "clTag": "10 · Checklista za darmo",
+    "clTitle": "w swoim koszyku sam",
+    "clTitleMuted": "25 punktów, które sprawdzisz",
+    "email": "kontakt@uxaudyt.pl",
+    "endpoint": "",
+    "showChecklist": false,
+    "tagline": "Audyty UX sklepów internetowych. Każdy raport piszę osobiście.",
+    "year": "2026"
+   }
+  ]
+ },
+ "index": {
+  "main": [
+   {
+    "faq": "Czym właściwie jest audyt UX?\nTo przejście Twojego sklepu albo strony oczami klienta i wskazanie miejsc, w których może się zawahać lub zrezygnować, razem z konkretnymi poprawkami. Więcej przeczytasz w poradniku [Audyt UX: co to jest, jak wygląda i ile kosztuje](/audyt-ux).\n\nCzy potrzebujesz dostępu do panelu sklepu?\nNie. Patrzę na sklep oczami klienta, na działającej stronie. Wystarczy mi jej adres.\n\nKto wykonuje audyt?\nJa, osobiście. Nie korzystam z narzędzi, które generują raporty automatycznie. Każdy sklep przechodzę sam, krok po kroku, na desktopie oraz urządzeniach mobilnych.\n\nCzy raport będzie zrozumiały, jeśli nie znam się na UX?\nTak. Piszę prostym językiem, bez żargonu. Każdy problem ma zrzut ekranu, wyjaśnienie, dlaczego przeszkadza klientom, i konkretną poprawkę do przekazania developerowi.\n\nCzy audyt opłaca się małemu sklepowi?\nNie zawsze. Jeśli masz mniej niż ok. 50 zamówień miesięcznie, pełny audyt może się jeszcze nie zwrócić. Zacznij wtedy od bezpłatnej wstępnej oceny. Szczerze napiszę, czy audyt ma u Ciebie sens.\n\nCzy audytujesz też strony firmowe?\nTak. Sprawdzam strony firmowe do ok. 20 podstron: ofertę, nawigację, przyciski kontaktu, formularze i wersję mobilną. Taki audyt kosztuje 1990 zł netto, a raport otrzymasz w 5 dni roboczych.\n\nNa jakich platformach działasz?\nNa każdej: PrestaShop (jestem oficjalnym partnerem), Shopify, WooCommerce, Shoper, IdoSell, Magento i innych. Sprawdzam to, co widzi klient, więc platforma nie ma znaczenia. Na co zwracam uwagę w sklepach na PrestaShop, opisuję w [osobnym poradniku](/audyt-ux-prestashop).\n\nIle trwa audyt?\nRaport otrzymasz w 5 dni roboczych od zaksięgowania płatności. W pakiecie z opieką warsztat umawiamy zaraz po wysłaniu raportu, w terminie, który Ci pasuje.\n\nA jeśli mój sklep nie ma wielu problemów?\nTo dobra wiadomość. A jeśli nie znajdę nic, co realnie wpływa na sprzedaż, zwrócę Ci całą kwotę.\n\nCzy pomagasz we wdrożeniu poprawek?\nTak. Zaprojektuję poprawki w Figmie i wdrożę je na Twojej platformie albo poprowadzę Twojego developera. Przygotuję wycenę po napisaniu raportu UX, gdy będzie wiadomo, co jest do zrobienia. Szczegóły znajdziesz na stronie [wdrożenia poprawek](/wdrozenie-poprawek).\n\nJak wygląda płatność?\nPłacisz z góry BLIK-iem, Przelewy24 albo kartą, przez bezpieczną bramkę Stripe. Od razu otrzymasz potwierdzenie na e-mail, a ja zaczynam pracę.",
+    "heroImage": "/img/kiuxUOb2lrGdwdGmEcpzZuxzr4s.png",
+    "hook": "https://hook.eu1.make.com/lgkd2whbcqhyffb9a2cm6s9icpppdctp",
+    "linkedin": "",
+    "orderHref": "/zamowienie",
+    "orderProHref": "/zamowienie-plan",
+    "page": "home",
+    "price": 2990,
+    "reportHref": "/przykladowy-raport",
+    "showNav": true
+   }
+  ],
+  "footer": [
+   {
+    "clConsent": "Zapisując się, zgadzasz się na otrzymywanie maili od uxaudyt.pl. Możesz zrezygnować w każdej chwili jednym kliknięciem.",
+    "clCta": "Wyślij mi checklistę",
+    "clLead": "Ta sama lista, od której zaczynam każdy audyt. Przejdź ją w 20 minut i sprawdź, czy Twój sklep nie gubi klientów.",
+    "clTag": "08 · Checklista za darmo",
+    "clTitle": "w swoim koszyku sam",
+    "clTitleMuted": "25 punktów, które sprawdzisz",
+    "email": "kontakt@uxaudyt.pl",
+    "endpoint": "",
+    "showChecklist": false,
+    "tagline": "Audyty UX sklepów internetowych. Każdy raport piszę osobiście.",
+    "year": "2026"
+   }
+  ],
+  "sheet": [
+   {
+    "endpoint": "https://formspree.io/f/xwlvonnj"
+   }
+  ],
+  "fx": [
+   {
+    "hoverFx": true,
+    "maxMs": 1500,
+    "minMs": 500,
+    "overlay": false
+   }
+  ],
+  "cookie": [
+   {
+    "clarityId": "",
+    "gaId": "",
+    "policyHref": "/polityka-cookies"
+   }
+  ]
+ },
+ "jak-sprawdzic-ux-sklepu": {
+  "fx": [
+   {
+    "hoverFx": true,
+    "maxMs": 1500,
+    "minMs": 500,
+    "overlay": false
+   }
+  ],
+  "sheet": [
+   {
+    "endpoint": "https://formspree.io/f/xwlvonnj"
+   }
+  ],
+  "cookie": [
+   {
+    "clarityId": "",
+    "gaId": "",
+    "policyHref": "/polityka-cookies"
+   }
+  ],
+  "main": [
+   {
+    "faq": "Czy potrzebujesz dostępu do panelu sklepu?\nNie. Patrzę na sklep oczami klienta, na działającej stronie. Wystarczy mi jej adres.\n\nKto wykonuje audyt?\nJa, osobiście. Nie korzystam z narzędzi, które generują raporty automatycznie. Każdy sklep przechodzę sam, krok po kroku, na desktopie oraz urządzeniach mobilnych.\n\nCzy raport będzie zrozumiały, jeśli nie znam się na UX?\nTak. Piszę prostym językiem, bez żargonu. Każdy problem ma zrzut ekranu, wyjaśnienie, dlaczego przeszkadza klientom, i konkretną poprawkę do przekazania developerowi.\n\nCzy audyt opłaca się małemu sklepowi?\nNie zawsze. Jeśli masz mniej niż ok. 50 zamówień miesięcznie, pełny audyt może się jeszcze nie zwrócić. Zacznij wtedy od bezpłatnej wstępnej oceny. Szczerze napiszę, czy audyt ma u Ciebie sens.\n\nCzy audytujesz też strony firmowe?\nTak. Sprawdzam strony firmowe do ok. 20 podstron: ofertę, nawigację, przyciski kontaktu, formularze i wersję mobilną. Taki audyt kosztuje 1990 zł netto, a raport otrzymasz w 5 dni roboczych.\n\nNa jakich platformach działasz?\nNa każdej: PrestaShop (jestem oficjalnym partnerem), Shopify, WooCommerce, Shoper, IdoSell, Magento i innych. Sprawdzam to, co widzi klient, więc platforma nie ma znaczenia.\n\nIle trwa audyt?\nRaport otrzymasz w 5 dni roboczych od zaksięgowania płatności. W pakiecie z opieką warsztat umawiamy zaraz po wysłaniu raportu, w terminie, który Ci pasuje.\n\nA jeśli mój sklep nie ma wielu problemów?\nTo dobra wiadomość. A jeśli nie znajdę nic, co realnie wpływa na sprzedaż, zwrócę Ci całą kwotę.\n\nCzy pomagasz we wdrożeniu poprawek?\nTak. Zaprojektuję poprawki w Figmie i wdrożę je na Twojej platformie albo poprowadzę Twojego developera. Przygotuję wycenę po napisaniu raportu UX, gdy będzie wiadomo, co jest do zrobienia.\n\nJak wygląda płatność?\nPłacisz z góry BLIK-iem, Przelewy24 albo kartą, przez bezpieczną bramkę Stripe. Od razu otrzymasz potwierdzenie na e-mail, a ja zaczynam pracę.",
+    "heroImage": "/img/kiuxUOb2lrGdwdGmEcpzZuxzr4s.png",
+    "hook": "https://hook.eu1.make.com/lgkd2whbcqhyffb9a2cm6s9icpppdctp",
+    "linkedin": "",
+    "orderHref": "/zamowienie",
+    "orderProHref": "/zamowienie-plan",
+    "page": "jak-sprawdzic-ux-sklepu",
+    "price": 2990,
+    "reportHref": "/przykladowy-raport",
+    "showNav": true
+   }
+  ],
+  "footer": [
+   {
+    "clConsent": "Zapisując się, zgadzasz się na otrzymywanie maili od uxaudyt.pl. Możesz zrezygnować w każdej chwili jednym kliknięciem.",
+    "clCta": "Wyślij mi checklistę",
+    "clLead": "Ta sama lista, od której zaczynam każdy audyt. Przejdź ją w 20 minut i sprawdź, czy Twój sklep nie gubi klientów.",
+    "clTag": "10 · Checklista za darmo",
+    "clTitle": "w swoim koszyku sam",
+    "clTitleMuted": "25 punktów, które sprawdzisz",
+    "email": "kontakt@uxaudyt.pl",
+    "endpoint": "",
+    "showChecklist": false,
+    "tagline": "Audyty UX sklepów internetowych. Każdy raport piszę osobiście.",
+    "year": "2026"
+   }
+  ]
+ },
+ "karta-produktu-checklista": {
+  "fx": [
+   {
+    "hoverFx": true,
+    "maxMs": 1500,
+    "minMs": 500,
+    "overlay": false
+   }
+  ],
+  "sheet": [
+   {
+    "endpoint": "https://formspree.io/f/xwlvonnj"
+   }
+  ],
+  "cookie": [
+   {
+    "clarityId": "",
+    "gaId": "",
+    "policyHref": "/polityka-cookies"
+   }
+  ],
+  "main": [
+   {
+    "faq": "Czy potrzebujesz dostępu do panelu sklepu?\nNie. Patrzę na sklep oczami klienta, na działającej stronie. Wystarczy mi jej adres.\n\nKto wykonuje audyt?\nJa, osobiście. Nie korzystam z narzędzi, które generują raporty automatycznie. Każdy sklep przechodzę sam, krok po kroku, na desktopie oraz urządzeniach mobilnych.\n\nCzy raport będzie zrozumiały, jeśli nie znam się na UX?\nTak. Piszę prostym językiem, bez żargonu. Każdy problem ma zrzut ekranu, wyjaśnienie, dlaczego przeszkadza klientom, i konkretną poprawkę do przekazania developerowi.\n\nCzy audyt opłaca się małemu sklepowi?\nNie zawsze. Jeśli masz mniej niż ok. 50 zamówień miesięcznie, pełny audyt może się jeszcze nie zwrócić. Zacznij wtedy od bezpłatnej wstępnej oceny. Szczerze napiszę, czy audyt ma u Ciebie sens.\n\nCzy audytujesz też strony firmowe?\nTak. Sprawdzam strony firmowe do ok. 20 podstron: ofertę, nawigację, przyciski kontaktu, formularze i wersję mobilną. Taki audyt kosztuje 1990 zł netto, a raport otrzymasz w 5 dni roboczych.\n\nNa jakich platformach działasz?\nNa każdej: PrestaShop (jestem oficjalnym partnerem), Shopify, WooCommerce, Shoper, IdoSell, Magento i innych. Sprawdzam to, co widzi klient, więc platforma nie ma znaczenia.\n\nIle trwa audyt?\nRaport otrzymasz w 5 dni roboczych od zaksięgowania płatności. W pakiecie z opieką warsztat umawiamy zaraz po wysłaniu raportu, w terminie, który Ci pasuje.\n\nA jeśli mój sklep nie ma wielu problemów?\nTo dobra wiadomość. A jeśli nie znajdę nic, co realnie wpływa na sprzedaż, zwrócę Ci całą kwotę.\n\nCzy pomagasz we wdrożeniu poprawek?\nTak. Zaprojektuję poprawki w Figmie i wdrożę je na Twojej platformie albo poprowadzę Twojego developera. Przygotuję wycenę po napisaniu raportu UX, gdy będzie wiadomo, co jest do zrobienia.\n\nJak wygląda płatność?\nPłacisz z góry BLIK-iem, Przelewy24 albo kartą, przez bezpieczną bramkę Stripe. Od razu otrzymasz potwierdzenie na e-mail, a ja zaczynam pracę.",
+    "heroImage": "/img/kiuxUOb2lrGdwdGmEcpzZuxzr4s.png",
+    "hook": "https://hook.eu1.make.com/lgkd2whbcqhyffb9a2cm6s9icpppdctp",
+    "linkedin": "",
+    "orderHref": "/zamowienie",
+    "orderProHref": "/zamowienie-plan",
+    "page": "karta-produktu-checklista",
+    "price": 2990,
+    "reportHref": "/przykladowy-raport",
+    "showNav": true
+   }
+  ],
+  "footer": [
+   {
+    "clConsent": "Zapisując się, zgadzasz się na otrzymywanie maili od uxaudyt.pl. Możesz zrezygnować w każdej chwili jednym kliknięciem.",
+    "clCta": "Wyślij mi checklistę",
+    "clLead": "Ta sama lista, od której zaczynam każdy audyt. Przejdź ją w 20 minut i sprawdź, czy Twój sklep nie gubi klientów.",
+    "clTag": "10 · Checklista za darmo",
+    "clTitle": "w swoim koszyku sam",
+    "clTitleMuted": "25 punktów, które sprawdzisz",
+    "email": "kontakt@uxaudyt.pl",
+    "endpoint": "",
+    "showChecklist": false,
+    "tagline": "Audyty UX sklepów internetowych. Każdy raport piszę osobiście.",
+    "year": "2026"
+   }
+  ]
+ },
+ "niska-konwersja-sklepu": {
+  "fx": [
+   {
+    "hoverFx": true,
+    "maxMs": 1500,
+    "minMs": 500,
+    "overlay": false
+   }
+  ],
+  "sheet": [
+   {
+    "endpoint": "https://formspree.io/f/xwlvonnj"
+   }
+  ],
+  "cookie": [
+   {
+    "clarityId": "",
+    "gaId": "",
+    "policyHref": "/polityka-cookies"
+   }
+  ],
+  "main": [
+   {
+    "faq": "Czy potrzebujesz dostępu do panelu sklepu?\nNie. Patrzę na sklep oczami klienta, na działającej stronie. Wystarczy mi jej adres.\n\nKto wykonuje audyt?\nJa, osobiście. Nie korzystam z narzędzi, które generują raporty automatycznie. Każdy sklep przechodzę sam, krok po kroku, na desktopie oraz urządzeniach mobilnych.\n\nCzy raport będzie zrozumiały, jeśli nie znam się na UX?\nTak. Piszę prostym językiem, bez żargonu. Każdy problem ma zrzut ekranu, wyjaśnienie, dlaczego przeszkadza klientom, i konkretną poprawkę do przekazania developerowi.\n\nCzy audyt opłaca się małemu sklepowi?\nNie zawsze. Jeśli masz mniej niż ok. 50 zamówień miesięcznie, pełny audyt może się jeszcze nie zwrócić. Zacznij wtedy od bezpłatnej wstępnej oceny. Szczerze napiszę, czy audyt ma u Ciebie sens.\n\nCzy audytujesz też strony firmowe?\nTak. Sprawdzam strony firmowe do ok. 20 podstron: ofertę, nawigację, przyciski kontaktu, formularze i wersję mobilną. Taki audyt kosztuje 1990 zł netto, a raport otrzymasz w 5 dni roboczych.\n\nNa jakich platformach działasz?\nNa każdej: PrestaShop (jestem oficjalnym partnerem), Shopify, WooCommerce, Shoper, IdoSell, Magento i innych. Sprawdzam to, co widzi klient, więc platforma nie ma znaczenia.\n\nIle trwa audyt?\nRaport otrzymasz w 5 dni roboczych od zaksięgowania płatności. W pakiecie z opieką warsztat umawiamy zaraz po wysłaniu raportu, w terminie, który Ci pasuje.\n\nA jeśli mój sklep nie ma wielu problemów?\nTo dobra wiadomość. A jeśli nie znajdę nic, co realnie wpływa na sprzedaż, zwrócę Ci całą kwotę.\n\nCzy pomagasz we wdrożeniu poprawek?\nTak. Zaprojektuję poprawki w Figmie i wdrożę je na Twojej platformie albo poprowadzę Twojego developera. Przygotuję wycenę po napisaniu raportu UX, gdy będzie wiadomo, co jest do zrobienia.\n\nJak wygląda płatność?\nPłacisz z góry BLIK-iem, Przelewy24 albo kartą, przez bezpieczną bramkę Stripe. Od razu otrzymasz potwierdzenie na e-mail, a ja zaczynam pracę.",
+    "heroImage": "/img/kiuxUOb2lrGdwdGmEcpzZuxzr4s.png",
+    "hook": "https://hook.eu1.make.com/lgkd2whbcqhyffb9a2cm6s9icpppdctp",
+    "linkedin": "",
+    "orderHref": "/zamowienie",
+    "orderProHref": "/zamowienie-plan",
+    "page": "niska-konwersja-sklepu",
+    "price": 2990,
+    "reportHref": "/przykladowy-raport",
+    "showNav": true
+   }
+  ],
+  "footer": [
+   {
+    "clConsent": "Zapisując się, zgadzasz się na otrzymywanie maili od uxaudyt.pl. Możesz zrezygnować w każdej chwili jednym kliknięciem.",
+    "clCta": "Wyślij mi checklistę",
+    "clLead": "Ta sama lista, od której zaczynam każdy audyt. Przejdź ją w 20 minut i sprawdź, czy Twój sklep nie gubi klientów.",
+    "clTag": "10 · Checklista za darmo",
+    "clTitle": "w swoim koszyku sam",
+    "clTitleMuted": "25 punktów, które sprawdzisz",
+    "email": "kontakt@uxaudyt.pl",
+    "endpoint": "",
+    "showChecklist": false,
+    "tagline": "Audyty UX sklepów internetowych. Każdy raport piszę osobiście.",
+    "year": "2026"
+   }
+  ]
+ },
+ "polityka-cookies": {
+  "legal": [
+   {
+    "doc": "cookies",
+    "homeHref": "/"
+   }
+  ],
+  "cookie": [
+   {
+    "clarityId": "",
+    "gaId": "",
+    "policyHref": "/polityka-cookies"
+   }
+  ],
+  "fx": [
+   {
+    "hoverFx": true,
+    "maxMs": 1500,
+    "minMs": 500,
+    "overlay": false
+   }
+  ]
+ },
+ "polityka-prywatnosci": {
+  "legal": [
+   {
+    "doc": "polityka",
+    "homeHref": "/"
+   }
+  ],
+  "fx": [
+   {
+    "hoverFx": true,
+    "maxMs": 1500,
+    "minMs": 500,
+    "overlay": false
+   }
+  ],
+  "cookie": [
+   {
+    "clarityId": "",
+    "gaId": "",
+    "policyHref": "/polityka-cookies"
+   }
+  ]
+ },
+ "porzucone-koszyki": {
+  "main": [
+   {
+    "faq": "Czy potrzebujesz dostępu do panelu sklepu?\nNie. Patrzę na sklep oczami klienta, na działającej stronie. Wystarczy mi jej adres.\n\nKto wykonuje audyt?\nJa, osobiście. Nie korzystam z narzędzi, które generują raporty automatycznie. Każdy sklep przechodzę sam, krok po kroku, na desktopie oraz urządzeniach mobilnych.\n\nCzy raport będzie zrozumiały, jeśli nie znam się na UX?\nTak. Piszę prostym językiem, bez żargonu. Każdy problem ma zrzut ekranu, wyjaśnienie, dlaczego przeszkadza klientom, i konkretną poprawkę do przekazania developerowi.\n\nCzy audyt opłaca się małemu sklepowi?\nNie zawsze. Jeśli masz mniej niż ok. 50 zamówień miesięcznie, pełny audyt może się jeszcze nie zwrócić. Zacznij wtedy od bezpłatnej wstępnej oceny. Szczerze napiszę, czy audyt ma u Ciebie sens.\n\nCzy audytujesz też strony firmowe?\nTak. Sprawdzam strony firmowe do ok. 20 podstron: ofertę, nawigację, przyciski kontaktu, formularze i wersję mobilną. Taki audyt kosztuje 1990 zł netto, a raport otrzymasz w 5 dni roboczych.\n\nNa jakich platformach działasz?\nNa każdej: PrestaShop (jestem oficjalnym partnerem), Shopify, WooCommerce, Shoper, IdoSell, Magento i innych. Sprawdzam to, co widzi klient, więc platforma nie ma znaczenia.\n\nIle trwa audyt?\nRaport otrzymasz w 5 dni roboczych od zaksięgowania płatności. W pakiecie z opieką warsztat umawiamy zaraz po wysłaniu raportu, w terminie, który Ci pasuje.\n\nA jeśli mój sklep nie ma wielu problemów?\nTo dobra wiadomość. A jeśli nie znajdę nic, co realnie wpływa na sprzedaż, zwrócę Ci całą kwotę.\n\nCzy pomagasz we wdrożeniu poprawek?\nTak. Zaprojektuję poprawki w Figmie i wdrożę je na Twojej platformie albo poprowadzę Twojego developera. Przygotuję wycenę po napisaniu raportu UX, gdy będzie wiadomo, co jest do zrobienia.\n\nJak wygląda płatność?\nPłacisz z góry BLIK-iem, Przelewy24 albo kartą, przez bezpieczną bramkę Stripe. Od razu otrzymasz potwierdzenie na e-mail, a ja zaczynam pracę.",
+    "heroImage": "/img/kiuxUOb2lrGdwdGmEcpzZuxzr4s.png",
+    "hook": "https://hook.eu1.make.com/lgkd2whbcqhyffb9a2cm6s9icpppdctp",
+    "linkedin": "",
+    "orderHref": "/zamowienie",
+    "orderProHref": "/zamowienie-plan",
+    "page": "porzucone-koszyki",
+    "price": 2990,
+    "reportHref": "/przykladowy-raport",
+    "showNav": true
+   }
+  ],
+  "footer": [
+   {
+    "clConsent": "Zapisując się, zgadzasz się na otrzymywanie maili od uxaudyt.pl. Możesz zrezygnować w każdej chwili jednym kliknięciem.",
+    "clCta": "Wyślij mi checklistę",
+    "clLead": "Ta sama lista, od której zaczynam każdy audyt. Przejdź ją w 20 minut i sprawdź, czy Twój sklep nie gubi klientów.",
+    "clTag": "10 · Checklista za darmo",
+    "clTitle": "w swoim koszyku sam",
+    "clTitleMuted": "25 punktów, które sprawdzisz",
+    "email": "kontakt@uxaudyt.pl",
+    "endpoint": "",
+    "showChecklist": false,
+    "tagline": "Audyty UX sklepów internetowych. Każdy raport piszę osobiście.",
+    "year": "2026"
+   }
+  ],
+  "sheet": [
+   {
+    "endpoint": "https://formspree.io/f/xwlvonnj"
+   }
+  ],
+  "cookie": [
+   {
+    "clarityId": "",
+    "gaId": "",
+    "policyHref": "/polityka-cookies"
+   }
+  ],
+  "fx": [
+   {
+    "hoverFx": true,
+    "maxMs": 1500,
+    "minMs": 500,
+    "overlay": false
+   }
+  ]
+ },
+ "przykladowy-raport": {
+  "main": [
+   {
+    "ink": "#0D0D0D",
+    "ink2": "#5D5D5D",
+    "ink3": "#6E6E6E",
+    "line": "#EAEAEA",
+    "page": "#FFFFFF",
+    "box": "#F7F7F7",
+    "surface": "#FFFFFF",
+    "primary": "#FF5A1F",
+    "bad": "#DC3709",
+    "warn": "#B26A00",
+    "ok": "#1E9E5A"
+   }
+  ],
+  "raport": [
+   {
+    "ctaHref": "/zamowienie",
+    "ctaLabel": "Zamów audyt sklepu",
+    "ctaText": "Otrzymasz go w 5 dni roboczych, razem z makietami poprawek. Jeśli nie znajdę nic, co wpływa na sprzedaż, oddam Ci pieniądze.",
+    "ctaTitle": "Sprawdzę tak samo Twój sklep.",
+    "homeHref": "/",
+    "label": "Raport UX · przykład",
+    "note": "Przykład poglądowy",
+    "scope": "Cała ścieżka zakupu na desktopie oraz urządzeniach mobilnych: strona główna, kategoria, karta produktu, koszyk i płatność.",
+    "shop": "Sklep z kosmetykami naturalnymi"
+   }
+  ],
+  "fx": [
+   {
+    "hoverFx": true,
+    "maxMs": 1500,
+    "minMs": 500,
+    "overlay": false
+   }
+  ],
+  "cookie": [
+   {
+    "clarityId": "",
+    "gaId": "",
+    "policyHref": "/polityka-cookies"
+   }
+  ]
+ },
+ "regulamin": {
+  "legal": [
+   {
+    "doc": "regulamin",
+    "homeHref": "/"
+   }
+  ],
+  "fx": [
+   {
+    "hoverFx": true,
+    "maxMs": 1500,
+    "minMs": 500,
+    "overlay": false
+   }
+  ],
+  "cookie": [
+   {
+    "clarityId": "",
+    "gaId": "",
+    "policyHref": "/polityka-cookies"
+   }
+  ]
+ },
+ "ux-sklepu-mobilnego": {
+  "fx": [
+   {
+    "hoverFx": true,
+    "maxMs": 1500,
+    "minMs": 500,
+    "overlay": false
+   }
+  ],
+  "sheet": [
+   {
+    "endpoint": "https://formspree.io/f/xwlvonnj"
+   }
+  ],
+  "cookie": [
+   {
+    "clarityId": "",
+    "gaId": "",
+    "policyHref": "/polityka-cookies"
+   }
+  ],
+  "main": [
+   {
+    "faq": "Czy potrzebujesz dostępu do panelu sklepu?\nNie. Patrzę na sklep oczami klienta, na działającej stronie. Wystarczy mi jej adres.\n\nKto wykonuje audyt?\nJa, osobiście. Nie korzystam z narzędzi, które generują raporty automatycznie. Każdy sklep przechodzę sam, krok po kroku, na desktopie oraz urządzeniach mobilnych.\n\nCzy raport będzie zrozumiały, jeśli nie znam się na UX?\nTak. Piszę prostym językiem, bez żargonu. Każdy problem ma zrzut ekranu, wyjaśnienie, dlaczego przeszkadza klientom, i konkretną poprawkę do przekazania developerowi.\n\nCzy audyt opłaca się małemu sklepowi?\nNie zawsze. Jeśli masz mniej niż ok. 50 zamówień miesięcznie, pełny audyt może się jeszcze nie zwrócić. Zacznij wtedy od bezpłatnej wstępnej oceny. Szczerze napiszę, czy audyt ma u Ciebie sens.\n\nCzy audytujesz też strony firmowe?\nTak. Sprawdzam strony firmowe do ok. 20 podstron: ofertę, nawigację, przyciski kontaktu, formularze i wersję mobilną. Taki audyt kosztuje 1990 zł netto, a raport otrzymasz w 5 dni roboczych.\n\nNa jakich platformach działasz?\nNa każdej: PrestaShop (jestem oficjalnym partnerem), Shopify, WooCommerce, Shoper, IdoSell, Magento i innych. Sprawdzam to, co widzi klient, więc platforma nie ma znaczenia.\n\nIle trwa audyt?\nRaport otrzymasz w 5 dni roboczych od zaksięgowania płatności. W pakiecie z opieką warsztat umawiamy zaraz po wysłaniu raportu, w terminie, który Ci pasuje.\n\nA jeśli mój sklep nie ma wielu problemów?\nTo dobra wiadomość. A jeśli nie znajdę nic, co realnie wpływa na sprzedaż, zwrócę Ci całą kwotę.\n\nCzy pomagasz we wdrożeniu poprawek?\nTak. Zaprojektuję poprawki w Figmie i wdrożę je na Twojej platformie albo poprowadzę Twojego developera. Przygotuję wycenę po napisaniu raportu UX, gdy będzie wiadomo, co jest do zrobienia.\n\nJak wygląda płatność?\nPłacisz z góry BLIK-iem, Przelewy24 albo kartą, przez bezpieczną bramkę Stripe. Od razu otrzymasz potwierdzenie na e-mail, a ja zaczynam pracę.",
+    "heroImage": "/img/kiuxUOb2lrGdwdGmEcpzZuxzr4s.png",
+    "hook": "https://hook.eu1.make.com/lgkd2whbcqhyffb9a2cm6s9icpppdctp",
+    "linkedin": "",
+    "orderHref": "/zamowienie",
+    "orderProHref": "/zamowienie-plan",
+    "page": "ux-sklepu-mobilnego",
+    "price": 2990,
+    "reportHref": "/przykladowy-raport",
+    "showNav": true
+   }
+  ],
+  "footer": [
+   {
+    "clConsent": "Zapisując się, zgadzasz się na otrzymywanie maili od uxaudyt.pl. Możesz zrezygnować w każdej chwili jednym kliknięciem.",
+    "clCta": "Wyślij mi checklistę",
+    "clLead": "Ta sama lista, od której zaczynam każdy audyt. Przejdź ją w 20 minut i sprawdź, czy Twój sklep nie gubi klientów.",
+    "clTag": "10 · Checklista za darmo",
+    "clTitle": "w swoim koszyku sam",
+    "clTitleMuted": "25 punktów, które sprawdzisz",
+    "email": "kontakt@uxaudyt.pl",
+    "endpoint": "",
+    "showChecklist": false,
+    "tagline": "Audyty UX sklepów internetowych. Każdy raport piszę osobiście.",
+    "year": "2026"
+   }
+  ]
+ },
+ "v7": {},
+ "wdrozenie-poprawek": {
+  "main": [
+   {
+    "faq": "Czym właściwie jest audyt UX?\nTo przejście Twojego sklepu albo strony oczami klienta i wskazanie miejsc, w których może się zawahać lub zrezygnować, razem z konkretnymi poprawkami. Więcej przeczytasz w poradniku [Audyt UX: co to jest, jak wygląda i ile kosztuje](/audyt-ux).\n\nCzy potrzebujesz dostępu do panelu sklepu?\nNie. Patrzę na sklep oczami klienta, na działającej stronie. Wystarczy mi jej adres.\n\nKto wykonuje audyt?\nJa, osobiście. Nie korzystam z narzędzi, które generują raporty automatycznie. Każdy sklep przechodzę sam, krok po kroku, na desktopie oraz urządzeniach mobilnych.\n\nCzy raport będzie zrozumiały, jeśli nie znam się na UX?\nTak. Piszę prostym językiem, bez żargonu. Każdy problem ma zrzut ekranu, wyjaśnienie, dlaczego przeszkadza klientom, i konkretną poprawkę do przekazania developerowi.\n\nCzy audyt opłaca się małemu sklepowi?\nNie zawsze. Jeśli masz mniej niż ok. 50 zamówień miesięcznie, pełny audyt może się jeszcze nie zwrócić. Zacznij wtedy od bezpłatnej wstępnej oceny. Szczerze napiszę, czy audyt ma u Ciebie sens.\n\nCzy audytujesz też strony firmowe?\nTak. Sprawdzam strony firmowe do ok. 20 podstron: ofertę, nawigację, przyciski kontaktu, formularze i wersję mobilną. Taki audyt kosztuje 1990 zł netto, a raport otrzymasz w 5 dni roboczych.\n\nNa jakich platformach działasz?\nNa każdej: PrestaShop (jestem oficjalnym partnerem), Shopify, WooCommerce, Shoper, IdoSell, Magento i innych. Sprawdzam to, co widzi klient, więc platforma nie ma znaczenia. Na co zwracam uwagę w sklepach na PrestaShop, opisuję w [osobnym poradniku](/audyt-ux-prestashop).\n\nIle trwa audyt?\nRaport otrzymasz w 5 dni roboczych od zaksięgowania płatności. W pakiecie z opieką warsztat umawiamy zaraz po wysłaniu raportu, w terminie, który Ci pasuje.\n\nA jeśli mój sklep nie ma wielu problemów?\nTo dobra wiadomość. A jeśli nie znajdę nic, co realnie wpływa na sprzedaż, zwrócę Ci całą kwotę.\n\nCzy pomagasz we wdrożeniu poprawek?\nTak. Zaprojektuję poprawki w Figmie i wdrożę je na Twojej platformie albo poprowadzę Twojego developera. Przygotuję wycenę po napisaniu raportu UX, gdy będzie wiadomo, co jest do zrobienia. Szczegóły znajdziesz na stronie [wdrożenia poprawek](/wdrozenie-poprawek).\n\nJak wygląda płatność?\nPłacisz z góry BLIK-iem, Przelewy24 albo kartą, przez bezpieczną bramkę Stripe. Od razu otrzymasz potwierdzenie na e-mail, a ja zaczynam pracę.",
+    "heroImage": "/img/kiuxUOb2lrGdwdGmEcpzZuxzr4s.png",
+    "hook": "https://hook.eu1.make.com/lgkd2whbcqhyffb9a2cm6s9icpppdctp",
+    "linkedin": "",
+    "orderHref": "/zamowienie",
+    "orderProHref": "/zamowienie-plan",
+    "page": "wdrozenie",
+    "price": 2990,
+    "reportHref": "/przykladowy-raport",
+    "showNav": true
+   }
+  ],
+  "footer": [
+   {
+    "clConsent": "Zapisując się, zgadzasz się na otrzymywanie maili od uxaudyt.pl. Możesz zrezygnować w każdej chwili jednym kliknięciem.",
+    "clCta": "Wyślij mi checklistę",
+    "clLead": "Ta sama lista, od której zaczynam każdy audyt. Przejdź ją w 20 minut i sprawdź, czy Twój sklep nie gubi klientów.",
+    "clTag": "10 · Checklista za darmo",
+    "clTitle": "w swoim koszyku sam",
+    "clTitleMuted": "25 punktów, które sprawdzisz",
+    "email": "kontakt@uxaudyt.pl",
+    "endpoint": "",
+    "showChecklist": false,
+    "tagline": "Audyty UX sklepów internetowych. Każdy raport piszę osobiście.",
+    "year": "2026"
+   }
+  ],
+  "sheet": [
+   {
+    "endpoint": "https://formspree.io/f/xwlvonnj"
+   }
+  ],
+  "cookie": [
+   {
+    "clarityId": "",
+    "gaId": "",
+    "policyHref": "/polityka-cookies"
+   }
+  ],
+  "fx": [
+   {
+    "hoverFx": true,
+    "maxMs": 1500,
+    "minMs": 500,
+    "overlay": false
+   }
+  ]
+ },
+ "zamowienie-plan": {
+  "checkout": [
+   {
+    "callB": "Warsztat + 30 dni wsparcia",
+    "days": "w 5 dni roboczych",
+    "descA": "Cała ścieżka zakupu na desktopie oraz urządzeniach mobilnych. Lista problemów od najważniejszych i 3 makiety poprawek.",
+    "descB": "Audyt sklepu, warsztat z omówieniem raportu, makiety krytycznych poprawek, 30 dni wsparcia i ponowne sprawdzenie sklepu.",
+    "descC": "Strona firmowa do ok. 20 podstron: oferta, przyciski kontaktu, formularze i wersja mobilna.",
+    "endpoint": "https://formspree.io/f/xkjorvvy",
+    "grossA": "3677,70 zł",
+    "grossB": "5522,70 zł",
+    "grossC": "2447,70 zł",
+    "homeHref": "/",
+    "nameA": "Audyt sklepu internetowego",
+    "nameB": "Audyt sklepu internetowego z opieką",
+    "nameC": "Audyt strony internetowej",
+    "payLinkA": "https://buy.stripe.com/aFaaF03zIbxM3ke3bw0VO01",
+    "payLinkB": "https://buy.stripe.com/28EbJ48U27hw1c67rM0VO02",
+    "payLinkC": "https://buy.stripe.com/dRm9AWfiqeJYf2WeUe0VO00",
+    "plan": "plan",
+    "priceA": "2990 zł netto",
+    "priceB": "4490 zł netto",
+    "priceC": "1990 zł netto",
+    "privacyHref": "/polityka-prywatnosci",
+    "termsHref": "/regulamin"
+   }
+  ],
+  "fx": [
+   {
+    "hoverFx": true,
+    "maxMs": 1500,
+    "minMs": 500,
+    "overlay": false
+   }
+  ],
+  "cookie": [
+   {
+    "clarityId": "",
+    "gaId": "",
+    "policyHref": "/polityka-cookies"
+   }
+  ]
+ },
+ "zamowienie": {
+  "checkout": [
+   {
+    "callB": "Warsztat + 30 dni wsparcia",
+    "days": "w 5 dni roboczych",
+    "descA": "Cała ścieżka zakupu na desktopie oraz urządzeniach mobilnych. Lista problemów od najważniejszych i 3 makiety poprawek.",
+    "descB": "Audyt sklepu, warsztat z omówieniem raportu, makiety krytycznych poprawek, 30 dni wsparcia i ponowne sprawdzenie sklepu.",
+    "descC": "Strona firmowa do ok. 20 podstron: oferta, przyciski kontaktu, formularze i wersja mobilna.",
+    "endpoint": "https://formspree.io/f/xkjorvvy",
+    "grossA": "3677,70 zł",
+    "grossB": "5522,70 zł",
+    "grossC": "2447,70 zł",
+    "homeHref": "/",
+    "nameA": "Audyt sklepu internetowego",
+    "nameB": "Audyt sklepu internetowego z opieką",
+    "nameC": "Audyt strony internetowej",
+    "payLinkA": "https://buy.stripe.com/aFaaF03zIbxM3ke3bw0VO01",
+    "payLinkB": "https://buy.stripe.com/28EbJ48U27hw1c67rM0VO02",
+    "payLinkC": "https://buy.stripe.com/dRm9AWfiqeJYf2WeUe0VO00",
+    "plan": "audyt",
+    "priceA": "2990 zł netto",
+    "priceB": "4490 zł netto",
+    "priceC": "1990 zł netto",
+    "privacyHref": "/polityka-prywatnosci",
+    "termsHref": "/regulamin"
+   }
+  ],
+  "fx": [
+   {
+    "hoverFx": true,
+    "maxMs": 1500,
+    "minMs": 500,
+    "overlay": false
+   }
+  ],
+  "cookie": [
+   {
+    "clarityId": "",
+    "gaId": "",
+    "policyHref": "/polityka-cookies"
+   }
+  ]
+ }
+}

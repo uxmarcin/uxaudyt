@@ -1,0 +1,15 @@
+{
+  "name": "uxaudyt",
+  "private": true,
+  "type": "module",
+  "description": "uxaudyt.pl — statyczna strona (SSR z komponentów React), hosting cyber_Folks",
+  "scripts": {
+    "build": "node build.mjs",
+    "dev": "php -S 127.0.0.1:8090 -t public tools/router.php"
+  },
+  "devDependencies": {
+    "esbuild": "0.28.2",
+    "react": "19.2.8",
+    "react-dom": "19.2.8"
+  }
+}
