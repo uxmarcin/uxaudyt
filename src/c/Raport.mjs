@@ -309,7 +309,7 @@ function R(e) {
                 className: `uxr-back`,
                 children: [
                   c(F, { name: `arrow-left`, size: 16 }),
-                  ` Wróć na stronę`,
+                  ` Wróć na stronę główną`,
                 ],
               }),
               s(`span`, {
@@ -380,6 +380,7 @@ function R(e) {
                 },
                 children: [
                   `Przykładowy raport z audytu UX sklepu`,
+                  ` `,
                   c(`span`, {
                     style: {
                       display: `block`,
@@ -423,7 +424,7 @@ function R(e) {
                   T(S(`Krytyczny`), `krytyczne`, V.primary),
                   T(S(`Ważny`), `ważne`, `#E8A33C`),
                   T(S(`Drobny`), `drobne`),
-                  T(w, w === 1 ? `dzień wdrożenia` : `dni wdrożenia`),
+                  T(w, w === 1 ? `dzień pracy na wdrożenie` : `dni pracy na wdrożenie`),
                 ],
               }),
             ],
@@ -701,14 +702,14 @@ var z,
         shop: G(`Sklep`, `Sklep z kosmetykami naturalnymi`),
         scope: G(
           `Zakres`,
-          `Cała ścieżka zakupu na desktopie oraz urządzeniach mobilnych: strona główna, kategoria, karta produktu, koszyk i płatność.`,
+          `Przykład poglądowy, uogólniony z typowych błędów w sklepach. Zakres taki jak w audycie: cała ścieżka zakupu na komputerze i telefonie, od strony głównej przez kategorię i kartę produktu po koszyk i płatność.`,
           !0,
         ),
         note: G(`Notka`, `Przykład poglądowy`),
         ctaTitle: G(`CTA tytuł`, `Sprawdzę tak samo Twój sklep.`),
         ctaText: G(
           `CTA opis`,
-          `Otrzymasz go w 5 dni roboczych, razem z makietami poprawek. Jeśli nie znajdę nic, co wpływa na sprzedaż, oddam Ci pieniądze.`,
+          `Raport otrzymasz w 5 dni roboczych od zaksięgowania płatności. Audyt sklepu kosztuje 2990 zł netto (3677,70 zł brutto). Jeśli raport nie wskaże żadnego problemu, który realnie wpływa na sprzedaż, albo nie dotrze w terminie, chyba że opóźnienie wynika z niedostępności Twojego sklepu, zwrócę całą kwotę.`,
           !0,
         ),
         ctaLabel: G(`Przycisk`, `Zamów audyt sklepu`),

@@ -86,6 +86,7 @@ ${desc ? `<meta name="twitter:description" content="${esc(desc)}">\n` : ''}<meta
 }
 
 fs.copyFileSync(path.join(ROOT, 'src/404.html'), path.join(OUT, '404.html'));
+fs.copyFileSync(path.join(ROOT, 'src/llms.txt'), path.join(OUT, 'llms.txt'));
 
 // 3) sitemap
 const today = new Date().toISOString().slice(0, 10);

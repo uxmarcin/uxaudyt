@@ -1,0 +1,46 @@
+# uxaudyt.pl
+
+> Audyty UX sklepów internetowych i stron firmowych w Polsce, zamawiane i opłacane online. Każdy audyt wykonuje osobiście Marcin Bednarz, projektant UX z 13-letnim doświadczeniem w projektowaniu produktów cyfrowych. Raport w PDF w 5 dni roboczych od zaksięgowania płatności, potem rozmowa omówienia raportu (w pakiecie z opieką warsztat online).
+
+Audyt UX w uxaudyt.pl to ekspercka ocena sklepu lub strony oczami klienta: przejście całej ścieżki zakupu albo kontaktu na komputerze i na telefonie oraz lista problemów ułożona od najważniejszych. Przy każdym problemie raport zawiera zrzut ekranu, wyjaśnienie i konkretną poprawkę do przekazania developerowi. Do audytu wystarczy adres sklepu lub strony; dostęp do panelu nie jest potrzebny.
+
+Ceny (netto, jednorazowo, stałe):
+- Audyt UX strony internetowej: 1990 zł netto (2447,70 zł brutto). Strony firmowe do ok. 20 podstron.
+- Audyt UX sklepu internetowego: 2990 zł netto (3677,70 zł brutto). Cała ścieżka zakupu na komputerze i telefonie.
+- Audyt sklepu z opieką przy wdrożeniu: 4490 zł netto (5522,70 zł brutto). Zakres audytu sklepu oraz warsztat online z omówieniem raportu, makiety wszystkich krytycznych poprawek, 30 dni wsparcia e-mailem przy wdrożeniu (liczone od dnia warsztatu) i jednorazowe ponowne sprawdzenie sklepu po zmianach.
+- Wdrożenie poprawek: wycena indywidualna po raporcie. Projekt poprawek w Figmie i wdrożenie na platformie klienta (PrestaShop, WooCommerce, Shopify, Shoper, IdoSell) albo prowadzenie jego developera.
+- Bezpłatna wstępna ocena: 0 zł, bez zobowiązań. Odpowiedź e-mailem, zwykle w ciągu 2 dni roboczych.
+
+Zamówienie i płatność: płatność z góry przez Stripe (BLIK, Przelewy24, karta), faktura VAT. Gwarancja: zwrot całej kwoty, jeśli raport nie zostanie dostarczony w terminie (chyba że opóźnienie wynika z niedostępności sklepu klienta) albo nie wskaże żadnego problemu, który realnie wpływa na sprzedaż. Zgłoszenie e-mailem w 14 dni od terminu raportu lub jego otrzymania (§ 7 regulaminu). uxaudyt.pl nie gwarantuje konkretnego wzrostu sprzedaży ani konwersji.
+
+Platformy: audyt obejmuje to, co widzi klient, więc działa na każdej platformie, m.in. PrestaShop, Shopify, WooCommerce, Shoper, IdoSell i Magento. Studio Creative Vision Marcina Bednarza ma status PrestaShop Expert.
+
+Kontakt: kontakt@uxaudyt.pl, +48 534 154 230. Usługę prowadzi Marcin Bednarz Creative Vision, NIP 7952514299, Rzeszów. Praca zdalna, klienci z całej Polski.
+
+## Usługi
+- [Audyt UX sklepu internetowego](https://www.uxaudyt.pl/audyt-sklepu-internetowego): 2990 zł netto, raport w 5 dni roboczych
+- [Audyt UX strony internetowej](https://www.uxaudyt.pl/audyt-strony-internetowej): 1990 zł netto, strony firmowe do ok. 20 podstron
+- [Audyt sklepu z opieką przy wdrożeniu](https://www.uxaudyt.pl/audyt-sklepu-z-opieka): 4490 zł netto, warsztat, makiety krytycznych poprawek i 30 dni wsparcia
+- [Wdrożenie poprawek](https://www.uxaudyt.pl/wdrozenie-poprawek): projekt w Figmie i wdrożenie, wycena po raporcie
+- [Bezpłatna wstępna ocena sklepu](https://www.uxaudyt.pl/darmowy-audyt-sklepu): odpowiedź e-mailem, zwykle w ciągu 2 dni roboczych
+- [Przykładowy raport z audytu UX](https://www.uxaudyt.pl/przykladowy-raport): przykład poglądowy, sklep z kosmetykami
+
+## Poradniki
+- [Audyt UX: co to jest, jak wygląda i ile kosztuje](https://www.uxaudyt.pl/audyt-ux)
+- [Audyt UX a audyt SEO](https://www.uxaudyt.pl/audyt-ux-a-audyt-seo)
+- [Niska konwersja sklepu: przyczyny i jak je znaleźć](https://www.uxaudyt.pl/niska-konwersja-sklepu)
+- [Porzucone koszyki: dlaczego klienci nie kupują](https://www.uxaudyt.pl/porzucone-koszyki)
+- [Karta produktu: checklista 20 punktów](https://www.uxaudyt.pl/karta-produktu-checklista)
+- [UX sklepu na telefonie](https://www.uxaudyt.pl/ux-sklepu-mobilnego)
+- [Jak samodzielnie sprawdzić UX sklepu w 30 minut](https://www.uxaudyt.pl/jak-sprawdzic-ux-sklepu)
+- [Jak zwiększyć sprzedaż w sklepie internetowym](https://www.uxaudyt.pl/jak-zwiekszyc-sprzedaz-sklepu): 12 poprawek, najpierw sklep, potem ruch
+- [Checklista audytu UX sklepu: 25 punktów](https://www.uxaudyt.pl/checklista-audytu-ux): otwarta lista do samodzielnego sprawdzenia
+- [Audyt UX sklepu na PrestaShop](https://www.uxaudyt.pl/audyt-ux-prestashop)
+- [Audyt UX sklepu na Shopify](https://www.uxaudyt.pl/audyt-ux-shopify)
+- [Audyt UX sklepu na WooCommerce](https://www.uxaudyt.pl/audyt-ux-woocommerce)
+- [Audyt UX sklepu na Shoperze](https://www.uxaudyt.pl/audyt-ux-shoper)
+
+## Optional
+- [Regulamin](https://www.uxaudyt.pl/regulamin): zakres usług, płatność, terminy, gwarancja zwrotu
+- [Polityka prywatności](https://www.uxaudyt.pl/polityka-prywatnosci)
+- [Creative Vision](https://creative-vision.pl): studio projektowe stron, sklepów i aplikacji, Rzeszów
