@@ -6,6 +6,7 @@
  */
 declare(strict_types=1);
 
+date_default_timezone_set('Europe/Warsaw');
 header('Content-Type: application/json; charset=utf-8');
 header('X-Content-Type-Options: nosniff');
 header('Referrer-Policy: same-origin');
@@ -104,10 +105,18 @@ function db(): PDO {
     reason TEXT NOT NULL, created INTEGER NOT NULL, resolved INTEGER NOT NULL DEFAULT 0);
   CREATE TABLE IF NOT EXISTS votes(player_id TEXT NOT NULL, feature TEXT NOT NULL, PRIMARY KEY(player_id, feature));
   CREATE TABLE IF NOT EXISTS events(id INTEGER PRIMARY KEY AUTOINCREMENT, type TEXT NOT NULL, payload TEXT NOT NULL, created INTEGER NOT NULL);
+  CREATE TABLE IF NOT EXISTS notifications(id INTEGER PRIMARY KEY AUTOINCREMENT, player_id TEXT NOT NULL, type TEXT NOT NULL, title TEXT NOT NULL, body TEXT NOT NULL, url TEXT NOT NULL DEFAULT '', created INTEGER NOT NULL, read INTEGER NOT NULL DEFAULT 0);
+  CREATE INDEX IF NOT EXISTS notif_p ON notifications(player_id, id);
+  CREATE TABLE IF NOT EXISTS push_subs(endpoint TEXT PRIMARY KEY, player_id TEXT NOT NULL, weekly INTEGER NOT NULL DEFAULT 1, created INTEGER NOT NULL, fails INTEGER NOT NULL DEFAULT 0);
+  CREATE INDEX IF NOT EXISTS push_p ON push_subs(player_id);
+  CREATE TABLE IF NOT EXISTS weekly(id INTEGER PRIMARY KEY AUTOINCREMENT, title TEXT NOT NULL, intro TEXT NOT NULL DEFAULT '', starts INTEGER NOT NULL, ends INTEGER NOT NULL, items TEXT NOT NULL DEFAULT '[]', created INTEGER NOT NULL, pushed INTEGER NOT NULL DEFAULT 0);
   CREATE TABLE IF NOT EXISTS hits(k TEXT NOT NULL, ts INTEGER NOT NULL);
   CREATE INDEX IF NOT EXISTS hits_k ON hits(k, ts);
   CREATE INDEX IF NOT EXISTS hits_ts ON hits(ts);
   SQL);
+  // migracje dla istniejących baz
+  $cols = array_column($pdo->query('PRAGMA table_info(jobs)')->fetchAll(), 'name');
+  if (!in_array('reminded', $cols, true)) $pdo->exec('ALTER TABLE jobs ADD COLUMN reminded INTEGER NOT NULL DEFAULT 0');
   return $pdo;
 }
 function q(string $sql, array $p = []): PDOStatement { $st = db()->prepare($sql); $st->execute($p); return $st; }
@@ -132,6 +141,86 @@ function hasLink(string $t): bool { return (bool)preg_match('~(https?://|www\.|\
 function event(string $type, array $payload): void {
   q('INSERT INTO events(type,payload,created) VALUES(?,?,?)', [$type, json_encode($payload, JSON_UNESCAPED_UNICODE), now()]);
   if (random_int(1, 20) === 1) q('DELETE FROM events WHERE id NOT IN (SELECT id FROM events ORDER BY id DESC LIMIT 200)');
+}
+
+/* ---------- powiadomienia i Web Push (VAPID, wiadomości bez treści) ---------- */
+function plPlural(int $n, string $one, string $few, string $many): string { $a = $n % 10; $b = $n % 100; return $n === 1 ? $one : (($a >= 2 && $a <= 4 && ($b < 12 || $b > 14)) ? $few : $many); }
+function b64u(string $b): string { return rtrim(strtr(base64_encode($b), '+/', '-_'), '='); }
+function vapid(): ?array {
+  static $v = null;
+  if ($v !== null) return $v ?: null;
+  $f = DATA_DIR . '/vapid.php';
+  if (is_file($f)) { $v = require $f; return $v ?: null; }
+  if (!function_exists('openssl_pkey_new')) { $v = []; return null; }
+  $k = @openssl_pkey_new(['curve_name' => 'prime256v1', 'private_key_type' => OPENSSL_KEYTYPE_EC]);
+  if (!$k) { $v = []; return null; }
+  openssl_pkey_export($k, $pem);
+  $d = openssl_pkey_get_details($k);
+  $pub = "\x04" . str_pad($d['ec']['x'], 32, "\0", STR_PAD_LEFT) . str_pad($d['ec']['y'], 32, "\0", STR_PAD_LEFT);
+  $v = ['private_pem' => $pem, 'public' => b64u($pub)];
+  @file_put_contents($f, "<?php\nreturn " . var_export($v, true) . ";\n");
+  return $v;
+}
+function derToRaw(string $der): string {
+  // SEQUENCE { INTEGER r, INTEGER s } -> r||s (po 32 bajty)
+  $pos = 2; if (ord($der[1]) & 0x80) $pos += ord($der[1]) & 0x7f;
+  $out = '';
+  for ($i = 0; $i < 2; $i++) {
+    $pos++; $len = ord($der[$pos]); $pos++;
+    $int = substr($der, $pos, $len); $pos += $len;
+    $int = ltrim($int, "\0");
+    $out .= str_pad($int, 32, "\0", STR_PAD_LEFT);
+  }
+  return $out;
+}
+function vapidHeader(string $endpoint): ?string {
+  $v = vapid(); if (!$v) return null;
+  $u = parse_url($endpoint);
+  if (empty($u['scheme']) || empty($u['host'])) return null;
+  $aud = $u['scheme'] . '://' . $u['host'] . (isset($u['port']) ? ':' . $u['port'] : '');
+  $data = b64u(json_encode(['typ' => 'JWT', 'alg' => 'ES256'])) . '.' . b64u(json_encode(['aud' => $aud, 'exp' => now() + 12 * 3600, 'sub' => 'https://www.uxaudyt.pl/ekipaz/']));
+  $key = openssl_pkey_get_private($v['private_pem']);
+  if (!$key || !openssl_sign($data, $sig, $key, OPENSSL_ALGO_SHA256)) return null;
+  return 'vapid t=' . $data . '.' . b64u(derToRaw($sig)) . ', k=' . $v['public'];
+}
+function pushTo(array $endpoints): void {
+  if (!$endpoints || !function_exists('curl_multi_init')) return;
+  $mh = curl_multi_init(); $hs = [];
+  foreach (array_slice($endpoints, 0, 300) as $ep) {
+    if (!preg_match('~^https://~', $ep)) continue;
+    $auth = vapidHeader($ep); if (!$auth) continue;
+    $ch = curl_init($ep);
+    curl_setopt_array($ch, [CURLOPT_POST => true, CURLOPT_POSTFIELDS => '', CURLOPT_RETURNTRANSFER => true, CURLOPT_TIMEOUT => 4, CURLOPT_CONNECTTIMEOUT => 3,
+      CURLOPT_HTTPHEADER => ['Authorization: ' . $auth, 'TTL: 86400', 'Urgency: high', 'Content-Length: 0']]);
+    curl_multi_add_handle($mh, $ch); $hs[$ep] = $ch;
+  }
+  do { $st = curl_multi_exec($mh, $run); if ($run) curl_multi_select($mh, 0.5); } while ($run && $st === CURLM_OK);
+  foreach ($hs as $ep => $ch) {
+    $code = (int)curl_getinfo($ch, CURLINFO_HTTP_CODE);
+    if ($code === 404 || $code === 410) q('DELETE FROM push_subs WHERE endpoint=?', [$ep]);
+    elseif ($code >= 400 || $code === 0) q('UPDATE push_subs SET fails=fails+1 WHERE endpoint=?', [$ep]);
+    else q('UPDATE push_subs SET fails=0 WHERE endpoint=?', [$ep]);
+    curl_multi_remove_handle($mh, $ch); curl_close($ch);
+  }
+  curl_multi_close($mh);
+  q('DELETE FROM push_subs WHERE fails>=5');
+}
+function notify(array $playerIds, string $type, string $title, string $body, string $url = ''): void {
+  $playerIds = array_values(array_unique(array_filter($playerIds)));
+  if (!$playerIds) return;
+  foreach ($playerIds as $pid) q('INSERT INTO notifications(player_id,type,title,body,url,created) VALUES(?,?,?,?,?,?)', [$pid, $type, mb_substr($title, 0, 120), mb_substr($body, 0, 240), $url, now()]);
+  if (random_int(1, 30) === 1) q('DELETE FROM notifications WHERE created < ?', [now() - 30 * 86400]);
+  $in = implode(',', array_fill(0, count($playerIds), '?'));
+  pushTo(array_column(all("SELECT endpoint FROM push_subs WHERE player_id IN ($in)", $playerIds), 'endpoint'));
+}
+function runReminders(): void {
+  // pseudo-cron: przy zwykłym ruchu wysyłamy przypomnienia 15 min przed startem
+  $due = all('SELECT * FROM jobs WHERE reminded=0 AND status NOT IN ("closed","hidden") AND start_at BETWEEN ? AND ? AND created < start_at - 1200 LIMIT 10', [now(), now() + 900]);
+  foreach ($due as $j) {
+    if (!q('UPDATE jobs SET reminded=1 WHERE id=? AND reminded=0', [$j['id']])->rowCount()) continue;
+    $ids = array_merge([$j['owner_id']], array_column(all('SELECT player_id FROM requests WHERE job_id=? AND status="accepted"', [$j['id']]), 'player_id'));
+    notify($ids, 'reminder', 'Start za ' . max(1, (int)ceil(((int)$j['start_at'] - now()) / 60)) . ' min: ' . $j['title'], 'Wejdź do gry i sprawdź skład. Discordy składu masz w szczegółach zlecenia.', '#/z/' . $j['id']);
+  }
 }
 
 /* ---------- auth ---------- */
@@ -215,6 +304,7 @@ if ($method === 'POST') {
 }
 
 try {
+  if (in_array($a, ['stats', 'jobs', 'me', 'notifs'], true) && random_int(1, 3) === 1) { try { runReminders(); } catch (Throwable $e) { error_log('[ekipaz] reminders ' . $e->getMessage()); } }
   switch ($a) {
 
   case 'stats': {
@@ -415,6 +505,7 @@ try {
     if (hasLink($msgTxt)) fail('Bez linków w wiadomości.');
     if ($ex) q('UPDATE requests SET status="pending", msg=?, created=?, decided=0 WHERE id=?', [$msgTxt, now(), $ex['id']]);
     else q('INSERT INTO requests(id,job_id,player_id,msg,status,created) VALUES(?,?,?,?,?,?)', [uid(10), $j['id'], $m['id'], $msgTxt, 'pending', now()]);
+    notify([$j['owner_id']], 'request', $m['nick'] . ' chce dołączyć', '„' . $j['title'] . '” – sprawdź profil i oceny, zanim przyjmiesz.', '#/z/' . $j['id']);
     out(['ok' => true, 'job' => jobRow($j, $m)]);
   }
 
@@ -444,6 +535,9 @@ try {
     if ($accept) {
       $p = one('SELECT nick FROM players WHERE id=?', [$r['player_id']]);
       event('accept', ['nick' => $p['nick'] ?? '', 'title' => $r['title'], 'jobId' => $r['job_id']]);
+      notify([$r['player_id']], 'accepted', 'Jesteś w składzie', '„' . $r['title'] . '” startuje o ' . date('H:i', (int)$r['start_at']) . '. Discord gospodarza znajdziesz w zleceniu.', '#/z/' . $r['job_id']);
+    } else {
+      notify([$r['player_id']], 'declined', 'Gospodarz wybrał inny skład', '„' . $r['title'] . '” – na tablicy czekają inne zlecenia.', '#/');
     }
     out(['ok' => true]);
   }
@@ -468,6 +562,7 @@ try {
       q('UPDATE players SET rep=rep+1 WHERE id=?', [$to]);
       $tp = one('SELECT nick FROM players WHERE id=?', [$to]);
       event('vouch', ['nick' => $tp['nick'] ?? '', 'from' => $m['nick']]);
+      notify([$to], 'vouch', 'Masz nowe +1', $m['nick'] . ' ocenił Twoją grę w „' . $j['title'] . '”.', '#/ja');
     }
     out(['ok' => true]);
   }
@@ -535,6 +630,7 @@ try {
     if ((int)one('SELECT COUNT(*) c FROM crew_members WHERE crew_id=?', [$c['id']])['c'] >= 50) fail('Ekipa ma komplet – 50 osób.', 409, 'full');
     q('INSERT INTO crew_members(crew_id,player_id,role,created) VALUES(?,?,?,?)', [$c['id'], $m['id'], 'member', now()]);
     event('crewjoin', ['nick' => $m['nick'], 'crew' => $c['name'], 'crewId' => $c['id']]);
+    notify([$c['owner_id']], 'crewjoin', 'Nowy członek ekipy', $m['nick'] . ' dołącza do [' . $c['tag'] . '] ' . $c['name'] . '.', '#/e/' . $c['id']);
     out(['ok' => true, 'crew' => crewRow($c, $m)]);
   }
 
@@ -611,6 +707,93 @@ try {
     q('UPDATE jobs SET status="closed" WHERE owner_id=?', [clean($b['id'] ?? '', 16)]);
     q('UPDATE reports SET resolved=1 WHERE target_type="player" AND target_id=?', [clean($b['id'] ?? '', 16)]);
     q('DELETE FROM crew_members WHERE player_id=?', [clean($b['id'] ?? '', 16)]);
+    out(['ok' => true]);
+  }
+
+  /* --- powiadomienia --- */
+  case 'notifs': {
+    $m = me();
+    $list = all('SELECT id,type,title,body,url,created,read FROM notifications WHERE player_id=? ORDER BY id DESC LIMIT 40', [$m['id']]);
+    out(['ok' => true, 'unread' => (int)one('SELECT COUNT(*) c FROM notifications WHERE player_id=? AND read=0', [$m['id']])['c'],
+      'items' => array_map(fn($n) => ['id' => (int)$n['id'], 'type' => $n['type'], 'title' => $n['title'], 'body' => $n['body'], 'url' => $n['url'], 'created' => (int)$n['created'], 'read' => (bool)$n['read']], $list),
+      'push' => (int)one('SELECT COUNT(*) c FROM push_subs WHERE player_id=?', [$m['id']])['c']]);
+  }
+  case 'notifs.latest': {
+    $m = me();
+    $n = one('SELECT title,body,url FROM notifications WHERE player_id=? AND read=0 ORDER BY id DESC LIMIT 1', [$m['id']]);
+    $c = (int)one('SELECT COUNT(*) c FROM notifications WHERE player_id=? AND read=0', [$m['id']])['c'];
+    out(['ok' => true, 'unread' => $c, 'item' => $n]);
+  }
+  case 'notifs.read': {
+    if ($method !== 'POST') fail('Metoda niedozwolona', 405);
+    $m = me();
+    q('UPDATE notifications SET read=1 WHERE player_id=? AND read=0', [$m['id']]);
+    out(['ok' => true]);
+  }
+  case 'push.key': {
+    $v = vapid();
+    out(['ok' => true, 'key' => $v['public'] ?? null]);
+  }
+  case 'push.subscribe': {
+    if ($method !== 'POST') fail('Metoda niedozwolona', 405);
+    $m = me(); $b = body();
+    limit('push', 20, 3600);
+    $ep = (string)($b['endpoint'] ?? '');
+    if (strlen($ep) > 600 || !preg_match('~^https://[a-z0-9.-]+(:\d+)?/~i', $ep)) fail('Nieprawidłowa subskrypcja.');
+    q('INSERT INTO push_subs(endpoint,player_id,weekly,created) VALUES(?,?,?,?) ON CONFLICT(endpoint) DO UPDATE SET player_id=excluded.player_id, weekly=excluded.weekly, fails=0', [$ep, $m['id'], array_key_exists('weekly', $b) ? (!empty($b['weekly']) ? 1 : 0) : 1, now()]);
+    out(['ok' => true]);
+  }
+  case 'push.unsubscribe': {
+    if ($method !== 'POST') fail('Metoda niedozwolona', 405);
+    $m = me(); $b = body();
+    if (!empty($b['endpoint'])) q('DELETE FROM push_subs WHERE endpoint=? AND player_id=?', [(string)$b['endpoint'], $m['id']]);
+    else q('DELETE FROM push_subs WHERE player_id=?', [$m['id']]);
+    out(['ok' => true]);
+  }
+
+  /* --- Tygodniówka --- */
+  case 'weekly': {
+    $cur = one('SELECT * FROM weekly WHERE starts<=? AND ends>? ORDER BY starts DESC LIMIT 1', [now(), now()]);
+    $prev = all('SELECT id,title,starts,ends FROM weekly WHERE starts<=? ORDER BY starts DESC LIMIT 6', [now()]);
+    $fmt = fn($w) => $w ? ['id' => (int)$w['id'], 'title' => $w['title'], 'intro' => $w['intro'], 'starts' => (int)$w['starts'], 'ends' => (int)$w['ends'], 'items' => json_decode($w['items'], true) ?: []] : null;
+    out(['ok' => true, 'current' => $fmt($cur), 'archive' => array_map(fn($w) => ['id' => (int)$w['id'], 'title' => $w['title'], 'starts' => (int)$w['starts'], 'ends' => (int)$w['ends']], $prev)]);
+  }
+  case 'admin.weekly': {
+    if (!isAdmin()) fail('Brak dostępu.', 403, 'forbidden');
+    out(['ok' => true, 'items' => array_map(fn($w) => ['id' => (int)$w['id'], 'title' => $w['title'], 'intro' => $w['intro'], 'starts' => (int)$w['starts'], 'ends' => (int)$w['ends'], 'items' => json_decode($w['items'], true) ?: [], 'pushed' => (bool)$w['pushed']], all('SELECT * FROM weekly ORDER BY starts DESC LIMIT 20'))]);
+  }
+  case 'admin.weekly.save': {
+    if (!isAdmin()) fail('Brak dostępu.', 403, 'forbidden');
+    $b = body();
+    $title = clean($b['title'] ?? '', 80);
+    if (mb_strlen($title) < 4) fail('Tytuł Tygodniówki: co najmniej 4 znaki.');
+    $starts = (int)($b['starts'] ?? 0); $ends = (int)($b['ends'] ?? 0);
+    if ($starts <= 0 || $ends <= $starts) fail('Ustaw poprawny okres obowiązywania.');
+    $items = [];
+    foreach (array_slice(is_array($b['items'] ?? null) ? $b['items'] : [], 0, 20) as $it) {
+      if (!is_array($it)) continue;
+      $txt = clean($it['text'] ?? '', 140); if (mb_strlen($txt) < 3) continue;
+      $items[] = ['kind' => pick($it['kind'] ?? '', ['2x', '3x', '4x', 'bonus', 'discount', 'reward', 'podium'], 'bonus'), 'text' => $txt, 'activity' => pick($it['activity'] ?? '', ACTIVITIES, '')];
+    }
+    if (!$items) fail('Dodaj co najmniej jedną pozycję.');
+    $id = (int)($b['id'] ?? 0);
+    if ($id) q('UPDATE weekly SET title=?, intro=?, starts=?, ends=?, items=? WHERE id=?', [$title, cleanMulti($b['intro'] ?? '', 400), $starts, $ends, json_encode($items, JSON_UNESCAPED_UNICODE), $id]);
+    else { q('INSERT INTO weekly(title,intro,starts,ends,items,created) VALUES(?,?,?,?,?,?)', [$title, cleanMulti($b['intro'] ?? '', 400), $starts, $ends, json_encode($items, JSON_UNESCAPED_UNICODE), now()]); $id = (int)db()->lastInsertId(); }
+    $sent = 0;
+    if (!empty($b['push'])) {
+      $w = one('SELECT * FROM weekly WHERE id=?', [$id]);
+      if ($w && !(int)$w['pushed'] && (int)$w['starts'] <= now() + 3600) {
+        q('UPDATE weekly SET pushed=1 WHERE id=?', [$id]);
+        $pids = array_column(all('SELECT DISTINCT player_id FROM push_subs WHERE weekly=1 LIMIT 2000'), 'player_id');
+        foreach (array_chunk($pids, 150) as $chunk) notify($chunk, 'weekly', 'Nowa Tygodniówka: ' . $title, count($items) . ' ' . plPlural(count($items), 'bonus', 'bonusy', 'bonusów') . ' do ' . date('d.m', $ends) . '. Sprawdź, gdzie dziś płacą najwięcej.', '#/tydzien');
+        $sent = count($pids);
+      }
+    }
+    out(['ok' => true, 'id' => $id, 'sent' => $sent]);
+  }
+  case 'admin.weekly.delete': {
+    if (!isAdmin()) fail('Brak dostępu.', 403, 'forbidden');
+    q('DELETE FROM weekly WHERE id=?', [(int)(body()['id'] ?? 0)]);
     out(['ok' => true]);
   }
 

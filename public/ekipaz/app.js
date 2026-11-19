@@ -82,7 +82,7 @@ const S = {
   stats: null, jobs: [], jobsLoaded: false, offline: false,
   filters: { platform: store.get('ek_f_platform') || '', activity: '', when: '', style: '', open: false },
   lbPeriod: 'week', lbPlatform: '', lbTab: 'players',
-  meTab: 'inbox', draft: null,
+  meTab: 'inbox', draft: null, notif: { unread: 0, items: [], push: 0 }, weekly: null,
 };
 
 /* ------------------------------------------------------------ narzędzia */
@@ -195,7 +195,14 @@ async function api(action, { method = 'GET', body, params } = {}) {
   }
   return data;
 }
-function setToken(t) { S.token = t; store.set('ek_token', t); if (!t) { S.me = null; S.meData = null; } }
+function idbSet(key, val) {
+  try {
+    const r = indexedDB.open('ekipaz', 1);
+    r.onupgradeneeded = () => r.result.createObjectStore('kv');
+    r.onsuccess = () => { try { const st = r.result.transaction('kv', 'readwrite').objectStore('kv'); val == null ? st.delete(key) : st.put(val, key); } catch (e) {} };
+  } catch (e) {}
+}
+function setToken(t) { S.token = t; store.set('ek_token', t); idbSet('token', t); if (!t) { S.me = null; S.meData = null; S.notif = { unread: 0, items: [], push: 0 }; } }
 
 /* ------------------------------------------------------------ toast / sheet */
 function toast(title, body = '', kind = 'success') {
@@ -551,7 +558,7 @@ function viewBoard() {
   const firstVisit = !S.token;
   const liveJobs = S.jobs.filter(j => j.status === 'open' && j.startAt - now() < 1800).slice(0, 8);
   return [
-    h('div', { class: 'ek-container ek-board-top' }, welcomeCard(), bigCards(), promoBanners(), liveStrip(), catTiles()),
+    h('div', { class: 'ek-container ek-board-top' }, welcomeCard(), weeklyBanner(), bigCards(), promoBanners(), liveStrip(), catTiles()),
     quickMatch(),
     liveJobs.length ? h('section', { class: 'ek-container ek-section', style: { paddingBottom: 0 } },
       sectionHead('Start w ciągu 30 minut', h('span', { class: 'ek-live' }, 'Na żywo')),
@@ -580,7 +587,7 @@ function renderSide() {
     h('div', { class: 'ek-side__switch' }, h('a', { href: '#/', 'aria-current': ['board', 'job', 'add'].includes(r.name) ? 'page' : null }, 'Zlecenia'), h('a', { href: '#/ekipy', 'aria-current': ['crews', 'crew'].includes(r.name) ? 'page' : null }, 'Ekipy')),
     h('a', { class: 'ek-btn ek-btn--grad ek-btn--block', href: S.token ? '#/dodaj' : '#/start' }, icon('plus', 16), S.token ? 'Wystaw zlecenie' : 'Załóż profil'),
     h('nav', { class: 'ek-side__group', 'aria-label': 'Menu' },
-      link('#/', '🗂️', 'Tablica', 'board'), link('#/ranking', '🏆', 'Ranking', 'ranking'), link('#/ja', '🪪', 'Moja kartoteka', 'me', n ? h('span', { class: 'ek-dot-inline' }, n) : null), link('#/plan', '🧭', 'Co budujemy', 'plan')),
+      link('#/', '🗂️', 'Tablica', 'board'), link('#/tydzien', '📰', 'Tygodniówka', 'weekly', S.weekly && S.weekly.current && store.get('ek_weekly_seen') !== String(S.weekly.current.id) ? h('span', { class: 'ek-weekly__new' }, 'Nowa') : null), link('#/ranking', '🏆', 'Ranking', 'ranking'), link('#/ja', '🪪', 'Moja kartoteka', 'me', n ? h('span', { class: 'ek-dot-inline' }, n) : null), link('#/plan', '🧭', 'Co budujemy', 'plan')),
     h('div', { class: 'ek-side__label' }, 'Kategorie'),
     h('div', { class: 'ek-side__group' }, Object.entries(ACT).map(([k, v]) => {
       const c = S.jobs.filter(j => j.activity === k && j.status !== 'closed').length;
@@ -674,6 +681,8 @@ async function viewJob(id) {
         h('div', { class: 'ek-detail__cta' }, cta)),
       h('div', { class: 'ek-stack' },
         h('section', { class: 'ek-card ek-stack' }, h('h2', { class: 'ek-h3' }, 'Skład'), slots(job), members, contactBox),
+        isOwner && S.justPosted ? pushPrompt('job') : null,
+        job.myStatus === 'pending' ? pushPrompt('join') : null,
         requestsBox,
         !isOwner ? h('button', { class: 'ek-btn ek-btn--ghost ek-btn--sm', onclick: () => reportSheet('job', job.id) }, icon('flag', 16), 'Zgłoś zlecenie') : null)))];
 }
@@ -747,6 +756,7 @@ function viewAdd() {
     try {
       const r = await api('job.create', { body: { title: d.title.trim(), activity: d.activity, platform: d.platform, slots: d.slots, startAt, style: d.style, micRequired: d.mic, details: d.details } });
       toast('Zlecenie opublikowane', 'Udostępnij link na Discordzie – tak najszybciej zbierzesz skład.', 'cash');
+      S.justPosted = true;
       refreshJobs(); location.hash = '#/z/' + r.job.id;
     } catch (err) { btn.disabled = false; msg.textContent = errMsg(err); }
   };
@@ -969,7 +979,7 @@ async function viewMe() {
       rapSheet(me, { crew: M.crew, hosted: M.hosted, cta: [
         h('button', { class: 'ek-btn ek-btn--primary', onclick: () => share('Moja kartoteka na Ekipażu', '#/g/' + me.id) }, icon('share'), 'Udostępnij profil'),
         h('button', { class: 'ek-btn ek-btn--ghost ek-btn--icon', 'aria-label': 'Wyloguj', onclick: logout }, icon('logout'))] }),
-      h('div', null, tabBar, panel)))];
+      h('div', null, pushPrompt('me'), tabBar, panel)))];
 }
 function editProfile(me) {
   const d = { platform: me.platform, activities: [...me.activities], times: [...me.times], style: me.style, mic: me.mic, contact: me.contact || '', bio: me.bio || '', avatar: me.avatar };
@@ -1172,11 +1182,176 @@ async function viewAdmin() {
         h('div', { class: 'ek-person__actions' },
           rep.target_type === 'job' ? h('button', { class: 'ek-btn ek-btn--secondary ek-btn--sm', onclick: () => act('admin.unhide', { id: rep.target_id }, 'Zlecenie przywrócone') }, 'Przywróć zlecenie') : null,
           rep.target_type === 'player' ? h('button', { class: 'ek-btn ek-btn--danger ek-btn--sm', onclick: () => act('admin.ban', { id: rep.target_id }, 'Gracz zablokowany') }, 'Zablokuj gracza') : null,
-          h('button', { class: 'ek-btn ek-btn--ghost ek-btn--sm', onclick: () => act('admin.resolve', { rid: rep.id }, 'Zgłoszenie zamknięte') }, 'Bez akcji'))))) : h('p', { class: 'ek-meta' }, 'Brak otwartych zgłoszeń. Spokojna noc na mieście.'));
+          h('button', { class: 'ek-btn ek-btn--ghost ek-btn--sm', onclick: () => act('admin.resolve', { rid: rep.id }, 'Zgłoszenie zamknięte') }, 'Bez akcji'))))) : h('p', { class: 'ek-meta' }, 'Brak otwartych zgłoszeń.'));
     } catch (e) { out.replaceChildren(h('p', { class: 'ek-formmsg' }, errMsg(e))); }
   };
-  if (key) setTimeout(load, 0);
-  return [h('div', { class: 'ek-container', style: { maxWidth: '760px' } }, pageHead('Moderacja', 'Panel moderatora', 'Klucz trzymamy tylko do zamknięcia karty.'), h('div', { class: 'ek-panel ek-stack' }, field('Klucz', keyIn), h('button', { class: 'ek-btn ek-btn--primary', onclick: load }, 'Pokaż zgłoszenia'), out))];
+  /* edytor Tygodniówki */
+  const wk = h('div', { class: 'ek-stack' });
+  const toLocal = ts => { const d = new Date(ts * 1000); return d.getFullYear() + '-' + pad(d.getMonth() + 1) + '-' + pad(d.getDate()) + 'T' + pad(d.getHours()) + ':' + pad(d.getMinutes()); };
+  const nextThu = from => { const d = new Date(from); d.setHours(11, 0, 0, 0); const add = (4 - d.getDay() + 7) % 7 || 7; d.setDate(d.getDate() + add); return Math.floor(d / 1000); };
+  const editor = (w) => {
+    const st = w || { title: '', intro: '', starts: Math.floor(Date.now() / 1000), ends: nextThu(Date.now()), items: [{ kind: '2x', text: '', activity: '' }] };
+    const d = { id: st.id || 0, title: st.title, intro: st.intro, starts: st.starts, ends: st.ends, items: st.items.map(x => ({ ...x })), push: !st.pushed };
+    const rows = h('div', { class: 'ek-stack' });
+    const drawRows = () => rows.replaceChildren(...d.items.map((it, i) => h('div', { class: 'ek-wkrow' },
+      h('select', { class: 'ek-select', 'aria-label': 'Rodzaj', onchange: e => { it.kind = e.target.value; } }, Object.entries(WK_KIND).map(([k, l]) => h('option', { value: k, selected: it.kind === k ? true : null }, l))),
+      h('input', { class: 'ek-input', value: it.text, maxlength: 140, placeholder: 'np. Wyzwania w trybie swobodnym – 4× GTA$ i RP', 'aria-label': 'Opis bonusu', oninput: e => { it.text = e.target.value; } }),
+      h('select', { class: 'ek-select', 'aria-label': 'Podepnij zlecenia', onchange: e => { it.activity = e.target.value; } }, [['', 'Bez zleceń'], ...Object.entries(ACT).map(([k, v]) => [k, v.l])].map(([k, l]) => h('option', { value: k, selected: it.activity === k ? true : null }, l))),
+      h('button', { class: 'ek-btn ek-btn--ghost ek-btn--icon', type: 'button', 'aria-label': 'Usuń pozycję', onclick: () => { d.items.splice(i, 1); drawRows(); } }, icon('x', 16)))));
+    drawRows();
+    const msg = h('p', { class: 'ek-formmsg', 'aria-live': 'polite' });
+    const startIn = h('input', { class: 'ek-input', type: 'datetime-local', value: toLocal(d.starts), onchange: e => { d.starts = Math.floor(Date.parse(e.target.value) / 1000); } });
+    const endIn = h('input', { class: 'ek-input', type: 'datetime-local', value: toLocal(d.ends), onchange: e => { d.ends = Math.floor(Date.parse(e.target.value) / 1000); } });
+    wk.replaceChildren(h('div', { class: 'ek-panel ek-stack' },
+      h('h2', { class: 'ek-h3' }, d.id ? 'Edytuj Tygodniówkę' : 'Nowa Tygodniówka'),
+      field('Tytuł', h('input', { class: 'ek-input', value: d.title, maxlength: 80, placeholder: 'np. Podwójna kasa za napady', oninput: e => { d.title = e.target.value; } })),
+      field('Wstęp (opcjonalnie)', h('textarea', { class: 'ek-textarea', maxlength: 400, placeholder: 'Jedno, dwa zdania: na co warto postawić w tym tygodniu.', oninput: e => { d.intro = e.target.value; } }, d.intro)),
+      h('div', { class: 'ek-form__row' }, field('Od', startIn), field('Do', endIn, 'Bonusy w GTA Online zmieniają się zwykle w czwartek.')),
+      h('div', { class: 'ek-label' }, 'Bonusy'), rows,
+      h('button', { class: 'ek-btn ek-btn--secondary ek-btn--sm', type: 'button', onclick: () => { d.items.push({ kind: 'bonus', text: '', activity: '' }); drawRows(); } }, icon('plus', 16), 'Dodaj pozycję'),
+      h('div', null, st.pushed ? h('p', { class: 'ek-meta' }, 'Powiadomienie o tym wydaniu zostało już wysłane.') : toggle('Wyślij powiadomienie do subskrybentów po zapisaniu', d.push, v => { d.push = v; })),
+      msg,
+      h('div', { class: 'ek-row' }, h('button', { class: 'ek-btn ek-btn--primary', type: 'button', onclick: async () => {
+        msg.className = 'ek-formmsg'; msg.textContent = '';
+        try { const r = await call('admin.weekly.save', d); msg.className = 'ek-formmsg is-ok'; msg.textContent = 'Zapisano.' + (r.sent ? ' Powiadomienie poszło do ' + r.sent + ' ' + plural(r.sent, 'gracza', 'graczy', 'graczy') + '.' : ''); refreshWeekly(); loadWk(); }
+        catch (e) { msg.textContent = errMsg(e); }
+      } }, 'Zapisz i opublikuj'), d.id ? h('button', { class: 'ek-btn ek-btn--ghost', type: 'button', onclick: () => editor(null) }, 'Nowa') : null)));
+  };
+  const wkList = h('div', { class: 'ek-stack' });
+  const loadWk = async () => {
+    try {
+      const r = await call('admin.weekly');
+      wkList.replaceChildren(...(r.items.length ? r.items.map(w => h('div', { class: 'ek-mini__item' },
+        h('div', null, h('div', { class: 'ek-mini__title' }, w.title), h('span', { class: 'ek-meta' }, new Date(w.starts * 1000).toLocaleDateString('pl-PL') + ' – ' + new Date(w.ends * 1000).toLocaleDateString('pl-PL') + ' · ' + w.items.length + ' poz.')),
+        h('div', { class: 'ek-row' }, h('button', { class: 'ek-btn ek-btn--secondary ek-btn--sm', onclick: () => editor(w) }, 'Edytuj'),
+          h('button', { class: 'ek-btn ek-btn--ghost ek-btn--sm', onclick: async () => { try { await call('admin.weekly.delete', { id: w.id }); loadWk(); refreshWeekly(); } catch (e) { toast('Nie udało się', errMsg(e), 'danger'); } } }, 'Usuń')))) : [h('p', { class: 'ek-meta' }, 'Brak wydań.')]));
+    } catch (e) { wkList.replaceChildren(); }
+  };
+  const loadAll = async () => { await load(); editor(null); loadWk(); };
+  if (key) setTimeout(loadAll, 0);
+  return [h('div', { class: 'ek-container', style: { maxWidth: '860px' } }, pageHead('Moderacja', 'Panel moderatora', 'Klucz trzymamy tylko do zamknięcia karty.'),
+    h('div', { class: 'ek-panel ek-stack' }, field('Klucz', keyIn), h('button', { class: 'ek-btn ek-btn--primary', onclick: loadAll }, 'Otwórz panel'), out),
+    h('h2', { class: 'ek-h2', style: { margin: '32px 0 12px' } }, 'Tygodniówka'), wk, h('div', { style: { height: '12px' } }), wkList)];
+}
+
+
+/* ------------------------------------------------------------ POWIADOMIENIA */
+const NOTIF_IC = { request: '🙋', accepted: '✅', declined: '↩️', vouch: '⭐', crewjoin: '🕶️', reminder: '⏰', weekly: '📰' };
+let swReg = null;
+if ('serviceWorker' in navigator) {
+  navigator.serviceWorker.register('sw.js', { scope: './' }).then(r => { swReg = r; }).catch(() => {});
+  navigator.serviceWorker.addEventListener('message', e => { if (e.data && e.data.go) { try { location.hash = new URL(e.data.go).hash || '#/'; } catch (x) {} } });
+}
+const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent) || (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
+const isStandalone = () => matchMedia('(display-mode: standalone)').matches || navigator.standalone === true;
+const pushSupported = () => 'serviceWorker' in navigator && 'PushManager' in window && 'Notification' in window;
+function b64uToBytes(b) { const p = '='.repeat((4 - b.length % 4) % 4); const raw = atob((b + p).replace(/-/g, '+').replace(/_/g, '/')); return Uint8Array.from([...raw].map(c => c.charCodeAt(0))); }
+async function enablePush(opts = {}) {
+  if (!S.token) { needProfile(location.hash); return false; }
+  if (isIOS && !isStandalone()) { iosInstallSheet(); return false; }
+  if (!pushSupported()) { toast('Ta przeglądarka nie obsługuje powiadomień', 'Spróbuj w Chrome, Edge, Firefoksie albo Safari 16.4+.', 'danger'); return false; }
+  try {
+    const perm = await Notification.requestPermission();
+    if (perm !== 'granted') { toast('Powiadomienia wyłączone', 'Możesz je włączyć w ustawieniach przeglądarki dla tej strony.', 'info'); return false; }
+    const reg = swReg || await navigator.serviceWorker.ready;
+    const { key } = await api('push.key');
+    if (!key) throw { message: 'Serwer nie obsługuje jeszcze powiadomień push.' };
+    let sub = await reg.pushManager.getSubscription();
+    if (!sub) sub = await reg.pushManager.subscribe({ userVisibleOnly: true, applicationServerKey: b64uToBytes(key) });
+    await api('push.subscribe', { body: { endpoint: sub.endpoint, weekly: opts.weekly !== false } });
+    S.notif.push = 1; store.set('ek_push_asked', '1');
+    toast('Powiadomienia włączone', 'Damy znać o zgłoszeniach, przyjęciach i starcie Twoich zleceń.');
+    renderChrome();
+    return true;
+  } catch (e) {
+    const m = e && e.name === 'NotAllowedError' ? 'Przeglądarka zablokowała powiadomienia dla tej strony. Zmienisz to w ustawieniach witryny.' : e && e.name === 'AbortError' ? 'Przeglądarka nie połączyła się z usługą powiadomień. Spróbuj ponownie za chwilę.' : (e && e.ok === false ? errMsg(e) : 'Przeglądarka nie połączyła się z usługą powiadomień. Spróbuj ponownie za chwilę albo w innej przeglądarce.');
+    toast('Nie udało się włączyć powiadomień', m, 'danger'); return false;
+  }
+}
+async function disablePush() {
+  try { const reg = swReg || await navigator.serviceWorker.ready; const sub = await reg.pushManager.getSubscription(); if (sub) { await api('push.unsubscribe', { body: { endpoint: sub.endpoint } }); await sub.unsubscribe(); } } catch (e) {}
+  S.notif.push = 0; toast('Powiadomienia wyłączone', '', 'info'); renderChrome();
+}
+function iosInstallSheet() {
+  openSheet('Powiadomienia na iPhonie', h('div', { class: 'ek-stack' },
+    h('p', null, 'iOS wysyła powiadomienia tylko do stron dodanych do ekranu początkowego. To zajmuje 10 sekund:'),
+    h('ol', { class: 'ek-steps-list' },
+      h('li', null, 'Stuknij ', h('b', null, 'Udostępnij'), ' na dolnym pasku Safari.'),
+      h('li', null, 'Wybierz ', h('b', null, 'Do ekranu początkowego'), '.'),
+      h('li', null, 'Otwórz Ekipaż z nowej ikony i włącz powiadomienia w swoim profilu.'))),
+    [h('button', { class: 'ek-btn ek-btn--primary', onclick: closeSheet }, 'Rozumiem')]);
+}
+function pushPrompt(context) {
+  if (!S.token || S.notif.push || !pushSupported() && !isIOS) return null;
+  if (typeof Notification !== 'undefined' && Notification.permission === 'denied') return null;
+  const copy = { job: 'Damy znać, gdy ktoś zgłosi się do Twojego zlecenia – nawet gdy zamkniesz tę kartę.', join: 'Damy znać, gdy gospodarz przyjmie Cię do składu.', me: 'Zgłoszenia, przyjęcia do składu, przypomnienie 15 minut przed startem i nowa Tygodniówka w czwartek.', weekly: 'Nowa Tygodniówka co czwartek – od razu, gdy ruszą bonusy.' }[context] || '';
+  return h('div', { class: 'ek-pushcard' }, h('span', { class: 'ek-pushcard__ic', 'aria-hidden': 'true' }, '🔔'),
+    h('div', null, h('b', null, 'Włącz powiadomienia'), h('p', null, copy)),
+    h('button', { class: 'ek-btn ek-btn--primary ek-btn--sm', onclick: () => enablePush() }, 'Włącz'));
+}
+async function refreshNotifs() {
+  if (!S.token) { S.notif = { unread: 0, items: [], push: 0 }; return; }
+  try {
+    const prev = S.notif.unread;
+    const d = await api('notifs');
+    S.notif = { unread: d.unread, items: d.items, push: d.push };
+    if (d.unread > prev && prev >= 0 && S.notifLoaded) {
+      const n = d.items.find(x => !x.read);
+      if (n) {
+        if (document.visibilityState !== 'visible' && !d.push && typeof Notification !== 'undefined' && Notification.permission === 'granted' && swReg) swReg.showNotification(n.title, { body: n.body, icon: 'icon-192.png', data: { url: n.url } });
+        else toast(n.title, n.body, n.type === 'vouch' ? 'cash' : 'info');
+      }
+    }
+    S.notifLoaded = true;
+  } catch (e) {}
+  document.title = (S.notif.unread ? '(' + S.notif.unread + ') ' : '') + document.title.replace(/^\(\d+\)\s/, '');
+  if (navigator.setAppBadge) { try { S.notif.unread ? navigator.setAppBadge(S.notif.unread) : navigator.clearAppBadge(); } catch (e) {} }
+}
+function openNotifs() {
+  const list = S.notif.items;
+  const body = h('div', { class: 'ek-stack' },
+    pushPrompt('me'),
+    list.length ? h('ul', { class: 'ek-notifs' }, list.map(n => h('li', null, h('a', { class: 'ek-notif' + (n.read ? '' : ' is-unread'), href: n.url || '#/', onclick: () => closeSheet() },
+      h('span', { class: 'ek-notif__ic', 'aria-hidden': 'true' }, NOTIF_IC[n.type] || '•'),
+      h('span', { class: 'ek-notif__main' }, h('b', null, n.title), h('span', null, n.body), h('time', null, ago(n.created))))))) :
+      h('p', { class: 'ek-meta' }, 'Tu pojawią się zgłoszenia do Twoich zleceń, przyjęcia do składów, oceny i przypomnienia przed startem.'));
+  openSheet('Powiadomienia', body, S.notif.push ? [h('button', { class: 'ek-btn ek-btn--ghost', onclick: () => { closeSheet(); disablePush(); } }, 'Wyłącz powiadomienia push')] : null);
+  if (S.notif.unread) api('notifs.read', { body: {} }).then(() => { S.notif.unread = 0; S.notif.items.forEach(x => x.read = true); renderChrome(); refreshNotifs(); }).catch(() => {});
+}
+
+/* ------------------------------------------------------------ TYGODNIÓWKA */
+const WK_KIND = { '2x': '2×', '3x': '3×', '4x': '4×', bonus: 'Bonus', discount: 'Zniżka', reward: 'Nagroda', podium: 'Podium' };
+async function refreshWeekly() { try { const d = await api('weekly'); S.weekly = d; } catch (e) {} }
+function weeklyEnds(w) { return new Date(w.ends * 1000).toLocaleDateString('pl-PL', { weekday: 'short', day: 'numeric', month: 'numeric' }) + ', ' + hhmm(w.ends); }
+function weeklyBanner() {
+  const w = S.weekly && S.weekly.current; if (!w) return null;
+  const isNew = store.get('ek_weekly_seen') !== String(w.id);
+  return h('a', { class: 'ek-weekly', href: '#/tydzien' },
+    h('div', { class: 'ek-weekly__head' }, h('span', { class: 'ek-weekly__k' }, '📰 Tygodniówka', isNew ? h('span', { class: 'ek-weekly__new' }, 'Nowa') : null), h('span', { class: 'ek-meta' }, 'do ' + weeklyEnds(w))),
+    h('div', { class: 'ek-weekly__title' }, w.title),
+    h('div', { class: 'ek-weekly__items' }, w.items.slice(0, 3).map(it => h('span', { class: 'ek-weekly__item' }, h('b', null, WK_KIND[it.kind] || ''), ' ' + it.text))),
+    h('span', { class: 'ek-weekly__cta' }, 'Zobacz bonusy i zlecenia ›'));
+}
+async function viewWeekly() {
+  await refreshWeekly();
+  const w = S.weekly && S.weekly.current;
+  if (w) store.set('ek_weekly_seen', String(w.id));
+  if (!w) return [h('div', { class: 'ek-container', style: { maxWidth: '820px' } }, pageHead('Tygodniówka', 'Bonusy tygodnia', 'Co czwartek zbieramy w jednym miejscu, gdzie w GTA Online płacą najwięcej, i podpinamy pod to zlecenia.'),
+    empty('Nowa Tygodniówka już w czwartek', 'Bonusy w GTA Online zmieniają się co tydzień. Włącz powiadomienia, a damy znać, gdy tylko pojawi się nowe wydanie.', pushPrompt('weekly') || h('a', { class: 'ek-btn ek-btn--primary', href: '#/' }, 'Wróć na tablicę'), 'radio'))];
+  const openJobs = a => S.jobs.filter(j => j.activity === a && j.status === 'open').length;
+  return [h('div', { class: 'ek-container', style: { maxWidth: '860px' } },
+    pageHead('Tygodniówka · do ' + weeklyEnds(w), w.title, w.intro || null),
+    pushPrompt('weekly'),
+    h('ul', { class: 'ek-wklist' }, w.items.map(it => {
+      const n = it.activity ? openJobs(it.activity) : 0;
+      return h('li', { class: 'ek-wkitem' },
+        h('span', { class: 'ek-wkitem__kind ek-wkitem__kind--' + it.kind }, WK_KIND[it.kind] || ''),
+        h('div', { class: 'ek-wkitem__main' }, h('b', null, it.text), it.activity ? h('span', { class: 'ek-meta' }, ACT[it.activity].i + ' ' + ACT[it.activity].l + ' · ' + (n ? n + ' ' + plural(n, 'otwarte zlecenie', 'otwarte zlecenia', 'otwartych zleceń') : 'brak otwartych zleceń')) : null),
+        it.activity ? h('div', { class: 'ek-wkitem__actions' },
+          n ? h('button', { class: 'ek-btn ek-btn--secondary ek-btn--sm', onclick: () => goFilter({ activity: it.activity }) }, 'Pokaż zlecenia') : null,
+          h('button', { class: 'ek-btn ek-btn--primary ek-btn--sm', onclick: () => { S.draft = { activity: it.activity, title: it.text.slice(0, 60) }; location.hash = '#/dodaj'; } }, 'Wystaw zlecenie')) : null);
+    })),
+    h('p', { class: 'ek-meta', style: { marginTop: '24px' } }, 'Tygodniówkę przygotowuje redakcja Ekipaża na podstawie ogłoszeń Rockstar Games. Szczegóły i warunki bonusów sprawdzisz w grze.'))];
 }
 
 /* ------------------------------------------------------------ INTRO (slider wartości) */
@@ -1289,10 +1464,13 @@ async function refreshJobs() {
   renderSide(); renderRail();
 }
 async function refreshMe() {
+  refreshNotifs().then(renderChrome);
   if (!S.token) { S.meData = null; renderChrome(); return; }
   try {
     const prev = S.meData ? S.meData.inbox.length : null;
+    const hadMe = !!S.me;
     S.meData = await api('me'); S.me = S.meData.me;
+    if (!hadMe && ['board', 'weekly'].includes(route().name)) { quietRender = true; await render(); quietRender = false; }
     if (prev !== null && S.meData.inbox.length > prev) toast('Ktoś puka do składu', S.meData.inbox[0].player.nick + ' chce wejść w: ' + S.meData.inbox[0].jobTitle, 'info');
   } catch (e) {}
   renderChrome();
@@ -1309,13 +1487,14 @@ function renderChrome() {
   const act = $('#topActions');
   act.replaceChildren(
     h('a', { class: 'ek-btn ek-btn--primary ek-btn--sm ek-topbar__cta', href: '#/dodaj' }, icon('plus', 16), 'Wystaw zlecenie'),
+    S.me ? h('button', { class: 'ek-bell', type: 'button', 'aria-label': 'Powiadomienia' + (S.notif.unread ? ', ' + S.notif.unread + ' nowych' : ''), onclick: openNotifs }, h('span', { 'aria-hidden': 'true' }, '🔔'), S.notif.unread ? h('span', { class: 'ek-bell__dot' }, S.notif.unread > 9 ? '9+' : S.notif.unread) : null) : null,
     S.me ? h('a', { class: 'ek-topbar__me', href: '#/ja', 'aria-label': 'Mój profil' + (n ? ', ' + n + ' powiadomień' : '') }, avatar(S.me, 'sm'), h('span', null, S.me.nick), n ? h('span', { class: 'ek-dot-inline' }, n) : null)
       : h('a', { class: 'ek-btn ek-btn--secondary ek-btn--sm', href: '#/start' }, 'Załóż profil'));
 }
 function route() {
   const hsh = location.hash.replace(/^#\/?/, '');
   const [a, b] = hsh.split('/');
-  const map = { '': 'board', z: 'job', dodaj: 'add', start: 'start', odzyskaj: 'recover', ja: 'me', g: 'player', ekipy: 'crews', e: 'crew', ranking: 'ranking', plan: 'plan', zasady: 'rules', admin: 'admin' };
+  const map = { '': 'board', z: 'job', dodaj: 'add', start: 'start', odzyskaj: 'recover', ja: 'me', g: 'player', ekipy: 'crews', e: 'crew', ranking: 'ranking', plan: 'plan', zasady: 'rules', admin: 'admin', tydzien: 'weekly' };
   return { name: map[a] || 'board', id: b ? decodeURIComponent(b).replace(/[^A-Za-z0-9]/g, '') : '' };
 }
 let renderSeq = 0, quietRender = false;
@@ -1325,7 +1504,7 @@ async function render() {
   document.title = 'Ekipaż – znajdź ekipę do GTA Online';
   renderChrome();
   const view = $('#view');
-  const views = { board: () => viewBoard(), job: () => viewJob(r.id), add: viewAdd, start: viewStart, recover: viewRecover, me: viewMe, player: () => viewPlayer(r.id), crews: viewCrews, crew: () => viewCrew(r.id), ranking: viewRanking, plan: viewPlan, rules: viewRules, admin: viewAdmin };
+  const views = { board: () => viewBoard(), job: () => viewJob(r.id), add: viewAdd, start: viewStart, recover: viewRecover, me: viewMe, player: () => viewPlayer(r.id), crews: viewCrews, crew: () => viewCrew(r.id), ranking: viewRanking, plan: viewPlan, rules: viewRules, admin: viewAdmin, weekly: viewWeekly };
   let nodes;
   const slow = setTimeout(() => { if (seq === renderSeq && !quietRender) view.replaceChildren(h('div', { class: 'ek-container ek-section' }, h('div', { class: 'ek-grid' }, skeletonCards(3)))); }, 250);
   try { nodes = await (views[r.name] || viewBoard)(); } catch (e) { console.error(e); nodes = [h('div', { class: 'ek-container' }, empty('Coś się wysypało', 'Odśwież stronę. Jeśli problem wraca – daj znać moderacji.'))]; }
@@ -1374,5 +1553,7 @@ render();
 if (!S.token && !store.get('ek_intro_seen') && ['board', 'start'].includes(route().name)) setTimeout(openIntro, 600);
 refreshJobs().then(() => { if (route().name === 'board') render(); });
 refreshRailTop(); setInterval(() => { if (document.visibilityState === 'visible') refreshRailTop(); }, 60000);
+refreshWeekly().then(() => { if (route().name === 'board') render(); else renderSide(); }); setInterval(refreshWeekly, 300000);
+idbSet('token', S.token);
 refreshMe();
 })();
