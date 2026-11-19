@@ -562,7 +562,7 @@ function viewBoard() {
       S.offline ? h('div', { class: 'ek-banner' }, icon('radio'), S.jobs.length ? 'Brak połączenia z serwerem. Pokazujemy ostatnie znane zlecenia.' : 'Brak połączenia z serwerem. Spróbuj odświeżyć za chwilę.') : null,
       h('div', { id: 'boardList' })),
     firstVisit ? h('section', { class: 'ek-container ek-section' },
-      sectionHead('Jak to działa'),
+      sectionHead('Jak to działa', h('button', { class: 'ek-btn ek-btn--secondary ek-btn--sm', onclick: openIntro }, 'Zobacz w 4 krokach')),
       h('div', { class: 'ek-steps3' },
         h('div', { class: 'ek-step3' }, h('h3', { class: 'ek-h3' }, 'Wystaw zlecenie'), h('p', null, 'Wybierasz aktywność, platformę, godzinę startu i liczbę miejsc. Zajmuje to mniej niż minutę.')),
         h('div', { class: 'ek-step3' }, h('h3', { class: 'ek-h3' }, 'Wybierz skład'), h('p', null, 'Przy każdym zgłoszeniu widzisz oceny i liczbę rozegranych robót. Decydujesz Ty, a Twój Discord zobaczą tylko przyjęci.')),
@@ -587,7 +587,7 @@ function renderSide() {
       return h('button', { type: 'button', class: 'ek-side__link', 'aria-pressed': S.filters.activity === k && r.name === 'board' ? 'true' : 'false', onclick: () => { goFilter({ activity: S.filters.activity === k ? '' : k }); renderSide(); } },
         h('span', { class: 'ek-side__ic', 'aria-hidden': 'true' }, v.i), v.l, c ? h('span', { class: 'ek-side__count' }, c) : null);
     })),
-    h('div', { class: 'ek-side__foot' }, h('a', { href: '#/zasady' }, 'Zasady i prywatność'), h('a', { href: '#/odzyskaj' }, 'Odzyskaj profil'))));
+    h('div', { class: 'ek-side__foot' }, h('a', { href: '#/', onclick: e => { e.preventDefault(); openIntro(); } }, 'Jak to działa'), h('a', { href: '#/zasady' }, 'Zasady i prywatność'), h('a', { href: '#/odzyskaj' }, 'Odzyskaj profil'))));
 }
 async function refreshRailTop() {
   try { const d = await api('leaderboard', { params: { period: 'week' } }); S.lbTop = d.players.slice(0, 3); } catch (e) {}
@@ -1179,6 +1179,100 @@ async function viewAdmin() {
   return [h('div', { class: 'ek-container', style: { maxWidth: '760px' } }, pageHead('Moderacja', 'Panel moderatora', 'Klucz trzymamy tylko do zamknięcia karty.'), h('div', { class: 'ek-panel ek-stack' }, field('Klucz', keyIn), h('button', { class: 'ek-btn ek-btn--primary', onclick: load }, 'Pokaż zgłoszenia'), out))];
 }
 
+/* ------------------------------------------------------------ INTRO (slider wartości) */
+function introArt(kind) {
+  const ava = (n, i) => avatar({ nick: n, avatar: i }, 'sm', false);
+  const stars = n => wanted(n, 'sm');
+  if (kind === 'job') return h('div', { class: 'ek-intro__mock' },
+    h('div', { class: 'ek-mock-card' },
+      h('div', { class: 'ek-row', style: { justifyContent: 'space-between' } }, h('span', { class: 'ek-job__activity' }, '💰 Napady'), h('span', { class: 'ek-live' }, 'Na żywo')),
+      h('div', { class: 'ek-mock-card__title' }, 'Finał napadu – brakuje 2 osób'),
+      h('div', { class: 'ek-job__host' }, ava('KR', 0), h('b', null, 'KrolNapadow'), stars(3)),
+      h('div', { class: 'ek-job__foot' }, slots({ slots: 4, taken: 2 }), h('span', { class: 'ek-cd-wrap' }, h('span', { class: 'ek-countdown__label' }, 'Start za'), h('span', { class: 'ek-countdown is-urgent' }, '14:52')))));
+  if (kind === 'pick') return h('div', { class: 'ek-intro__mock' },
+    [['Zosia_Drift', 3, 4, 'Mam lvl 140, mogę od razu'], ['Nowy_Gracz', 0, 0, '']].map(([n, i, st, m]) => h('div', { class: 'ek-mock-row' }, ava(n, i),
+      h('div', { class: 'ek-mock-row__main' }, h('b', null, n), h('span', { class: 'ek-meta' }, st ? st + ' gwiazdki · 12 robót' : 'Nowy profil · 0 robót'), m ? h('span', { class: 'ek-mock-row__msg' }, '„' + m + '”') : null),
+      st ? h('span', { class: 'ek-btn ek-btn--primary ek-btn--sm' }, 'Przyjmij') : h('span', { class: 'ek-btn ek-btn--secondary ek-btn--sm' }, 'Odrzuć'))));
+  if (kind === 'rep') return h('div', { class: 'ek-intro__mock' },
+    h('div', { class: 'ek-mock-card ek-mock-card--center' },
+      avatar({ nick: 'KR', avatar: 0 }, 'lg', false),
+      h('div', { class: 'ek-mock-card__title' }, 'KrolNapadow'),
+      wanted(4, 'lg'),
+      h('div', { class: 'ek-mock-stats' }, h('span', null, h('b', null, '24'), 'oceny'), h('span', null, h('b', null, '31'), 'robót'), h('span', null, h('b', null, '12'), 'wystawionych'))),
+    h('div', { class: 'ek-mock-toast' }, h('span', { 'aria-hidden': 'true' }, '★'), h('span', null, h('b', null, 'Czysta robota +1'), h('br'), 'od Zosia_Drift')));
+  return h('div', { class: 'ek-intro__mock' },
+    h('div', { class: 'ek-mock-card' },
+      h('div', { class: 'ek-row' }, h('span', { class: 'ek-crew__emblem', style: { width: '52px', height: '52px', fontSize: '1.1rem' } }, 'NZ'),
+        h('div', null, h('div', { class: 'ek-mock-card__title', style: { margin: 0 } }, 'Nocna Zmiana'), h('span', { class: 'ek-meta' }, '[NZ] · PS5 · Napady'))),
+      h('div', { class: 'ek-crew__members' }, ['NZ', 'ZD', 'BP', 'NK', 'AS'].map((n, i) => avatar({ nick: n, avatar: i * 2 }, '', false)), h('span', { class: 'ek-crew__count' }, '12 członków · ★ 148')),
+      h('div', { class: 'ek-row', style: { justifyContent: 'space-between' } }, h('span', { class: 'ek-badge ek-badge--gold' }, '#1 w rankingu ekip'), h('span', { class: 'ek-btn ek-btn--secondary ek-btn--sm' }, 'Dołącz'))));
+}
+const INTRO = [
+  { art: 'job', k: 'Zlecenia z godziną startu', t: 'Skład w kilka minut', d: 'Wystawiasz zlecenie: co gracie, na jakiej platformie, o której i ilu ludzi potrzebujesz. Gracze, którzy szukają tego samego, zgłaszają się sami.' },
+  { art: 'pick', k: 'Pełna kontrola', t: 'Ty decydujesz, kto wchodzi', d: 'Przy każdym zgłoszeniu widzisz oceny i liczbę rozegranych robót. Twój Discord pokazujemy dopiero osobom przyjętym do składu.' },
+  { art: 'rep', k: 'Reputacja', t: 'Oceny, których nie da się podrobić', d: 'Po grze dajesz +1 tym, którzy dowieźli. Oceniać mogą tylko gracze ze wspólnego składu, więc wysoka ocena naprawdę coś znaczy.' },
+  { art: 'crew', k: 'Ekipy', t: 'Stały skład z własnym tagiem', d: 'Gracie regularnie razem? Załóżcie ekipę, budujcie wspólny ranking i rekrutujcie nowych graczy bez ogłaszania się na forach.' },
+];
+function openIntro() {
+  store.set('ek_intro_seen', '1');
+  if (document.querySelector('.ek-intro')) return;
+  let i = 0;
+  const prevFocus = document.activeElement;
+  const track = h('div', { class: 'ek-intro__track' });
+  const slides = INTRO.map((sl, n) => h('section', { class: 'ek-intro__slide', role: 'group', 'aria-roledescription': 'slajd', 'aria-label': (n + 1) + ' z ' + INTRO.length },
+    introArt(sl.art),
+    h('div', { class: 'ek-intro__text' }, h('div', { class: 'ek-kicker' }, sl.k), h('h2', { class: 'ek-intro__title' }, sl.t), h('p', { class: 'ek-intro__desc' }, sl.d))));
+  track.append(...slides);
+  const dots = h('div', { class: 'ek-intro__dots', role: 'tablist', 'aria-label': 'Wybierz slajd' });
+  const back = h('button', { class: 'ek-btn ek-btn--ghost', type: 'button', onclick: () => go(i - 1) }, 'Wstecz');
+  const next = h('button', { class: 'ek-btn ek-btn--primary ek-btn--lg', type: 'button', onclick: () => i < INTRO.length - 1 ? go(i + 1) : finish(true) });
+  const skip = h('button', { class: 'ek-btn ek-btn--ghost ek-btn--sm ek-intro__skip', type: 'button', onclick: () => finish(false) }, 'Pomiń');
+  const live = h('div', { class: 'ek-sr-only', 'aria-live': 'polite' });
+  const root = h('div', { class: 'ek-intro', role: 'dialog', 'aria-modal': 'true', 'aria-label': 'Jak działa Ekipaż' },
+    h('div', { class: 'ek-intro__panel', 'aria-roledescription': 'karuzela' },
+      h('div', { class: 'ek-intro__top' }, h('span', { class: 'ek-logo__word' }, 'EKIPA', h('em', null, 'Ż')), skip),
+      h('div', { class: 'ek-intro__viewport' }, track),
+      dots, live,
+      h('div', { class: 'ek-intro__foot' }, back, next)));
+  function go(n) {
+    i = Math.max(0, Math.min(INTRO.length - 1, n));
+    track.style.transform = 'translateX(' + (-100 * i) + '%)';
+    slides.forEach((sl, k) => { sl.setAttribute('aria-hidden', k === i ? 'false' : 'true'); sl.inert = k !== i; });
+    dots.replaceChildren(...INTRO.map((_, k) => h('button', { type: 'button', class: 'ek-intro__dot', role: 'tab', 'aria-selected': k === i ? 'true' : 'false', 'aria-label': 'Slajd ' + (k + 1), onclick: () => go(k) })));
+    back.style.visibility = i === 0 ? 'hidden' : 'visible';
+    next.textContent = i === INTRO.length - 1 ? (S.token ? 'Zaczynamy' : 'Załóż darmowy profil') : 'Dalej';
+    live.textContent = 'Slajd ' + (i + 1) + ' z ' + INTRO.length + ': ' + INTRO[i].t;
+  }
+  function finish(toStart) {
+    root.classList.add('is-leaving');
+    document.removeEventListener('keydown', onKey);
+    setTimeout(() => { root.remove(); document.body.style.overflow = ''; if (prevFocus && prevFocus.focus) prevFocus.focus({ preventScroll: true }); }, 220);
+    if (toStart && !S.token) location.hash = '#/start';
+  }
+  function onKey(e) {
+    if (e.key === 'ArrowRight') go(i + 1);
+    else if (e.key === 'ArrowLeft') go(i - 1);
+    else if (e.key === 'Escape') finish(false);
+    else if (e.key === 'Tab') {
+      const f = [...root.querySelectorAll('button')].filter(b => b.offsetParent !== null && !b.closest('[inert]'));
+      if (!f.length) return;
+      if (e.shiftKey && document.activeElement === f[0]) { e.preventDefault(); f[f.length - 1].focus(); }
+      else if (!e.shiftKey && document.activeElement === f[f.length - 1]) { e.preventDefault(); f[0].focus(); }
+    }
+  }
+  // przesuwanie palcem
+  let x0 = null, dx = 0;
+  const vp = root.querySelector('.ek-intro__viewport');
+  vp.addEventListener('pointerdown', e => { x0 = e.clientX; dx = 0; track.style.transition = 'none'; vp.setPointerCapture && vp.setPointerCapture(e.pointerId); });
+  vp.addEventListener('pointermove', e => { if (x0 == null) return; dx = e.clientX - x0; track.style.transform = 'translateX(calc(' + (-100 * i) + '% + ' + dx + 'px))'; });
+  const end = () => { if (x0 == null) return; track.style.transition = ''; const w = vp.clientWidth || 1; if (dx < -w * 0.18) go(i + 1); else if (dx > w * 0.18) go(i - 1); else go(i); x0 = null; };
+  vp.addEventListener('pointerup', end); vp.addEventListener('pointercancel', end);
+  document.addEventListener('keydown', onKey);
+  document.body.append(root); document.body.style.overflow = 'hidden';
+  go(0);
+  requestAnimationFrame(() => next.focus({ preventScroll: true }));
+}
+
 /* ------------------------------------------------------------ odświeżanie danych */
 async function refreshJobs() {
   try {
@@ -1277,6 +1371,7 @@ document.addEventListener('visibilitychange', () => { if (document.visibilitySta
 /* start */
 lastRoute = route().name + route().id;
 render();
+if (!S.token && !store.get('ek_intro_seen') && ['board', 'start'].includes(route().name)) setTimeout(openIntro, 600);
 refreshJobs().then(() => { if (route().name === 'board') render(); });
 refreshRailTop(); setInterval(() => { if (document.visibilityState === 'visible') refreshRailTop(); }, 60000);
 refreshMe();
