@@ -24,13 +24,8 @@ const STYLE_D = { chill: 'Bez spiny, śmiech na czacie', balanced: 'Gramy porzą
 const PLAT = { ps5: 'PS5', xbox: 'XSX', pc: 'PC' };
 const PLAT_L = { ps5: 'PlayStation 5', xbox: 'Xbox Series', pc: 'PC' };
 const PLAT_CLS = { ps5: 'ps', xbox: 'xbox', pc: 'pc' };
-const AVATARS = [
-  'linear-gradient(135deg,#FF3D8B,#FF8A3D)', 'linear-gradient(135deg,#2EE6D6,#4D8DFF)', 'linear-gradient(135deg,#FFD23F,#FF8A3D)',
-  'linear-gradient(135deg,#8B2FC9,#FF3D8B)', 'linear-gradient(135deg,#3DDC84,#2EE6D6)', 'linear-gradient(135deg,#FF5A5F,#8B2FC9)',
-  'linear-gradient(135deg,#4D8DFF,#8B2FC9)', 'linear-gradient(135deg,#FFF3E6,#C4B3D6)', 'linear-gradient(135deg,#FF8A3D,#D7263D)',
-  'linear-gradient(135deg,#2EE6D6,#3DDC84)', 'linear-gradient(135deg,#FFD23F,#3DDC84)', 'linear-gradient(135deg,#FF3D8B,#4D8DFF)',
-];
-const CREW_COLORS = ['var(--ek-grad-teal)', 'var(--ek-grad-cta)', 'linear-gradient(90deg,#FFD23F,#FF8A3D)', 'linear-gradient(90deg,#8B2FC9,#FF3D8B)', 'linear-gradient(90deg,#3DDC84,#2EE6D6)', 'linear-gradient(90deg,#FF5A5F,#FF8A3D)'];
+const AVATARS = ['#D81B6A', '#3B82F6', '#D97706', '#7C3AED', '#059669', '#DC2626', '#4F46E5', '#64748B', '#EA580C', '#0D9488', '#65A30D', '#C026D3'];
+const CREW_COLORS = ['#2A2A36', '#D81B6A', '#D97706', '#7C3AED', '#059669', '#DC2626'];
 const FEATURES = [
   { id: 'map',        t: 'Interaktywna mapa',       d: 'Mapa Leonidy z miejscówkami, sklepami i znajdźkami – gdy tylko świat zostanie rozpracowany.' },
   { id: 'checklist',  t: 'Lista postępu na 100%',   d: 'Odhaczasz zadania i znajdźki, a postęp trzyma się Twojego profilu.' },
@@ -252,6 +247,33 @@ function chip(label, pressed, onclick, extra = '') {
 function field(label, input, hint) {
   const id = input.id || ('f' + Math.random().toString(36).slice(2, 8)); input.id = id;
   return h('div', { class: 'ek-field' }, h('label', { class: 'ek-label', for: id }, label), input, hint ? h('div', { class: 'ek-hint' }, hint) : null);
+}
+function fieldError(input, msg) {
+  const f = input.closest('.ek-field'); if (!f) return;
+  const hint = f.querySelector('.ek-hint') || f.appendChild(h('div', { class: 'ek-hint' }));
+  if (hint.dataset.orig == null) hint.dataset.orig = hint.textContent;
+  f.classList.toggle('is-invalid', !!msg);
+  hint.textContent = msg || hint.dataset.orig;
+  if (msg) { input.setAttribute('aria-invalid', 'true'); input.focus(); } else input.removeAttribute('aria-invalid');
+}
+const PL_MAP = { ą: 'a', ć: 'c', ę: 'e', ł: 'l', ń: 'n', ó: 'o', ś: 's', ź: 'z', ż: 'z' };
+function discordNormalize(v) { return String(v || '').toLowerCase().replace(/[ąćęłńóśźż]/g, c => PL_MAP[c]).replace(/^@/, '').replace(/\s+/g, ''); }
+const DISCORD_RE = /^(?:[a-z0-9_.]{2,32}|[^\s#@:]{2,32}#\d{4})$/;
+function discordInput(value, onValue) {
+  const inp = h('input', { class: 'ek-input', maxlength: 40, value: value || '', placeholder: 'np. krolnapadow', autocapitalize: 'none', autocomplete: 'off', spellcheck: 'false' });
+  let hadPl = false;
+  inp.addEventListener('input', () => {
+    const raw = inp.value, norm = discordNormalize(raw);
+    if (/[ąćęłńóśźż]/i.test(raw)) hadPl = true;
+    if (!norm) hadPl = false;
+    if (norm !== raw) { const pos = inp.selectionStart; inp.value = norm; try { inp.setSelectionRange(pos, pos); } catch (e) {} }
+    const f = inp.closest('.ek-field'), hint = f && f.querySelector('.ek-hint');
+    if (hint) { if (hint.dataset.orig == null) hint.dataset.orig = hint.textContent; f.classList.remove('is-invalid');
+      hint.textContent = hadPl ? 'Discord nie używa polskich znaków, więc zapisujemy to jako „' + norm + '”. Sprawdź, czy tak brzmi Twoja nazwa w Discordzie.' : hint.dataset.orig;
+      hint.classList.toggle('ek-hint--fix', hadPl); }
+    onValue(inp.value);
+  });
+  return inp;
 }
 function groupLabel(text) { return h('div', { class: 'ek-label' }, text); }
 function toggle(label, checked, onchange) {
@@ -719,7 +741,8 @@ function viewAdd() {
     let startAt;
     if (d.when === 'custom') { const t = Date.parse(d.custom); if (!t) { msg.textContent = 'Wybierz datę i godzinę startu.'; return; } startAt = Math.floor(t / 1000); if (startAt < now()) { msg.textContent = 'Ten termin już minął. Wybierz godzinę w przyszłości.'; return; } }
     else startAt = now() + d.when * 60;
-    if ((d.title || '').trim().length < 4) { msg.textContent = 'Nazwij zlecenie – minimum 4 znaki.'; titleIn.focus(); return; }
+    fieldError(titleIn, '');
+    if ((d.title || '').trim().length < 4) { fieldError(titleIn, 'Nazwa zlecenia musi mieć co najmniej 4 znaki.'); return; }
     const btn = e.submitter || $('button[type=submit]', e.target); btn.disabled = true; msg.textContent = '';
     try {
       const r = await api('job.create', { body: { title: d.title.trim(), activity: d.activity, platform: d.platform, slots: d.slots, startAt, style: d.style, micRequired: d.mic, details: d.details } });
@@ -779,7 +802,7 @@ function viewStart() {
     } else {
       const msg = h('p', { class: 'ek-formmsg', 'aria-live': 'polite' });
       const nick = h('input', { class: 'ek-input', maxlength: 24, value: d.nick, autocomplete: 'nickname', placeholder: 'Twój nick z gry', oninput: e => { d.nick = e.target.value; } });
-      const contact = h('input', { class: 'ek-input', maxlength: 40, value: d.contact, placeholder: 'np. krolnapadow', oninput: e => { d.contact = e.target.value; } });
+      const contact = discordInput(d.contact, v => { d.contact = v; });
       const hp = h('input', { class: 'ek-hp', tabindex: '-1', autocomplete: 'off', name: 'website', 'aria-hidden': 'true' });
       const avs = h('div', { class: 'ek-avatars', role: 'group', 'aria-label': 'Kolor avatara' });
       const drawAv = () => avs.replaceChildren(...AVATARS.map((_, i) => h('button', { type: 'button', class: 'ek-avatar-pick', 'aria-label': 'Avatar ' + (i + 1), 'aria-pressed': d.avatar === i ? 'true' : 'false', onclick: () => { d.avatar = i; drawAv(); } }, avatar({ nick: d.nick || 'EK', avatar: i }, '', false))));
@@ -787,14 +810,20 @@ function viewStart() {
       nick.addEventListener('input', drawAv);
       const submit = async e => {
         e.preventDefault(); msg.textContent = '';
-        if (d.nick.trim().length < 3) { msg.textContent = 'Nick musi mieć co najmniej 3 znaki.'; nick.focus(); return; }
-        if (d.contact.trim().length < 2) { msg.textContent = 'Podaj nazwę użytkownika Discord – po niej skład się z Tobą skontaktuje.'; contact.focus(); return; }
+        fieldError(nick, ''); fieldError(contact, '');
+        if (d.nick.trim().length < 3) { fieldError(nick, 'Nick musi mieć co najmniej 3 znaki.'); return; }
+        if (!/^[A-Za-z0-9ĄĆĘŁŃÓŚŹŻąćęłńóśźż_\-. ]+$/.test(d.nick.trim())) { fieldError(nick, 'Nick może zawierać litery, cyfry, spację oraz _ - .'); return; }
+        if (!DISCORD_RE.test(d.contact.trim())) { fieldError(contact, 'Wpisz nazwę użytkownika Discord: małe litery, cyfry, kropka lub podkreślnik, np. krolnapadow.'); return; }
         const btn = e.submitter; if (btn) btn.disabled = true;
         try {
           const r = await api('register', { body: { ...d, nick: d.nick.trim(), contact: d.contact.trim(), website: hp.value } });
           setToken(r.token); S.me = r.me;
           showRecovery(r.recovery, true);
-        } catch (err) { if (btn) btn.disabled = false; msg.textContent = errMsg(err); }
+        } catch (err) {
+          if (btn) btn.disabled = false;
+          const m = errMsg(err);
+          if (/Discord/i.test(m)) fieldError(contact, m); else if (/nick/i.test(m)) fieldError(nick, m); else msg.textContent = m;
+        }
       };
       body = [h('h2', { class: 'ek-h2' }, 'Twój profil'), h('p', { class: 'ek-meta' }, 'Bez maila i hasła. Na koniec dostaniesz kod odzyskiwania – zapisz go.'),
         h('form', { class: 'ek-form', onsubmit: submit, novalidate: true },
@@ -954,10 +983,11 @@ function editProfile(me) {
     avs.replaceChildren(...AVATARS.map((_, i) => h('button', { type: 'button', class: 'ek-avatar-pick', 'aria-label': 'Avatar ' + (i + 1), 'aria-pressed': d.avatar === i ? 'true' : 'false', onclick: () => { d.avatar = i; redraw(); } }, avatar({ nick: me.nick, avatar: i }, '', false))));
   };
   redraw();
-  const contact = h('input', { class: 'ek-input', maxlength: 40, value: d.contact, oninput: e => { d.contact = e.target.value; } });
+  const contact = discordInput(d.contact, v => { d.contact = v; });
   const bio = h('textarea', { class: 'ek-textarea', maxlength: 280, placeholder: 'Kilka słów: co masz w grze, jak grasz, czego szukasz.', oninput: e => { d.bio = e.target.value; } }, d.bio);
   return h('form', { class: 'ek-form', onsubmit: async e => {
-    e.preventDefault(); msg.className = 'ek-formmsg'; msg.textContent = '';
+    e.preventDefault(); msg.className = 'ek-formmsg'; msg.textContent = ''; fieldError(contact, '');
+    if (!DISCORD_RE.test(d.contact.trim())) { fieldError(contact, 'Wpisz nazwę użytkownika Discord: małe litery, cyfry, kropka lub podkreślnik.'); return; }
     try { const r = await api('profile.update', { body: d }); S.me = r.me; msg.className = 'ek-formmsg is-ok'; msg.textContent = 'Zapisane. Kartoteka zaktualizowana.'; toast('Profil zapisany'); refreshMe().then(() => { if (route().name === 'me') render(); }); }
     catch (err) { msg.textContent = errMsg(err); }
   } },
@@ -967,7 +997,7 @@ function editProfile(me) {
     h('div', { class: 'ek-stack' }, groupLabel('Kiedy grasz'), times),
     h('div', { class: 'ek-stack' }, groupLabel('Styl'), styles),
     toggle('Mam mikrofon', d.mic, v => { d.mic = v; }),
-    field('Discord', contact, 'Widoczny tylko dla Twoich składów.'),
+    field('Discord', contact, 'Nazwa użytkownika z Discorda. Widzą ją tylko gracze z Twoich składów.'),
     field('O mnie', bio),
     msg,
     h('div', { class: 'ek-row' }, h('button', { class: 'ek-btn ek-btn--primary', type: 'submit' }, 'Zapisz zmiany'),
