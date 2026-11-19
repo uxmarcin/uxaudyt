@@ -59,7 +59,7 @@ function sampleCard(x, i) {
   return h('article', { class: 'ek-job ek-job--sample ek-rise', '--i': i, role: 'button', tabindex: '0', 'aria-label': 'Przykład: ' + x.title + '. Kliknij, żeby wystawić podobne zlecenie.', onclick: () => useSample(x), onkeydown: e => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); useSample(x); } } },
     h('span', { class: 'ek-sticker ek-sticker--teal ek-job__mine' }, 'Przykład'),
     h('div', { class: 'ek-job__head' }, h('div', null, h('div', { class: 'ek-job__activity' }, a.i + ' ' + a.l), h('h3', { class: 'ek-job__title' }, x.title))),
-    h('div', { class: 'ek-job__host' }, avatar({ nick: 'Ty', avatar: (S.me && S.me.avatar) || 0 }, 'sm', false), h('b', null, S.me ? S.me.nick : 'Twój nick'), h('span', { class: 'ek-meta' }, '· szef roboty')),
+    h('div', { class: 'ek-job__host' }, avatar({ nick: 'Ty', avatar: (S.me && S.me.avatar) || 0 }, 'sm', false), h('b', null, S.me ? S.me.nick : 'Twój nick'), h('span', { class: 'ek-meta' }, '· gospodarz')),
     h('div', { class: 'ek-job__meta' }, platTag(x.platform), h('span', { class: 'ek-badge' }, STYLES[x.style]), x.mic ? h('span', { class: 'ek-badge ek-badge--mic' }, '🎙 Mikrofon') : null),
     h('p', { class: 'ek-job__note' }, x.details),
     h('div', { class: 'ek-job__foot' }, slots(job), h('span', { class: 'ek-cd-wrap' }, h('span', { class: 'ek-countdown__label' }, 'Start za'), h('span', { class: 'ek-countdown' }, x.inMin < 60 ? x.inMin + ' min' : Math.round(x.inMin / 60) + ' h')),
@@ -291,7 +291,7 @@ function reportSheet(type, id) {
   openSheet('Zgłoś nadużycie', h('div', { class: 'ek-stack' }, h('p', { class: 'ek-meta' }, 'Zgłoszenia są anonimowe dla innych graczy. Trzy niezależne zgłoszenia automatycznie ukrywają zlecenie do czasu sprawdzenia.'), box),
     [h('button', { class: 'ek-btn ek-btn--ghost', onclick: closeSheet }, 'Anuluj'),
      h('button', { class: 'ek-btn ek-btn--danger', onclick: async () => {
-       try { await api('report', { body: { type, id, reason } }); closeSheet(); toast('Dzięki, sprawdzimy to', 'Zanim ktoś straci napad.'); } catch (e) { toast('Nie wysłano zgłoszenia', errMsg(e), 'danger'); }
+       try { await api('report', { body: { type, id, reason } }); closeSheet(); toast('Dziękujemy za zgłoszenie', 'Moderacja sprawdzi je najszybciej, jak to możliwe.'); } catch (e) { toast('Nie wysłano zgłoszenia', errMsg(e), 'danger'); }
      } }, 'Wyślij zgłoszenie')]);
 }
 
@@ -337,13 +337,13 @@ async function joinJob(job) {
   if (needProfile('#/z/' + job.id)) return;
   if (S.me && S.me.platform !== job.platform) { toast('Inna platforma', 'To zlecenie jest na ' + PLAT_L[job.platform] + ', a Twój profil na ' + PLAT_L[S.me.platform] + '.', 'danger'); return; }
   const msg = h('input', { class: 'ek-input', maxlength: 160, placeholder: 'np. Mam Kosatkę, lvl 120, mogę od razu' });
-  openSheet('Wchodzisz w to?', h('div', { class: 'ek-stack' },
-    h('p', { class: 'ek-meta' }, 'Szef roboty zobaczy Twój profil i respekt. Po akceptacji dostaniesz jego Discorda.'),
+  openSheet('Zgłoszenie do składu', h('div', { class: 'ek-stack' },
+    h('p', { class: 'ek-meta' }, 'Gospodarz zobaczy Twój profil i oceny. Po akceptacji wyświetlimy Ci jego Discorda.'),
     field('Krótka wiadomość (opcjonalnie)', msg)),
-    [h('button', { class: 'ek-btn ek-btn--ghost', onclick: closeSheet }, 'Jeszcze nie'),
+    [h('button', { class: 'ek-btn ek-btn--ghost', onclick: closeSheet }, 'Anuluj'),
      h('button', { class: 'ek-btn ek-btn--primary', onclick: async ev => {
        ev.target.disabled = true;
-       try { await api('job.join', { body: { id: job.id, msg: msg.value } }); closeSheet(); toast('Zgłoszenie poszło', 'Dostaniesz znać, gdy szef Cię przyjmie.'); refreshJobs(); if (route().name === 'job') render(); }
+       try { await api('job.join', { body: { id: job.id, msg: msg.value } }); closeSheet(); toast('Zgłoszenie wysłane', 'Status zobaczysz w zleceniu i w swoim profilu.'); refreshJobs(); if (route().name === 'job') render(); }
        catch (e) { ev.target.disabled = false; toast('Nie udało się', errMsg(e), 'danger'); }
      } }, 'Wyślij zgłoszenie')]);
 }
@@ -442,8 +442,8 @@ function renderBoardList() {
   const cnt = document.getElementById('jobCount'); if (cnt) cnt.textContent = list.length + ' ' + plural(list.length, 'zlecenie', 'zlecenia', 'zleceń');
   if (!list.length) {
     const anyJobs = S.jobs.length > 0;
-    host.replaceChildren(samplesSection(list), h('div', { style: { height: '24px' } }), empty(anyJobs ? 'Nic pod te filtry' : 'Cisza w eterze',
-      anyJobs ? 'Poluzuj filtry albo wystaw własne zlecenie – ktoś na pewno szuka tego samego.' : 'Wystaw pierwsze zlecenie. Ktoś zaraz się odezwie – a Ty zgarniesz pierwszy respekt na mieście.',
+    host.replaceChildren(samplesSection(list), h('div', { style: { height: '24px' } }), empty(anyJobs ? 'Brak zleceń dla tych filtrów' : 'Tablica czeka na pierwsze zlecenie',
+      anyJobs ? 'Zmień filtry albo wystaw własne zlecenie – trafi na górę tablicy.' : 'Wystaw je w minutę. Zobaczą je wszyscy, którzy właśnie szukają składu.',
       h('div', { class: 'ek-row', style: { justifyContent: 'center' } },
         h('a', { class: 'ek-btn ek-btn--primary', href: '#/dodaj' }, 'Wystaw zlecenie'),
         anyJobs ? h('button', { class: 'ek-btn ek-btn--ghost', onclick: () => { Object.assign(S.filters, { platform: '', activity: '', when: '', style: '', open: false }); store.set('ek_f_platform', ''); render(); } }, 'Wyczyść filtry') : null)));
@@ -465,22 +465,22 @@ function welcomeCard() {
   return h('section', { class: 'ek-welcome' },
     h('div', { class: 'ek-welcome__art', 'aria-hidden': 'true' }, h('div', { class: 'ek-hero__sun' }), heroSkyline()),
     h('div', { class: 'ek-welcome__body' },
-      h('div', { class: 'ek-kicker' }, 'Polska tablica zleceń · GTA Online'),
-      me ? h('h1', { class: 'ek-welcome__title' }, 'Siema, ', h('span', { class: 'ek-sunset-text' }, me.nick), h('br'), 'kto dziś wchodzi w robotę?')
-         : h('h1', { class: 'ek-welcome__title' }, 'Skompletuj ekipę, ', h('span', { class: 'ek-sunset-text' }, 'zanim ostygnie kawa.')),
+      h('div', { class: 'ek-kicker' }, 'GTA Online · PS5 · Xbox · PC'),
+      me ? h('h1', { class: 'ek-welcome__title' }, 'Cześć, ', h('span', { class: 'ek-sunset-text' }, me.nick + '.'), h('br'), 'Co dziś gramy?')
+         : h('h1', { class: 'ek-welcome__title' }, 'Ekipa, która ', h('span', { class: 'ek-sunset-text' }, 'dowiezie finał.')),
       h('p', { class: 'ek-welcome__sub' }, me
-        ? (inbox ? 'Masz ' + inbox + ' ' + plural(inbox, 'zgłoszenie', 'zgłoszenia', 'zgłoszeń') + ' do rozpatrzenia. Skład sam się nie wybierze.' : 'Wystaw zlecenie z godziną startu albo wskocz do cudzego składu.')
-        : 'Zlecenia z godziną startu, skład 2/4 i respekt za czystą robotę. Bez randomów, którzy wysadzą Cię po pięciu minutach.'),
+        ? (inbox ? inbox + ' ' + plural(inbox, 'gracz czeka', 'graczy czeka', 'graczy czeka') + ' na Twoją decyzję. Sprawdź ich oceny i skompletuj skład.' : 'Wystaw zlecenie z godziną startu albo dołącz do składu, który właśnie zbiera ludzi.')
+        : 'Wystaw zlecenie z godziną startu albo dołącz do cudzego. Każdy gracz ma oceny od ludzi, z którymi grał – zanim kogoś przyjmiesz, wiesz, czy dowozi, czy wychodzi w połowie.'),
       h('div', { class: 'ek-welcome__ctas' },
         me ? h('a', { class: 'ek-btn ek-btn--grad ek-btn--lg', href: '#/dodaj' }, icon('plus'), 'Wystaw zlecenie')
-           : h('a', { class: 'ek-btn ek-btn--grad ek-btn--lg', href: '#/start' }, 'Załóż profil – 30 sekund'),
+           : h('a', { class: 'ek-btn ek-btn--grad ek-btn--lg', href: '#/start' }, 'Załóż darmowy profil'),
         me && inbox ? h('a', { class: 'ek-btn ek-btn--glass ek-btn--lg', href: '#/ja' }, 'Zgłoszenia', h('span', { class: 'ek-dot-inline' }, inbox))
-           : h('button', { class: 'ek-btn ek-btn--glass ek-btn--lg', onclick: scrollToJobs }, 'Przeglądaj zlecenia')),
+           : h('button', { class: 'ek-btn ek-btn--glass ek-btn--lg', onclick: scrollToJobs }, 'Zobacz zlecenia')),
       h('div', { class: 'ek-welcome__stats' },
         h('span', { class: 'ek-pillstat' }, h('i', { class: 'ek-pillstat__dot' }), h('b', null, st.online ?? '–'), ' online'),
         h('span', { class: 'ek-pillstat' }, h('b', null, st.jobs ?? '–'), ' ' + plural(st.jobs || 0, 'zlecenie', 'zlecenia', 'zleceń')),
         h('span', { class: 'ek-pillstat' }, h('b', null, st.crews ?? '–'), ' ' + plural(st.crews || 0, 'ekipa', 'ekipy', 'ekip')))),
-    !me ? h('p', { class: 'ek-welcome__note' }, h('b', null, 'Nowy tryb online nie ma jeszcze daty startu. '), 'Zbieraj ekipę już teraz w obecnym GTA Online – profil i respekt przejdą z Tobą dalej.') : null);
+    !me ? h('p', { class: 'ek-welcome__note' }, h('b', null, 'GTA VI Online nie ma jeszcze daty premiery. '), 'Do tego czasu gramy w obecne GTA Online – profil i oceny zostaną z Tobą, gdy ruszy nowa odsłona.') : null);
 }
 function bigCards() {
   const n = S.jobs.filter(j => j.status === 'open').length;
@@ -493,9 +493,9 @@ function bigCards() {
 function promoBanners() {
   const cnt = a => S.jobs.filter(j => j.activity === a && j.status === 'open').length;
   const B = [
-    { cls: 'heist', k: 'Na dziś', t: ['Noc', 'napadów'], d: cnt('heist') ? cnt('heist') + ' ' + plural(cnt('heist'), 'otwarte zlecenie', 'otwarte zlecenia', 'otwartych zleceń') : 'Wystaw pierwsze dziś', art: '💰', on: () => goFilter({ activity: 'heist', when: 'today' }) },
-    { cls: 'race', k: 'Ulice nocą', t: ['Wyścigi', 'do rana'], d: cnt('race') ? cnt('race') + ' ' + plural(cnt('race'), 'lobby', 'lobby', 'lobby') + ' czeka' : 'Zbierz lobby wyścigowe', art: '🏎️', on: () => goFilter({ activity: 'race' }) },
-    { cls: 'rank', k: 'Ranking tygodnia', t: ['Respekt', 'na mieście'], d: 'Kto gra najczyściej?', art: '🏆', on: () => { location.hash = '#/ranking'; } },
+    { cls: 'heist', k: 'Finały i przygotówki', t: ['Napady', 'na wieczór'], d: cnt('heist') ? cnt('heist') + ' ' + plural(cnt('heist'), 'skład szuka ludzi', 'składy szukają ludzi', 'składów szuka ludzi') : 'Zbierz skład na dzisiejszy wieczór', art: '💰', on: () => goFilter({ activity: 'heist', when: 'today' }) },
+    { cls: 'race', k: 'Wyścigi', t: ['Czyste', 'lobby'], d: cnt('race') ? cnt('race') + ' ' + plural(cnt('race'), 'lobby zbiera', 'lobby zbierają', 'lobby zbiera') + ' kierowców' : 'Bez taranowania i ragequitów', art: '🏎️', on: () => goFilter({ activity: 'race' }) },
+    { cls: 'rank', k: 'Ranking tygodnia', t: ['Najlepiej', 'oceniani'], d: 'Zobacz, z kim warto grać', art: '🏆', on: () => { location.hash = '#/ranking'; } },
   ];
   return h('section', { class: 'ek-promos', 'aria-label': 'Wyróżnione' }, B.map(b => h('button', { type: 'button', class: 'ek-promo ek-promo--' + b.cls, onclick: b.on },
     h('span', { class: 'ek-promo__k' }, b.k), h('span', { class: 'ek-promo__t' }, b.t[0], h('br'), b.t[1]), h('span', { class: 'ek-promo__d' }, b.d), h('span', { class: 'ek-promo__art', 'aria-hidden': 'true' }, b.art))));
@@ -508,19 +508,19 @@ function liveStrip() {
     return h(href ? 'a' : 'div', { class: 'ek-livechip', href },
       h('span', { class: 'ek-livechip__ic', 'aria-hidden': 'true' }, ({ job: '📣', accept: '🤝', vouch: '⭐', crew: '🕶️', crewjoin: '🕶️' })[e.type] || '•'),
       h('span', { class: 'ek-livechip__txt' }, h('b', null, e.nick), ' ' + t[0], h('span', { class: 'ek-livechip__sub' }, t[1] + ' · ' + hhmm(e.created))));
-  }) : [h('div', { class: 'ek-livechip' }, h('span', { class: 'ek-livechip__ic' }, '📻'), h('span', { class: 'ek-livechip__txt' }, h('b', null, 'Nasłuch włączony'), h('span', { class: 'ek-livechip__sub' }, 'Tu zobaczysz, co dzieje się na mieście')))];
-  return h('section', { class: 'ek-livestrip', 'aria-label': 'Na żywo na mieście' },
+  }) : [h('div', { class: 'ek-livechip' }, h('span', { class: 'ek-livechip__ic' }, '📻'), h('span', { class: 'ek-livechip__txt' }, h('b', null, 'Na razie spokojnie'), h('span', { class: 'ek-livechip__sub' }, 'Nowe zlecenia i składy pojawią się tutaj')))];
+  return h('section', { class: 'ek-livestrip', 'aria-label': 'Ostatnia aktywność' },
     h('div', { class: 'ek-livestrip__badge' }, h('span', { class: 'ek-livestrip__wave', 'aria-hidden': 'true' }, '((•))'), 'Na', h('br'), 'żywo'),
     h('div', { class: 'ek-livestrip__track' }, items));
 }
 function catTiles() {
   const f = S.filters;
   return h('section', { class: 'ek-cats-wrap' },
-    h('div', { class: 'ek-section-head' }, h('h2', { class: 'ek-h2' }, 'Co robimy?'), f.activity ? h('button', { class: 'ek-btn ek-btn--ghost ek-btn--sm', onclick: () => goFilter({}) }, 'Pokaż wszystko') : null),
+    h('div', { class: 'ek-section-head' }, h('h2', { class: 'ek-h2' }, 'Co dziś gramy?'), f.activity ? h('button', { class: 'ek-btn ek-btn--ghost ek-btn--sm', onclick: () => goFilter({}) }, 'Pokaż wszystko') : null),
     h('div', { class: 'ek-cats', role: 'group', 'aria-label': 'Kategorie' }, Object.entries(ACT).map(([k, v]) => {
       const n = S.jobs.filter(j => j.activity === k && j.status !== 'closed').length;
       return h('button', { type: 'button', class: 'ek-cat ek-cat--' + k, 'aria-pressed': f.activity === k ? 'true' : 'false', onclick: () => goFilter({ activity: f.activity === k ? '' : k }) },
-        h('span', { class: 'ek-cat__count' }, n ? n + ' ' + plural(n, 'zlecenie', 'zlecenia', 'zleceń') : 'Wystaw pierwsze'),
+        h('span', { class: 'ek-cat__count' }, n ? n + ' ' + plural(n, 'zlecenie', 'zlecenia', 'zleceń') : 'Brak zleceń'),
         h('span', { class: 'ek-cat__art', 'aria-hidden': 'true' }, CAT_ART[k]),
         h('span', { class: 'ek-cat__label' }, v.l));
     })));
@@ -532,7 +532,7 @@ function viewBoard() {
     h('div', { class: 'ek-container ek-board-top' }, welcomeCard(), bigCards(), promoBanners(), liveStrip(), catTiles()),
     quickMatch(),
     liveJobs.length ? h('section', { class: 'ek-container ek-section', style: { paddingBottom: 0 } },
-      sectionHead('Startują zaraz', h('span', { class: 'ek-live' }, liveJobs.length + ' ' + plural(liveJobs.length, 'start', 'starty', 'startów') + ' w ciągu 30 min')),
+      sectionHead('Start w ciągu 30 minut', h('span', { class: 'ek-live' }, 'Na żywo')),
       h('div', { class: 'ek-live-strip' }, liveJobs.map(jobCard))) : null,
     h('section', { class: 'ek-container ek-section', id: 'jobs' },
       sectionHead('Tablica zleceń', h('span', { class: 'ek-count', id: 'jobCount' })),
@@ -542,9 +542,9 @@ function viewBoard() {
     firstVisit ? h('section', { class: 'ek-container ek-section' },
       sectionHead('Jak to działa'),
       h('div', { class: 'ek-steps3' },
-        h('div', { class: 'ek-step3' }, h('h3', { class: 'ek-h3' }, 'Wystaw robotę'), h('p', null, 'Co, na jakiej platformie i o której. Ustawiasz liczbę miejsc – reszta to formalność.')),
-        h('div', { class: 'ek-step3' }, h('h3', { class: 'ek-h3' }, 'Wybierz skład'), h('p', null, 'Gracze zgłaszają się z profilem i respektem. Ty decydujesz, kto wchodzi. Discord widzą tylko przyjęci.')),
-        h('div', { class: 'ek-step3' }, h('h3', { class: 'ek-h3' }, 'Daj respekt'), h('p', null, 'Po grze każdy ze składu może dać drugiemu „Czysta robota +1”. Tak rośnie Twoja kartoteka.')))) : null,
+        h('div', { class: 'ek-step3' }, h('h3', { class: 'ek-h3' }, 'Wystaw zlecenie'), h('p', null, 'Wybierasz aktywność, platformę, godzinę startu i liczbę miejsc. Zajmuje to mniej niż minutę.')),
+        h('div', { class: 'ek-step3' }, h('h3', { class: 'ek-h3' }, 'Wybierz skład'), h('p', null, 'Przy każdym zgłoszeniu widzisz oceny i liczbę rozegranych robót. Decydujesz Ty, a Twój Discord zobaczą tylko przyjęci.')),
+        h('div', { class: 'ek-step3' }, h('h3', { class: 'ek-h3' }, 'Oceń po grze'), h('p', null, 'Po robocie dajesz +1 tym, którzy dowieźli. Oceny dają tylko gracze ze wspólnego składu, więc nie da się ich kupić ani nabić.')))) : null,
   ];
 }
 
@@ -576,24 +576,24 @@ function renderRail() {
   const feed = ((S.stats && S.stats.feed) || []).slice(0, 14);
   const top = S.lbTop || [];
   rail.replaceChildren(h('div', { class: 'ek-rail__inner' },
-    h('div', { class: 'ek-rail__head' }, h('span', { class: 'ek-live' }, 'Nasłuch'), h('span', { class: 'ek-meta' }, 'Co się dzieje na mieście')),
+    h('div', { class: 'ek-rail__head' }, h('span', { class: 'ek-live' }, 'Nasłuch'), h('span', { class: 'ek-meta' }, 'Ostatnia aktywność graczy')),
     h('a', { class: 'ek-railtop', href: '#/ranking' },
       h('div', { class: 'ek-railtop__head' }, h('span', null, '🏆 Ranking tygodnia'), h('span', { 'aria-hidden': 'true' }, '›')),
       top.length ? h('ol', { class: 'ek-railtop__list' }, top.map((p, i) => h('li', null, h('span', { class: 'ek-medal ek-medal--' + (i + 1) }, i + 1), h('span', { class: 'ek-railtop__nick' }, p.nick), h('span', { class: 'ek-lb__score' }, '+' + p.score))))
-        : h('p', { class: 'ek-meta', style: { margin: 0 } }, 'Podium czeka na pierwszych z respektem.')),
+        : h('p', { class: 'ek-meta', style: { margin: 0 } }, 'Pierwsze oceny pojawią się po pierwszych wspólnych grach.')),
     h('div', { class: 'ek-rail__feed' }, feed.length ? feed.map(e => {
       const t = { job: 'szuka ludzi: ' + e.title, accept: 'wchodzi w skład: ' + e.title, vouch: 'dostaje respekt od ' + e.from, crew: 'zakłada ekipę ' + e.crew, crewjoin: 'dołącza do ekipy ' + e.crew }[e.type] || '';
       const href = e.jobId ? '#/z/' + e.jobId : e.crewId ? '#/e/' + e.crewId : null;
       return h(href ? 'a' : 'div', { class: 'ek-msg', href }, h('div', { class: 'ek-msg__top' }, h('b', null, e.nick), h('time', null, hhmm(e.created))), h('div', { class: 'ek-msg__bubble' }, t));
-    }) : h('div', { class: 'ek-msg' }, h('div', { class: 'ek-msg__bubble' }, 'Cisza w eterze. Pierwsze zlecenie pojawi się tutaj, gdy tylko ktoś je wystawi.'))),
-    h('a', { class: 'ek-btn ek-btn--grad ek-btn--block', href: S.token ? '#/dodaj' : '#/start' }, S.token ? 'Wystaw zlecenie' : 'Dołącz do nasłuchu')));
+    }) : h('div', { class: 'ek-msg' }, h('div', { class: 'ek-msg__bubble' }, 'Tu zobaczysz nowe zlecenia, przyjęcia do składów i oceny – na bieżąco.'))),
+    h('a', { class: 'ek-btn ek-btn--grad ek-btn--block', href: S.token ? '#/dodaj' : '#/start' }, S.token ? 'Wystaw zlecenie' : 'Załóż profil')));
 }
 
 /* ------------------------------------------------------------ SZCZEGÓŁY ZLECENIA */
 async function viewJob(id) {
   let job;
   try { job = (await api('job', { params: { id } })).job; }
-  catch (e) { return [h('div', { class: 'ek-container' }, pageHead('Zlecenie', 'Robota przepadła', null, '#/'), empty('Tego już nie ma', errMsg(e), h('a', { class: 'ek-btn ek-btn--primary', href: '#/' }, 'Wróć na tablicę')))]; }
+  catch (e) { return [h('div', { class: 'ek-container' }, pageHead('Zlecenie', 'Zlecenie wygasło', null, '#/'), empty('Tego zlecenia już nie ma', errMsg(e), h('a', { class: 'ek-btn ek-btn--primary', href: '#/' }, 'Wróć na tablicę')))]; }
   const a = ACT[job.activity] || ACT.heist;
   const isOwner = job.myStatus === 'owner';
   const inCrew = isOwner || job.myStatus === 'accepted';
@@ -601,15 +601,15 @@ async function viewJob(id) {
   document.title = job.title + ' – Ekipaż';
 
   const members = h('ul', { class: 'ek-crewlist' },
-    job.owner ? h('li', { class: 'ek-person' }, avatar(job.owner), h('div', null, playerLink(job.owner), h('span', { class: 'ek-person__sub' }, 'Szef roboty · ' + job.owner.jobsDone + ' ' + plural(job.owner.jobsDone, 'robota', 'roboty', 'robót'))), wanted(job.owner.stars)) : null,
+    job.owner ? h('li', { class: 'ek-person' }, avatar(job.owner), h('div', null, playerLink(job.owner), h('span', { class: 'ek-person__sub' }, 'Gospodarz · ' + job.owner.jobsDone + ' ' + plural(job.owner.jobsDone, 'robota', 'roboty', 'robót'))), wanted(job.owner.stars)) : null,
     job.members.map(m => h('li', { class: 'ek-person' }, avatar(m), h('div', null, playerLink(m), h('span', { class: 'ek-person__sub' }, 'W składzie')), wanted(m.stars))),
     Array.from({ length: Math.max(0, job.slots - job.taken) }, () => h('li', { class: 'ek-person is-empty' }, h('span', { class: 'ek-slot' }), h('span', null, 'Wolne miejsce'), h('span'))));
 
   let contactBox = null;
   if (inCrew && !isOwner && job.owner && job.owner.contact) {
-    contactBox = h('div', { class: 'ek-stack' }, h('div', { class: 'ek-label' }, 'Discord szefa'), h('button', { class: 'ek-contact', onclick: () => copy(job.owner.contact, 'Discord') }, icon('discord'), job.owner.contact, icon('copy', 14)));
+    contactBox = h('div', { class: 'ek-stack' }, h('div', { class: 'ek-label' }, 'Discord gospodarza'), h('button', { class: 'ek-contact', onclick: () => copy(job.owner.contact, 'Discord') }, icon('discord'), job.owner.contact, icon('copy', 14)));
   } else if (!inCrew) {
-    contactBox = h('p', { class: 'ek-lock-note' }, icon('lock', 16), 'Discord szefa zobaczysz po przyjęciu do składu.');
+    contactBox = h('p', { class: 'ek-lock-note' }, icon('lock', 16), 'Discord gospodarza zobaczysz po przyjęciu do składu.');
   }
 
   let requestsBox = null;
@@ -620,19 +620,19 @@ async function viewJob(id) {
     requestsBox = h('section', { class: 'ek-card ek-stack' },
       h('div', { class: 'ek-section-head', style: { marginBottom: 0 } }, h('h2', { class: 'ek-h3' }, 'Zgłoszenia'), h('span', { class: 'ek-count' }, pending.length + ' oczekuje')),
       pending.length ? h('ul', { class: 'ek-crewlist' }, pending.map(r => requestRow(r, job))) :
-        h('p', { class: 'ek-meta' }, 'Nikt jeszcze nie zapukał. Podeślij link na swój serwer – zlecenia z linkiem zapełniają się szybciej.'),
+        h('p', { class: 'ek-meta' }, 'Brak zgłoszeń. Udostępnij link na swoim serwerze Discord albo w grupie – tak najszybciej zbierzesz skład.'),
       accepted.length ? [h('div', { class: 'ek-label' }, 'Kontakty składu'), h('ul', { class: 'ek-crewlist' }, accepted.map(r => h('li', { class: 'ek-person' }, avatar(r.player), h('div', null, playerLink(r.player), h('span', { class: 'ek-person__sub' }, 'Discord')), h('button', { class: 'ek-contact', onclick: () => copy(r.player.contact, 'Discord') }, r.player.contact))))] : null);
   }
 
   let cta;
   if (job.status === 'closed') cta = [h('span', { class: 'ek-meta', style: { flex: 1 } }, 'Zlecenie zamknięte.'), h('a', { class: 'ek-btn ek-btn--secondary', href: '#/' }, 'Inne zlecenia')];
   else if (isOwner) cta = [h('button', { class: 'ek-btn ek-btn--cash', onclick: () => share(job.title, '#/z/' + job.id) }, icon('share'), 'Udostępnij link'),
-    h('button', { class: 'ek-btn ek-btn--ghost', onclick: () => confirmSheet(job.startAt <= now() ? 'Zakończyć robotę?' : 'Odwołać zlecenie?', job.startAt <= now() ? 'Zlecenie zniknie z tablicy, a skład dostanie zaliczoną robotę.' : 'Zlecenie zniknie z tablicy, a zgłoszenia przepadną.', 'Tak, zamykam', async () => { try { await api('job.close', { body: { id: job.id } }); toast('Zlecenie zamknięte', job.startAt <= now() ? 'Robota zaliczona całemu składowi. Nie zapomnijcie o respekcie.' : 'Zniknęło z tablicy.'); refreshJobs(); refreshMe(); render(); } catch (e) { toast('Nie udało się', errMsg(e), 'danger'); } }) }, job.startAt <= now() ? 'Zakończ' : 'Odwołaj')];
+    h('button', { class: 'ek-btn ek-btn--ghost', onclick: () => confirmSheet(job.startAt <= now() ? 'Zakończyć robotę?' : 'Odwołać zlecenie?', job.startAt <= now() ? 'Zlecenie zniknie z tablicy, a skład dostanie zaliczoną robotę.' : 'Zlecenie zniknie z tablicy, a zgłoszenia przepadną.', 'Tak, zamykam', async () => { try { await api('job.close', { body: { id: job.id } }); toast('Zlecenie zamknięte', job.startAt <= now() ? 'Robota zaliczona całemu składowi. Możecie teraz wystawić sobie oceny.' : 'Zniknęło z tablicy.'); refreshJobs(); refreshMe(); render(); } catch (e) { toast('Nie udało się', errMsg(e), 'danger'); } }) }, job.startAt <= now() ? 'Zakończ' : 'Odwołaj')];
   else if (job.myStatus === 'accepted') cta = [h('span', { class: 'ek-stamp ek-stamp--ok is-stamping', style: { fontSize: '1rem' } }, 'W składzie'), h('button', { class: 'ek-btn ek-btn--secondary', onclick: () => share(job.title, '#/z/' + job.id) }, icon('share'), 'Udostępnij'),
     h('button', { class: 'ek-btn ek-btn--ghost', onclick: () => leave(job) }, 'Rezygnuję')];
-  else if (job.myStatus === 'pending') cta = [h('span', { class: 'ek-meta', style: { flex: 1 } }, 'Zgłoszenie wysłane. Czekasz na decyzję szefa.'), h('button', { class: 'ek-btn ek-btn--ghost', onclick: () => leave(job) }, 'Wycofaj')];
-  else if (job.myStatus === 'declined') cta = [h('span', { class: 'ek-meta', style: { flex: 1 } }, 'Tym razem bez Ciebie. Zleceń nie brakuje.'), h('a', { class: 'ek-btn ek-btn--secondary', href: '#/' }, 'Szukaj dalej')];
-  else if (job.status === 'full') cta = [h('span', { class: 'ek-meta', style: { flex: 1 } }, 'Komplet. Ten skok jest już obsadzony.'), h('a', { class: 'ek-btn ek-btn--secondary', href: '#/' }, 'Inne zlecenia')];
+  else if (job.myStatus === 'pending') cta = [h('span', { class: 'ek-meta', style: { flex: 1 } }, 'Zgłoszenie wysłane. Czekasz na decyzję gospodarza.'), h('button', { class: 'ek-btn ek-btn--ghost', onclick: () => leave(job) }, 'Wycofaj')];
+  else if (job.myStatus === 'declined') cta = [h('span', { class: 'ek-meta', style: { flex: 1 } }, 'Gospodarz wybrał inny skład. Sprawdź pozostałe zlecenia.'), h('a', { class: 'ek-btn ek-btn--secondary', href: '#/' }, 'Szukaj dalej')];
+  else if (job.status === 'full') cta = [h('span', { class: 'ek-meta', style: { flex: 1 } }, 'Skład jest kompletny.'), h('a', { class: 'ek-btn ek-btn--secondary', href: '#/' }, 'Inne zlecenia')];
   else cta = [h('button', { class: 'ek-btn ek-btn--primary ek-btn--lg', onclick: () => joinJob(job) }, 'Wchodzę'), h('button', { class: 'ek-btn ek-btn--secondary ek-btn--icon', 'aria-label': 'Udostępnij', onclick: () => share(job.title, '#/z/' + job.id) }, icon('share'))];
 
   return [h('div', { class: 'ek-container' },
@@ -671,7 +671,7 @@ function requestRow(r, job) {
 function confirmSheet(title, text, yes, fn) {
   openSheet(title, h('p', null, text), [h('button', { class: 'ek-btn ek-btn--ghost', onclick: closeSheet }, 'Nie'), h('button', { class: 'ek-btn ek-btn--danger', onclick: async () => { closeSheet(); await fn(); } }, yes)]);
 }
-function leave(job) { confirmSheet('Na pewno?', job.myStatus === 'accepted' ? 'Zwolnisz miejsce w składzie. Szef dostanie informację na tablicy.' : 'Wycofasz zgłoszenie do tej roboty.', 'Tak, rezygnuję', () => doLeave(job)); }
+function leave(job) { confirmSheet('Na pewno?', job.myStatus === 'accepted' ? 'Zwolnisz swoje miejsce w składzie. Gospodarz zobaczy je jako wolne.' : 'Wycofasz zgłoszenie do tej roboty.', 'Tak, rezygnuję', () => doLeave(job)); }
 async function doLeave(job) {
   try { await api('job.leave', { body: { id: job.id } }); toast('Wycofano', 'Miejsce wraca do puli.'); refreshJobs(); render(); } catch (e) { toast('Nie udało się', errMsg(e), 'danger'); }
 }
@@ -723,7 +723,7 @@ function viewAdd() {
     const btn = e.submitter || $('button[type=submit]', e.target); btn.disabled = true; msg.textContent = '';
     try {
       const r = await api('job.create', { body: { title: d.title.trim(), activity: d.activity, platform: d.platform, slots: d.slots, startAt, style: d.style, micRequired: d.mic, details: d.details } });
-      toast('Zlecenie na tablicy', 'Podeślij link na swój serwer – szybciej zbierzesz skład.', 'cash');
+      toast('Zlecenie opublikowane', 'Udostępnij link na Discordzie – tak najszybciej zbierzesz skład.', 'cash');
       refreshJobs(); location.hash = '#/z/' + r.job.id;
     } catch (err) { btn.disabled = false; msg.textContent = errMsg(err); }
   };
@@ -742,7 +742,7 @@ function viewAdd() {
     h('div', { class: 'ek-row' }, h('button', { class: 'ek-btn ek-btn--primary ek-btn--lg', type: 'submit' }, 'Wystaw zlecenie'), h('a', { class: 'ek-btn ek-btn--ghost', href: '#/' }, 'Anuluj')));
   setTimeout(drawWhen, 0);
   return [h('div', { class: 'ek-container' },
-    pageHead('Nowe zlecenie', 'Wystaw robotę', 'Trzy decyzje: co, kiedy, ilu ludzi. Zlecenie wygasa dwie godziny po starcie, więc tablica jest zawsze świeża.', '#/'),
+    pageHead('Nowe zlecenie', 'Wystaw zlecenie', 'Podaj aktywność, godzinę startu i liczbę miejsc. Zlecenie znika z tablicy dwie godziny po starcie.', '#/'),
     h('div', { class: 'ek-panel' }, form))];
 }
 
@@ -788,7 +788,7 @@ function viewStart() {
       const submit = async e => {
         e.preventDefault(); msg.textContent = '';
         if (d.nick.trim().length < 3) { msg.textContent = 'Nick musi mieć co najmniej 3 znaki.'; nick.focus(); return; }
-        if (d.contact.trim().length < 2) { msg.textContent = 'Podaj Discorda – po nim skład się z Tobą zgada.'; contact.focus(); return; }
+        if (d.contact.trim().length < 2) { msg.textContent = 'Podaj nazwę użytkownika Discord – po niej skład się z Tobą skontaktuje.'; contact.focus(); return; }
         const btn = e.submitter; if (btn) btn.disabled = true;
         try {
           const r = await api('register', { body: { ...d, nick: d.nick.trim(), contact: d.contact.trim(), website: hp.value } });
@@ -796,12 +796,12 @@ function viewStart() {
           showRecovery(r.recovery, true);
         } catch (err) { if (btn) btn.disabled = false; msg.textContent = errMsg(err); }
       };
-      body = [h('h2', { class: 'ek-h2' }, 'Twoja kartoteka'), h('p', { class: 'ek-meta' }, 'Bez maila i bez hasła. Dostaniesz kod odzyskiwania – to Twój klucz do profilu.'),
+      body = [h('h2', { class: 'ek-h2' }, 'Twój profil'), h('p', { class: 'ek-meta' }, 'Bez maila i hasła. Na koniec dostaniesz kod odzyskiwania – zapisz go.'),
         h('form', { class: 'ek-form', onsubmit: submit, novalidate: true },
-          field('Nick', nick, '3–24 znaki. Najlepiej taki sam jak w grze – łatwiej Cię znaleźć.'),
+          field('Nick', nick, '3–24 znaki. Użyj nicku z gry, żeby skład mógł Cię znaleźć.'),
           field('Discord', contact, 'Nazwa użytkownika, np. krolnapadow. Widzą ją tylko ludzie przyjęci do wspólnego składu.'),
           h('div', { class: 'ek-stack' }, groupLabel('Kolor avatara'), avs), hp, msg,
-          h('div', { class: 'ek-row' }, h('button', { class: 'ek-btn ek-btn--ghost', type: 'button', onclick: () => { step = 3; draw(); } }, 'Wstecz'), h('button', { class: 'ek-btn ek-btn--primary ek-btn--lg', type: 'submit' }, 'Wchodzę na miasto')),
+          h('div', { class: 'ek-row' }, h('button', { class: 'ek-btn ek-btn--ghost', type: 'button', onclick: () => { step = 3; draw(); } }, 'Wstecz'), h('button', { class: 'ek-btn ek-btn--primary ek-btn--lg', type: 'submit' }, 'Załóż profil')),
           h('p', { class: 'ek-meta' }, 'Zakładając profil, akceptujesz ', h('a', { href: '#/zasady' }, 'zasady'), '. Serwis dla osób 16+.'))];
       canNext = false;
     }
@@ -812,16 +812,16 @@ function viewStart() {
     const firstBtn = wrap.querySelector('h2'); if (firstBtn) { firstBtn.tabIndex = -1; firstBtn.focus({ preventScroll: true }); }
   };
   draw();
-  return [h('div', { class: 'ek-container', style: { maxWidth: '760px' } }, pageHead('Pierwsze wejście', 'Załóż profil gracza', 'Cztery szybkie kroki. Potem możesz od razu wystawić zlecenie albo wejść w cudze.'), wrap)];
+  return [h('div', { class: 'ek-container', style: { maxWidth: '760px' } }, pageHead('Pierwsze wejście', 'Załóż profil gracza', 'Cztery krótkie kroki, bez maila i hasła. Potem od razu wystawiasz zlecenie albo dołączasz do składu.'), wrap)];
 }
 function showRecovery(code, fresh) {
   const next = store.get('ek_next'); store.set('ek_next', null);
-  openSheet(fresh ? 'Witaj na mieście' : 'Kod odzyskiwania',
+  openSheet(fresh ? 'Profil gotowy' : 'Kod odzyskiwania',
     h('div', { class: 'ek-stack' },
-      h('p', null, 'To Twój klucz do profilu. Zapisz go w bezpiecznym miejscu – drugi raz go nie pokażemy. Przyda się na nowym telefonie albo po wyczyszczeniu przeglądarki.'),
+      h('p', null, 'To jedyny klucz do Twojego profilu. Zapisz go w bezpiecznym miejscu – nie pokażemy go ponownie. Przyda się na nowym urządzeniu albo po wyczyszczeniu przeglądarki.'),
       h('div', { class: 'ek-recovery' }, h('div', { class: 'ek-label' }, 'Nick: ' + (S.me ? S.me.nick : '')), h('div', { class: 'ek-recovery__code' }, code),
         h('button', { class: 'ek-btn ek-btn--cash ek-btn--sm', onclick: () => copy((S.me ? S.me.nick : '') + ' / ' + code, 'Kod') }, icon('copy', 16), 'Kopiuj kod'))),
-    [h('button', { class: 'ek-btn ek-btn--primary', onclick: () => { closeSheet(); location.hash = next || '#/dodaj'; } }, 'Zapisane, lecimy')]);
+    [h('button', { class: 'ek-btn ek-btn--primary', onclick: () => { closeSheet(); location.hash = next || '#/dodaj'; } }, 'Kod zapisany')]);
   refreshMe();
 }
 function viewRecover() {
@@ -833,7 +833,7 @@ function viewRecover() {
     try { const r = await api('recover', { body: { nick: nick.value.trim(), code: code.value.trim() } }); setToken(r.token); S.me = r.me; toast('Jesteś z powrotem', 'Profil ' + r.me.nick + ' odzyskany.'); refreshMe(); location.hash = '#/ja'; }
     catch (err) { msg.textContent = errMsg(err); }
   };
-  return [h('div', { class: 'ek-container', style: { maxWidth: '640px' } }, pageHead('Odzyskiwanie', 'Wróć do swojej kartoteki', 'Podaj nick i kod odzyskiwania, który dostałeś przy zakładaniu profilu.'),
+  return [h('div', { class: 'ek-container', style: { maxWidth: '640px' } }, pageHead('Odzyskiwanie', 'Odzyskaj profil', 'Wpisz nick i kod odzyskiwania z dnia założenia profilu.'),
     h('div', { class: 'ek-panel' }, h('form', { class: 'ek-form', onsubmit: submit }, field('Nick', nick), field('Kod odzyskiwania', code), msg,
       h('div', { class: 'ek-row' }, h('button', { class: 'ek-btn ek-btn--primary', type: 'submit' }, 'Odzyskaj profil'), h('a', { class: 'ek-btn ek-btn--ghost', href: '#/start' }, 'Załóż nowy')))))];
 }
@@ -877,7 +877,7 @@ async function viewPlayer(id) {
   if (S.me && S.me.id === id) { location.hash = '#/ja'; return []; }
   let d;
   try { d = await api('player', { params: { id } }); }
-  catch (e) { return [h('div', { class: 'ek-container' }, pageHead('Kartoteka', 'Nie ma takiego gracza', null, '#/'), empty('Akta zniknęły', errMsg(e)))]; }
+  catch (e) { return [h('div', { class: 'ek-container' }, pageHead('Kartoteka', 'Nie ma takiego gracza', null, '#/'), empty('Profil niedostępny', errMsg(e)))]; }
   const p = d.player;
   document.title = p.nick + ' – kartoteka – Ekipaż';
   const theirJobs = S.jobs.filter(j => j.owner && j.owner.id === p.id && j.status !== 'closed');
@@ -914,16 +914,16 @@ async function viewMe() {
     let content;
     if (S.meTab === 'inbox') {
       content = M.inbox.length ? h('ul', { class: 'ek-crewlist' }, M.inbox.map(r => requestRow(r, null))) :
-        empty('Nikt jeszcze nie zapukał', M.jobs.length ? 'Podeślij link do zlecenia na swój serwer albo grupę – zgłoszenia przyjdą szybciej.' : 'Wystaw zlecenie, a zgłoszenia od graczy pojawią się właśnie tutaj.', h('a', { class: 'ek-btn ek-btn--primary', href: '#/dodaj' }, 'Wystaw zlecenie'));
+        empty('Brak nowych zgłoszeń', M.jobs.length ? 'Udostępnij link do zlecenia na Discordzie albo w grupie – tak najszybciej zbierzesz skład.' : 'Wystaw zlecenie. Zgłoszenia graczy pojawią się tutaj.', h('a', { class: 'ek-btn ek-btn--primary', href: '#/dodaj' }, 'Wystaw zlecenie'));
     } else if (S.meTab === 'mates') {
-      content = M.mates.length ? h('div', { class: 'ek-stack' }, h('p', { class: 'ek-meta' }, 'To ludzie z Twoich składów z ostatnich 48 godzin. Daj respekt tym, z którymi robota poszła czysto – tak buduje się zaufanie na mieście.'),
+      content = M.mates.length ? h('div', { class: 'ek-stack' }, h('p', { class: 'ek-meta' }, 'Gracze z Twoich składów z ostatnich 48 godzin. Daj +1 tym, którzy dowieźli – to ich reputacja na kolejne zlecenia.'),
         h('ul', { class: 'ek-crewlist' }, M.mates.map(m => h('li', { class: 'ek-person' }, avatar(m.player), h('div', null, playerLink(m.player), h('span', { class: 'ek-person__sub' }, m.jobTitle)),
           h('button', { class: 'ek-btn ek-btn--cash ek-btn--sm', onclick: async ev => {
             const btn = ev.currentTarget; btn.disabled = true;
             try { await api('vouch', { body: { to: m.player.id, jobId: m.jobId } }); toast('Czysta robota +1', m.player.nick + ' dostaje respekt.', 'cash'); await refreshMe(); draw(); }
             catch (e) { btn.disabled = false; toast('Nie udało się', errMsg(e), 'danger'); }
           } }, '★ Czysta robota +1'))))) :
-        empty('Nie ma komu dać respektu', 'Respekt dajesz ludziom ze wspólnego składu, do 48 godzin po starcie roboty.', null, 'star');
+        empty('Brak graczy do oceny', 'Oceniasz osoby ze wspólnego składu, od 15 minut do 48 godzin po starcie zlecenia.', null, 'star');
     } else if (S.meTab === 'jobs' || S.meTab === 'joined') {
       const list = S.meTab === 'jobs' ? M.jobs : M.joined;
       content = list.length ? h('div', { class: 'ek-grid' }, list.map(jobCard)) :
@@ -976,7 +976,7 @@ function editProfile(me) {
 }
 function logout() {
   openSheet('Wylogować?', h('p', null, 'Do profilu wrócisz tylko z kodem odzyskiwania. Masz go zapisanego?'),
-    [h('button', { class: 'ek-btn ek-btn--ghost', onclick: closeSheet }, 'Zostaję'), h('button', { class: 'ek-btn ek-btn--danger', onclick: async () => { try { await api('logout', { body: {} }); } catch (e) {} setToken(null); closeSheet(); toast('Wylogowano', 'Do zobaczenia na mieście.', 'info'); location.hash = '#/'; renderChrome(); } }, 'Wyloguj')]);
+    [h('button', { class: 'ek-btn ek-btn--ghost', onclick: closeSheet }, 'Zostaję'), h('button', { class: 'ek-btn ek-btn--danger', onclick: async () => { try { await api('logout', { body: {} }); } catch (e) {} setToken(null); closeSheet(); toast('Wylogowano', 'Wrócisz kodem odzyskiwania.', 'info'); location.hash = '#/'; renderChrome(); } }, 'Wyloguj')]);
 }
 
 /* ------------------------------------------------------------ EKIPY */
@@ -1000,12 +1000,12 @@ async function viewCrews() {
   try { crews = (await api('crews', { params: plat ? { platform: plat } : {} })).crews; } catch (e) { return [h('div', { class: 'ek-container' }, pageHead('Ekipy', 'Ekipy', null), empty('Brak połączenia', errMsg(e)))]; }
   const myCrew = S.meData && S.meData.crew;
   return [h('div', { class: 'ek-container' },
-    pageHead('Stałe składy', 'Ekipy', 'Grasz regularnie z tymi samymi ludźmi? Załóż ekipę z tagiem, zbierajcie wspólny respekt i rekrutujcie nowych.'),
+    pageHead('Stałe składy', 'Ekipy', 'Gracie regularnie w tym samym gronie? Załóż ekipę z własnym tagiem, budujcie wspólną reputację i rekrutujcie nowych graczy.'),
     h('div', { class: 'ek-row', style: { marginBottom: '16px', justifyContent: 'space-between' } },
       h('div', { class: 'ek-chips' }, chip('Wszystkie', !plat, () => { S.filters.platform = ''; store.set('ek_f_platform', ''); render(); }), ...Object.keys(PLAT).map(p => chip(PLAT_L[p], plat === p, () => { S.filters.platform = p; store.set('ek_f_platform', p); render(); }))),
       myCrew ? h('a', { class: 'ek-btn ek-btn--secondary', href: '#/e/' + myCrew.id }, 'Moja ekipa') : h('button', { class: 'ek-btn ek-btn--primary', onclick: createCrew }, icon('plus'), 'Załóż ekipę')),
     crews.length ? h('div', { class: 'ek-grid' }, crews.map(crewCard)) :
-      empty('Żadnej ekipy na horyzoncie', 'Bądź pierwszy. Ekipa z tagiem to stały skład, wspólny ranking i rekrutacja nowych ludzi.', myCrew ? null : h('button', { class: 'ek-btn ek-btn--primary', onclick: createCrew }, 'Załóż ekipę')))];
+      empty('Nie ma jeszcze żadnej ekipy', 'Załóż pierwszą. Dostaniesz własny tag, wspólny ranking i stronę rekrutacyjną dla nowych graczy.', myCrew ? null : h('button', { class: 'ek-btn ek-btn--primary', onclick: createCrew }, 'Załóż ekipę')))];
 }
 function createCrew() {
   if (needProfile('#/ekipy')) return;
@@ -1029,7 +1029,7 @@ function createCrew() {
 }
 async function viewCrew(id) {
   let c;
-  try { c = (await api('crew', { params: { id } })).crew; } catch (e) { return [h('div', { class: 'ek-container' }, pageHead('Ekipa', 'Nie ma takiej ekipy', null, '#/ekipy'), empty('Rozwiązana albo nie istniała', errMsg(e)))]; }
+  try { c = (await api('crew', { params: { id } })).crew; } catch (e) { return [h('div', { class: 'ek-container' }, pageHead('Ekipa', 'Nie ma takiej ekipy', null, '#/ekipy'), empty('Ekipa została rozwiązana', errMsg(e)))]; }
   document.title = c.name + ' – ekipa – Ekipaż';
   const isBoss = S.me && c.ownerId === S.me.id;
   const myCrew = S.meData && S.meData.crew;
@@ -1072,7 +1072,7 @@ async function viewRanking() {
         avatar(p), h('span', { style: { minWidth: 0 } }, h('span', { class: 'ek-lb__name' }, p.nick), h('span', { class: 'ek-lb__sub' }, PLAT[p.platform] + ' · ' + wantedText(p.stars))),
         h('span', { class: 'ek-lb__score' }, '+' + p.score)))),
         S.me && meIdx === -1 ? h('li', null, h('div', { class: 'ek-lb__row is-me is-pinned' }, h('span', { class: 'ek-lb__rank' }, '–'), avatar(S.me), h('span', null, h('span', { class: 'ek-lb__name' }, S.me.nick), h('span', { class: 'ek-lb__sub' }, 'Jeszcze bez respektu w tym okresie')), h('span', { class: 'ek-lb__score' }, '0'))) : null) :
-      empty('Ranking czeka na pierwszych', 'Respekt zbiera się po wspólnych robotach. Wystaw zlecenie, zagraj czysto i wskocz na podium.', h('a', { class: 'ek-btn ek-btn--primary', href: '#/dodaj' }, 'Wystaw zlecenie'), 'star');
+      empty('Ranking ruszy po pierwszych grach', 'Oceny pojawiają się po wspólnych robotach. Wystaw zlecenie, zagraj z ekipą i zdobądź pierwsze +1.', h('a', { class: 'ek-btn ek-btn--primary', href: '#/dodaj' }, 'Wystaw zlecenie'), 'star');
   } else {
     list = d.crews.length ? h('ol', { class: 'ek-lb' }, d.crews.map((c, i) => h('li', null, h('a', { class: 'ek-lb__row' + (i < 3 ? ' is-top' : ''), href: '#/e/' + c.id },
       i < 3 ? h('span', { class: 'ek-medal ek-medal--' + (i + 1) }, i + 1) : h('span', { class: 'ek-lb__rank' }, i + 1),
@@ -1081,7 +1081,7 @@ async function viewRanking() {
       h('span', { class: 'ek-lb__score' }, '★ ' + c.score))))) : empty('Brak ekip w rankingu', 'Załóż ekipę i zbierajcie respekt razem.', h('a', { class: 'ek-btn ek-btn--primary', href: '#/ekipy' }, 'Zobacz ekipy'), 'star');
   }
   return [h('div', { class: 'ek-container', style: { maxWidth: '820px' } },
-    pageHead('Ranking', S.lbTab === 'players' ? (S.lbPeriod === 'week' ? 'Najbardziej zaufani w tym tygodniu' : S.lbPeriod === 'month' ? 'Najbardziej zaufani w miesiącu' : 'Najbardziej zaufani wszech czasów') : 'Najmocniejsze ekipy', 'Liczy się respekt od ludzi, z którymi naprawdę zagrałeś. Nie da się go kupić ani nabić samemu.'),
+    pageHead('Ranking', S.lbTab === 'players' ? (S.lbPeriod === 'week' ? 'Najlepiej oceniani w tym tygodniu' : S.lbPeriod === 'month' ? 'Najlepiej oceniani w tym miesiącu' : 'Najlepiej oceniani od startu') : 'Najmocniejsze ekipy', 'Liczą się wyłącznie oceny od graczy ze wspólnych składów. Nie da się ich kupić ani nabić samemu.'),
     h('div', { class: 'ek-lb-head' },
       seg([['players', 'Gracze'], ['crews', 'Ekipy']], S.lbTab, v => { S.lbTab = v; }),
       S.lbTab === 'players' ? seg([['week', 'Tydzień'], ['month', 'Miesiąc'], ['all', 'Zawsze']], S.lbPeriod, v => { S.lbPeriod = v; }) : null),
@@ -1097,7 +1097,7 @@ async function viewPlan() {
   const max = Math.max(1, ...Object.values(v.counts));
   const mine = new Set(v.mine);
   return [h('div', { class: 'ek-container' },
-    pageHead('Roadmapa', 'Co budujemy dalej', 'Głosujesz – my budujemy. Kolejność prac ustawia społeczność, nie my.'),
+    pageHead('Roadmapa', 'Co budujemy dalej', 'Zagłosuj na funkcje, których potrzebujesz. Najczęściej wybierane wdrażamy jako pierwsze.'),
     h('div', { class: 'ek-roadmap' }, FEATURES.map(f => {
       const n = v.counts[f.id] || 0, on = mine.has(f.id);
       return h('article', { class: 'ek-feature' }, h('h3', { class: 'ek-feature__title' }, f.t), h('p', null, f.d),
@@ -1111,7 +1111,7 @@ async function viewPlan() {
 }
 function viewRules() {
   const li = t => h('li', null, t);
-  return [h('div', { class: 'ek-container' }, pageHead('Zasady', 'Zasady miasta', 'Krótko, bo nikt nie lubi regulaminów. Ale te kilka punktów trzymamy twardo.'),
+  return [h('div', { class: 'ek-container' }, pageHead('Zasady', 'Zasady', 'Kilka reguł, które trzymają poziom tablicy. Pilnujemy ich bez wyjątków.'),
     h('div', { class: 'ek-prose' },
       h('h2', { class: 'ek-h3' }, 'Gramy czysto'),
       h('ul', null, li('Zero cheatów, modmenu, handlu kontami, walutą z gry i „money dropów”. Za to od razu ban.'), li('Zero oszustw – obiecujesz udział w łupie, to dzielisz.'), li('Szanujemy się na czacie. Toksyczność zgłaszaj przyciskiem z flagą.'), li('Respekt dajesz tylko za prawdziwą, wspólną grę. Farmienie respektu = reset kartoteki.')),
@@ -1235,7 +1235,7 @@ setInterval(async () => {
     const j = (await api('job', { params: { id: r.id } })).job;
     const sig = JSON.stringify([j.status, j.taken, j.myStatus, (j.requests || []).map(x => x.id + x.status), j.owner && j.owner.contact]);
     if (lastJobSig && sig !== lastJobSig) {
-      if (j.myStatus === 'accepted') toast('Jesteś w składzie', 'Discord szefa masz już w szczegółach zlecenia.', 'cash');
+      if (j.myStatus === 'accepted') toast('Jesteś w składzie', 'Discord gospodarza znajdziesz w szczegółach zlecenia.', 'cash');
       quietRender = true; await render(); quietRender = false;
     }
     lastJobSig = sig;

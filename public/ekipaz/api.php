@@ -409,8 +409,8 @@ try {
     if ($row['status'] !== 'open') fail('Skład jest już pełny albo zlecenie zostało zamknięte.', 409, 'closed');
     if ($j['platform'] !== $m['platform']) fail('To zlecenie jest na inną platformę niż Twój profil.', 409, 'platform');
     $ex = one('SELECT * FROM requests WHERE job_id=? AND player_id=?', [$j['id'], $m['id']]);
-    if ($ex && $ex['status'] === 'declined') fail('Szef tej roboty już odrzucił Twoje zgłoszenie.', 409, 'declined');
-    if ($ex && $ex['status'] !== 'left') fail('Zgłoszenie już wysłane. Czekaj na odpowiedź szefa.', 409, 'exists');
+    if ($ex && $ex['status'] === 'declined') fail('Gospodarz tego zlecenia odrzucił już Twoje zgłoszenie.', 409, 'declined');
+    if ($ex && $ex['status'] !== 'left') fail('Zgłoszenie jest już wysłane. Poczekaj na decyzję gospodarza.', 409, 'exists');
     $msgTxt = clean($b['msg'] ?? '', 160);
     if (hasLink($msgTxt)) fail('Bez linków w wiadomości.');
     if ($ex) q('UPDATE requests SET status="pending", msg=?, created=?, decided=0 WHERE id=?', [$msgTxt, now(), $ex['id']]);
@@ -431,7 +431,7 @@ try {
     $m = me(); $b = body();
     $r = one('SELECT r.*, j.owner_id, j.slots, j.title, j.status jstatus, j.start_at FROM requests r JOIN jobs j ON j.id=r.job_id WHERE r.id=?', [clean($b['id'] ?? '', 16)]);
     if (!$r) fail('Nie ma takiego zgłoszenia.', 404, 'not_found');
-    if ($r['owner_id'] !== $m['id']) fail('Tylko szef zlecenia decyduje o składzie.', 403, 'forbidden');
+    if ($r['owner_id'] !== $m['id']) fail('O składzie decyduje gospodarz zlecenia.', 403, 'forbidden');
     limit('decide', 120, 3600);
     if ($r['status'] !== 'pending') fail('To zgłoszenie jest już rozpatrzone.', 409, 'decided');
     if (in_array($r['jstatus'], ['closed', 'hidden'], true) || now() > (int)$r['start_at'] + JOB_TTL) fail('Zlecenie jest już zamknięte.', 409, 'closed');
@@ -453,16 +453,16 @@ try {
     if ($method !== 'POST') fail('Metoda niedozwolona', 405);
     $m = me(); $b = body();
     $to = clean($b['to'] ?? '', 16); $jobId = clean($b['jobId'] ?? '', 16);
-    if ($to === $m['id']) fail('Respektu nie daje się samemu sobie.');
+    if ($to === $m['id']) fail('Nie możesz ocenić samego siebie.');
     limit('vouch', 30, 3600);
     $j = one('SELECT * FROM jobs WHERE id=?', [$jobId]);
-    if (!$j || (int)$j['start_at'] > now() - 900) fail('Respekt możesz dać po wspólnej robocie – najwcześniej 15 minut po starcie.', 409, 'too_early');
+    if (!$j || (int)$j['start_at'] > now() - 900) fail('Ocenę wystawisz po wspólnej grze – najwcześniej 15 minut po starcie.', 409, 'too_early');
     if ((int)$j['closed_at'] && (int)$j['closed_at'] < (int)$j['start_at']) fail('To zlecenie zostało odwołane przed startem.', 409, 'cancelled');
     if ($j['status'] === 'hidden') fail('To zlecenie zostało ukryte przez moderację.', 409, 'hidden');
-    if (one('SELECT 1 FROM vouches WHERE from_id=? AND to_id=? AND created>?', [$m['id'], $to, now() - 7 * 86400])) fail('Ten gracz dostał już od Ciebie respekt w tym tygodniu. Wróć za kilka dni.', 409, 'weekly');
-    if (now() > (int)$j['start_at'] + VOUCH_WINDOW) fail('Minęło 48 godzin od tej roboty – respekt można było dać wcześniej.', 409, 'too_late');
+    if (one('SELECT 1 FROM vouches WHERE from_id=? AND to_id=? AND created>?', [$m['id'], $to, now() - 7 * 86400])) fail('Ten gracz ma już od Ciebie ocenę w tym tygodniu.', 409, 'weekly');
+    if (now() > (int)$j['start_at'] + VOUCH_WINDOW) fail('Minęło 48 godzin od startu – czas na ocenę już się skończył.', 409, 'too_late');
     $inJob = fn($pid) => $j['owner_id'] === $pid || one('SELECT 1 FROM requests WHERE job_id=? AND player_id=? AND status="accepted" AND decided<=?', [$jobId, $pid, (int)$j['start_at']]);
-    if (!$inJob($m['id']) || !$inJob($to)) fail('Respekt możesz dać tylko komuś z Twojego składu.', 403, 'forbidden');
+    if (!$inJob($m['id']) || !$inJob($to)) fail('Ocenić możesz tylko graczy z Twojego składu.', 403, 'forbidden');
     $ins = q('INSERT OR IGNORE INTO vouches(from_id,to_id,job_id,created) VALUES(?,?,?,?)', [$m['id'], $to, $jobId, now()]);
     if ($ins->rowCount()) {
       q('UPDATE players SET rep=rep+1 WHERE id=?', [$to]);
