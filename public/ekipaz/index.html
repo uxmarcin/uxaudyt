@@ -14,7 +14,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Anton&family=Barlow+Condensed:wght@500;600;700&family=Barlow:wght@400;500;600;700&family=Caveat:wght@700&family=JetBrains+Mono:wght@500;700&display=swap&subset=latin-ext" rel="stylesheet">
-<link rel="stylesheet" href="app.css?v=3">
+<link rel="stylesheet" href="app.css?v=4">
 </head>
 <body>
 <a class="ek-sr-only" href="#main">Przejdź do treści</a>
@@ -36,6 +36,8 @@
 
 <div class="ek-toasts" id="toasts" aria-live="polite"></div>
 
+<div class="ek-shell">
+<aside class="ek-side" id="side" aria-label="Menu boczne"></aside>
 <main class="ek-app" id="main">
   <div id="view" class="ek-view" tabindex="-1"></div>
   <footer class="ek-footer">
@@ -49,6 +51,8 @@
     </div>
   </footer>
 </main>
+<aside class="ek-rail" id="rail" aria-label="Na żywo"></aside>
+</div>
 
 <nav class="ek-bottomnav" aria-label="Nawigacja">
   <a class="ek-bottomnav__item" href="#/" data-nav="board"><span class="ek-bottomnav__icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="16" rx="2"/><path d="M8 4v4M16 4v4M7 13h4M7 16h7"/></svg></span>Tablica</a>
@@ -61,6 +65,6 @@
 <div class="ek-backdrop" id="backdrop"></div>
 <div class="ek-sheet" id="sheet" role="dialog" aria-modal="true" aria-labelledby="sheetTitle" hidden></div>
 
-<script src="app.js?v=3" defer></script>
+<script src="app.js?v=4" defer></script>
 </body>
 </html>

@@ -434,6 +434,7 @@ function filterBar() {
 function renderBoardList() {
   const host = document.getElementById('boardList'); if (!host) return;
   const fb = document.getElementById('filterbar'); if (fb) fb.replaceWith(filterBar());
+  document.querySelectorAll('.ek-cat').forEach(b => { const k = [...b.classList].find(c => c.startsWith('ek-cat--')); if (k) b.setAttribute('aria-pressed', S.filters.activity === k.slice(8) ? 'true' : 'false'); });
   const qm = document.querySelector('.ek-quickmatch'); // utrzymaj selecty w zgodzie z filtrami
   if (qm) { const sels = qm.querySelectorAll('select'); if (sels[0]) sels[0].value = S.filters.activity; if (sels[1]) sels[1].value = S.filters.platform; if (sels[2]) sels[2].value = S.filters.when; }
   if (!S.jobsLoaded) { host.replaceChildren(h('div', { class: 'ek-grid' }, skeletonCards(3))); return; }
@@ -448,29 +449,90 @@ function renderBoardList() {
         anyJobs ? h('button', { class: 'ek-btn ek-btn--ghost', onclick: () => { Object.assign(S.filters, { platform: '', activity: '', when: '', style: '', open: false }); store.set('ek_f_platform', ''); render(); } }, 'Wyczyść filtry') : null)));
     return;
   }
-  host.replaceChildren(h('div', { class: 'ek-grid' }, list.map(jobCard)), list.length < 4 ? samplesSection(list) : null);
+  host.replaceChildren(...[h('div', { class: 'ek-grid' }, list.map(jobCard)), list.length < 4 ? samplesSection(list) : null].filter(Boolean));
+}
+function goFilter(patch) {
+  Object.assign(S.filters, { activity: '', when: '', style: '', open: false }, patch);
+  if (route().name !== 'board') { location.hash = '#/'; setTimeout(() => scrollToJobs(), 400); return; }
+  renderBoardList(); scrollToJobs();
+}
+function scrollToJobs() { const el = document.getElementById('jobs'); if (el) el.scrollIntoView({ behavior: matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth', block: 'start' }); }
+const CAT_ART = { heist: '💰', contact: '📞', race: '🏁', business: '📦', freeroam: '🌴', pvp: '🎯', rp: '🎭', cars: '🚗' };
+function welcomeCard() {
+  const st = S.stats || {};
+  const me = S.me;
+  const inbox = S.meData ? S.meData.inbox.length : 0;
+  return h('section', { class: 'ek-welcome' },
+    h('div', { class: 'ek-welcome__art', 'aria-hidden': 'true' }, h('div', { class: 'ek-hero__sun' }), heroSkyline()),
+    h('div', { class: 'ek-welcome__body' },
+      h('div', { class: 'ek-kicker' }, 'Polska tablica zleceń · GTA Online'),
+      me ? h('h1', { class: 'ek-welcome__title' }, 'Siema, ', h('span', { class: 'ek-sunset-text' }, me.nick), h('br'), 'kto dziś wchodzi w robotę?')
+         : h('h1', { class: 'ek-welcome__title' }, 'Skompletuj ekipę, ', h('span', { class: 'ek-sunset-text' }, 'zanim ostygnie kawa.')),
+      h('p', { class: 'ek-welcome__sub' }, me
+        ? (inbox ? 'Masz ' + inbox + ' ' + plural(inbox, 'zgłoszenie', 'zgłoszenia', 'zgłoszeń') + ' do rozpatrzenia. Skład sam się nie wybierze.' : 'Wystaw zlecenie z godziną startu albo wskocz do cudzego składu.')
+        : 'Zlecenia z godziną startu, skład 2/4 i respekt za czystą robotę. Bez randomów, którzy wysadzą Cię po pięciu minutach.'),
+      h('div', { class: 'ek-welcome__ctas' },
+        me ? h('a', { class: 'ek-btn ek-btn--grad ek-btn--lg', href: '#/dodaj' }, icon('plus'), 'Wystaw zlecenie')
+           : h('a', { class: 'ek-btn ek-btn--grad ek-btn--lg', href: '#/start' }, 'Załóż profil – 30 sekund'),
+        me && inbox ? h('a', { class: 'ek-btn ek-btn--glass ek-btn--lg', href: '#/ja' }, 'Zgłoszenia', h('span', { class: 'ek-dot-inline' }, inbox))
+           : h('button', { class: 'ek-btn ek-btn--glass ek-btn--lg', onclick: scrollToJobs }, 'Przeglądaj zlecenia')),
+      h('div', { class: 'ek-welcome__stats' },
+        h('span', { class: 'ek-pillstat' }, h('i', { class: 'ek-pillstat__dot' }), h('b', null, st.online ?? '–'), ' online'),
+        h('span', { class: 'ek-pillstat' }, h('b', null, st.jobs ?? '–'), ' ' + plural(st.jobs || 0, 'zlecenie', 'zlecenia', 'zleceń')),
+        h('span', { class: 'ek-pillstat' }, h('b', null, st.crews ?? '–'), ' ' + plural(st.crews || 0, 'ekipa', 'ekipy', 'ekip')))),
+    !me ? h('p', { class: 'ek-welcome__note' }, h('b', null, 'Nowy tryb online nie ma jeszcze daty startu. '), 'Zbieraj ekipę już teraz w obecnym GTA Online – profil i respekt przejdą z Tobą dalej.') : null);
+}
+function bigCards() {
+  const n = S.jobs.filter(j => j.status === 'open').length;
+  return h('section', { class: 'ek-bigcards' },
+    h('a', { class: 'ek-bigcard ek-bigcard--jobs', href: '#jobs', onclick: e => { e.preventDefault(); scrollToJobs(); } },
+      h('span', { class: 'ek-bigcard__title' }, 'Zlecenia'), h('span', { class: 'ek-bigcard__meta' }, n + ' ' + plural(n, 'otwarte', 'otwarte', 'otwartych')), h('span', { class: 'ek-bigcard__art', 'aria-hidden': 'true' }, '💰')),
+    h('a', { class: 'ek-bigcard ek-bigcard--crews', href: '#/ekipy' },
+      h('span', { class: 'ek-bigcard__title' }, 'Ekipy'), h('span', { class: 'ek-bigcard__meta' }, (S.stats && S.stats.crews || 0) + ' ' + plural((S.stats && S.stats.crews) || 0, 'ekipa', 'ekipy', 'ekip')), h('span', { class: 'ek-bigcard__art', 'aria-hidden': 'true' }, '🕶️')));
+}
+function promoBanners() {
+  const cnt = a => S.jobs.filter(j => j.activity === a && j.status === 'open').length;
+  const B = [
+    { cls: 'heist', k: 'Na dziś', t: ['Noc', 'napadów'], d: cnt('heist') ? cnt('heist') + ' ' + plural(cnt('heist'), 'otwarte zlecenie', 'otwarte zlecenia', 'otwartych zleceń') : 'Wystaw pierwsze dziś', art: '💰', on: () => goFilter({ activity: 'heist', when: 'today' }) },
+    { cls: 'race', k: 'Ulice nocą', t: ['Wyścigi', 'do rana'], d: cnt('race') ? cnt('race') + ' ' + plural(cnt('race'), 'lobby', 'lobby', 'lobby') + ' czeka' : 'Zbierz lobby wyścigowe', art: '🏎️', on: () => goFilter({ activity: 'race' }) },
+    { cls: 'rank', k: 'Ranking tygodnia', t: ['Respekt', 'na mieście'], d: 'Kto gra najczyściej?', art: '🏆', on: () => { location.hash = '#/ranking'; } },
+  ];
+  return h('section', { class: 'ek-promos', 'aria-label': 'Wyróżnione' }, B.map(b => h('button', { type: 'button', class: 'ek-promo ek-promo--' + b.cls, onclick: b.on },
+    h('span', { class: 'ek-promo__k' }, b.k), h('span', { class: 'ek-promo__t' }, b.t[0], h('br'), b.t[1]), h('span', { class: 'ek-promo__d' }, b.d), h('span', { class: 'ek-promo__art', 'aria-hidden': 'true' }, b.art))));
+}
+function liveStrip() {
+  const feed = ((S.stats && S.stats.feed) || []).slice(0, 12);
+  const items = feed.length ? feed.map(e => {
+    const t = { job: ['szuka ludzi', e.title], accept: ['wchodzi w skład', e.title], vouch: ['dostaje respekt', 'od ' + e.from], crew: ['zakłada ekipę', e.crew], crewjoin: ['dołącza do ekipy', e.crew] }[e.type] || ['', ''];
+    const href = e.jobId ? '#/z/' + e.jobId : e.crewId ? '#/e/' + e.crewId : null;
+    return h(href ? 'a' : 'div', { class: 'ek-livechip', href },
+      h('span', { class: 'ek-livechip__ic', 'aria-hidden': 'true' }, ({ job: '📣', accept: '🤝', vouch: '⭐', crew: '🕶️', crewjoin: '🕶️' })[e.type] || '•'),
+      h('span', { class: 'ek-livechip__txt' }, h('b', null, e.nick), ' ' + t[0], h('span', { class: 'ek-livechip__sub' }, t[1] + ' · ' + hhmm(e.created))));
+  }) : [h('div', { class: 'ek-livechip' }, h('span', { class: 'ek-livechip__ic' }, '📻'), h('span', { class: 'ek-livechip__txt' }, h('b', null, 'Nasłuch włączony'), h('span', { class: 'ek-livechip__sub' }, 'Tu zobaczysz, co dzieje się na mieście')))];
+  return h('section', { class: 'ek-livestrip', 'aria-label': 'Na żywo na mieście' },
+    h('div', { class: 'ek-livestrip__badge' }, h('span', { class: 'ek-livestrip__wave', 'aria-hidden': 'true' }, '((•))'), 'Na', h('br'), 'żywo'),
+    h('div', { class: 'ek-livestrip__track' }, items));
+}
+function catTiles() {
+  const f = S.filters;
+  return h('section', { class: 'ek-cats-wrap' },
+    h('div', { class: 'ek-section-head' }, h('h2', { class: 'ek-h2' }, 'Co robimy?'), f.activity ? h('button', { class: 'ek-btn ek-btn--ghost ek-btn--sm', onclick: () => goFilter({}) }, 'Pokaż wszystko') : null),
+    h('div', { class: 'ek-cats', role: 'group', 'aria-label': 'Kategorie' }, Object.entries(ACT).map(([k, v]) => {
+      const n = S.jobs.filter(j => j.activity === k && j.status !== 'closed').length;
+      return h('button', { type: 'button', class: 'ek-cat ek-cat--' + k, 'aria-pressed': f.activity === k ? 'true' : 'false', onclick: () => goFilter({ activity: f.activity === k ? '' : k }) },
+        h('span', { class: 'ek-cat__count' }, n ? n + ' ' + plural(n, 'zlecenie', 'zlecenia', 'zleceń') : 'Wystaw pierwsze'),
+        h('span', { class: 'ek-cat__art', 'aria-hidden': 'true' }, CAT_ART[k]),
+        h('span', { class: 'ek-cat__label' }, v.l));
+    })));
 }
 function viewBoard() {
-  const st = S.stats || {};
   const firstVisit = !S.token;
   const liveJobs = S.jobs.filter(j => j.status === 'open' && j.startAt - now() < 1800).slice(0, 8);
   return [
-    h('section', { class: 'ek-hero' + (firstVisit ? '' : ' ek-hero--compact') },
-      h('div', { class: 'ek-hero__sky' }), h('div', { class: 'ek-hero__sun' }), heroSkyline(), h('div', { class: 'ek-hero__scrim' }),
-      h('div', { class: 'ek-hero__content' },
-        h('div', { class: 'ek-kicker' }, 'Polska tablica zleceń · GTA Online'),
-        h('h1', { class: 'ek-hero__title' }, h('span', { class: 'ek-hand' }, 'skok sam się nie zrobi'), firstVisit ? ['Skompletuj ekipę, ', h('span', { class: 'ek-sunset-text' }, 'zanim ostygnie kawa.')] : ['Kto dziś ', h('span', { class: 'ek-sunset-text' }, 'wchodzi w robotę?')]),
-        firstVisit ? h('p', { class: 'ek-hero__sub' }, 'Wystawiasz zlecenie z godziną startu, zbierasz skład 2/4 i grasz z ludźmi, którzy mają respekt za czystą robotę. Bez randomów, którzy wysadzą Cię po pięciu minutach.') : null,
-        h('div', { class: 'ek-hero__ctas' },
-          h('a', { class: 'ek-btn ek-btn--primary ek-btn--lg', href: S.token ? '#/dodaj' : '#/start' }, S.token ? 'Wystaw zlecenie' : 'Załóż profil – 30 sekund'),
-          h('a', { class: 'ek-btn ek-btn--secondary ek-btn--lg', href: '#jobs', onclick: e => { e.preventDefault(); document.getElementById('jobs').scrollIntoView({ behavior: 'smooth' }); } }, 'Przeglądaj zlecenia')),
-        h('div', { class: 'ek-hero__stats' },
-          h('div', null, h('b', null, st.online ?? '–'), 'online teraz'), h('div', null, h('b', null, st.jobs ?? '–'), 'aktywnych zleceń'), h('div', null, h('b', null, st.crews ?? '–'), plural(st.crews || 0, 'ekipa', 'ekipy', 'ekip'))),
-        firstVisit ? h('p', { class: 'ek-hero__note' }, h('b', null, 'Nowy tryb online nie ma jeszcze daty startu. '), 'Zbieraj ekipę już teraz w obecnym GTA Online – profil i respekt przejdą z Tobą dalej.') : null)),
-    ticker(),
+    h('div', { class: 'ek-container ek-board-top' }, welcomeCard(), bigCards(), promoBanners(), liveStrip(), catTiles()),
     quickMatch(),
     liveJobs.length ? h('section', { class: 'ek-container ek-section', style: { paddingBottom: 0 } },
-      sectionHead('Na żywo', h('span', { class: 'ek-live' }, liveJobs.length + ' ' + plural(liveJobs.length, 'start', 'starty', 'startów') + ' w ciągu 30 min')),
+      sectionHead('Startują zaraz', h('span', { class: 'ek-live' }, liveJobs.length + ' ' + plural(liveJobs.length, 'start', 'starty', 'startów') + ' w ciągu 30 min')),
       h('div', { class: 'ek-live-strip' }, liveJobs.map(jobCard))) : null,
     h('section', { class: 'ek-container ek-section', id: 'jobs' },
       sectionHead('Tablica zleceń', h('span', { class: 'ek-count', id: 'jobCount' })),
@@ -484,6 +546,47 @@ function viewBoard() {
         h('div', { class: 'ek-step3' }, h('h3', { class: 'ek-h3' }, 'Wybierz skład'), h('p', null, 'Gracze zgłaszają się z profilem i respektem. Ty decydujesz, kto wchodzi. Discord widzą tylko przyjęci.')),
         h('div', { class: 'ek-step3' }, h('h3', { class: 'ek-h3' }, 'Daj respekt'), h('p', null, 'Po grze każdy ze składu może dać drugiemu „Czysta robota +1”. Tak rośnie Twoja kartoteka.')))) : null,
   ];
+}
+
+/* ------------------------------------------------------------ sidebar i panel na żywo (desktop) */
+function renderSide() {
+  const side = $('#side'); if (!side) return;
+  const r = route();
+  const link = (href, ic, label, key, extra) => h('a', { class: 'ek-side__link', href, 'aria-current': key === r.name ? 'page' : null }, h('span', { class: 'ek-side__ic', 'aria-hidden': 'true' }, ic), label, extra || null);
+  const n = S.meData ? S.meData.inbox.length + S.meData.mates.length : 0;
+  side.replaceChildren(h('div', { class: 'ek-side__inner' },
+    h('div', { class: 'ek-side__switch' }, h('a', { href: '#/', 'aria-current': ['board', 'job', 'add'].includes(r.name) ? 'page' : null }, 'Zlecenia'), h('a', { href: '#/ekipy', 'aria-current': ['crews', 'crew'].includes(r.name) ? 'page' : null }, 'Ekipy')),
+    h('a', { class: 'ek-btn ek-btn--grad ek-btn--block', href: S.token ? '#/dodaj' : '#/start' }, icon('plus', 16), S.token ? 'Wystaw zlecenie' : 'Załóż profil'),
+    h('nav', { class: 'ek-side__group', 'aria-label': 'Menu' },
+      link('#/', '🗂️', 'Tablica', 'board'), link('#/ranking', '🏆', 'Ranking', 'ranking'), link('#/ja', '🪪', 'Moja kartoteka', 'me', n ? h('span', { class: 'ek-dot-inline' }, n) : null), link('#/plan', '🧭', 'Co budujemy', 'plan')),
+    h('div', { class: 'ek-side__label' }, 'Kategorie'),
+    h('div', { class: 'ek-side__group' }, Object.entries(ACT).map(([k, v]) => {
+      const c = S.jobs.filter(j => j.activity === k && j.status !== 'closed').length;
+      return h('button', { type: 'button', class: 'ek-side__link', 'aria-pressed': S.filters.activity === k && r.name === 'board' ? 'true' : 'false', onclick: () => { goFilter({ activity: S.filters.activity === k ? '' : k }); renderSide(); } },
+        h('span', { class: 'ek-side__ic', 'aria-hidden': 'true' }, v.i), v.l, c ? h('span', { class: 'ek-side__count' }, c) : null);
+    })),
+    h('div', { class: 'ek-side__foot' }, h('a', { href: '#/zasady' }, 'Zasady i prywatność'), h('a', { href: '#/odzyskaj' }, 'Odzyskaj profil'))));
+}
+async function refreshRailTop() {
+  try { const d = await api('leaderboard', { params: { period: 'week' } }); S.lbTop = d.players.slice(0, 3); } catch (e) {}
+  renderRail();
+}
+function renderRail() {
+  const rail = $('#rail'); if (!rail) return;
+  const feed = ((S.stats && S.stats.feed) || []).slice(0, 14);
+  const top = S.lbTop || [];
+  rail.replaceChildren(h('div', { class: 'ek-rail__inner' },
+    h('div', { class: 'ek-rail__head' }, h('span', { class: 'ek-live' }, 'Nasłuch'), h('span', { class: 'ek-meta' }, 'Co się dzieje na mieście')),
+    h('a', { class: 'ek-railtop', href: '#/ranking' },
+      h('div', { class: 'ek-railtop__head' }, h('span', null, '🏆 Ranking tygodnia'), h('span', { 'aria-hidden': 'true' }, '›')),
+      top.length ? h('ol', { class: 'ek-railtop__list' }, top.map((p, i) => h('li', null, h('span', { class: 'ek-medal ek-medal--' + (i + 1) }, i + 1), h('span', { class: 'ek-railtop__nick' }, p.nick), h('span', { class: 'ek-lb__score' }, '+' + p.score))))
+        : h('p', { class: 'ek-meta', style: { margin: 0 } }, 'Podium czeka na pierwszych z respektem.')),
+    h('div', { class: 'ek-rail__feed' }, feed.length ? feed.map(e => {
+      const t = { job: 'szuka ludzi: ' + e.title, accept: 'wchodzi w skład: ' + e.title, vouch: 'dostaje respekt od ' + e.from, crew: 'zakłada ekipę ' + e.crew, crewjoin: 'dołącza do ekipy ' + e.crew }[e.type] || '';
+      const href = e.jobId ? '#/z/' + e.jobId : e.crewId ? '#/e/' + e.crewId : null;
+      return h(href ? 'a' : 'div', { class: 'ek-msg', href }, h('div', { class: 'ek-msg__top' }, h('b', null, e.nick), h('time', null, hhmm(e.created))), h('div', { class: 'ek-msg__bubble' }, t));
+    }) : h('div', { class: 'ek-msg' }, h('div', { class: 'ek-msg__bubble' }, 'Cisza w eterze. Pierwsze zlecenie pojawi się tutaj, gdy tylko ktoś je wystawi.'))),
+    h('a', { class: 'ek-btn ek-btn--grad ek-btn--block', href: S.token ? '#/dodaj' : '#/start' }, S.token ? 'Wystaw zlecenie' : 'Dołącz do nasłuchu')));
 }
 
 /* ------------------------------------------------------------ SZCZEGÓŁY ZLECENIA */
@@ -1059,6 +1162,7 @@ async function refreshJobs() {
     }
   }
   if (route().name === 'board') renderBoardList();
+  renderSide(); renderRail();
 }
 async function refreshMe() {
   if (!S.token) { S.meData = null; renderChrome(); return; }
@@ -1072,6 +1176,7 @@ async function refreshMe() {
 
 /* ------------------------------------------------------------ chrome i router */
 function renderChrome() {
+  renderSide(); renderRail();
   const r = route();
   const navKey = { board: 'board', job: 'board', crews: 'crews', crew: 'crews', ranking: 'ranking', me: 'me', player: '', add: 'add', plan: 'plan' }[r.name] || '';
   document.querySelectorAll('[data-nav]').forEach(a => { if (a.dataset.nav === navKey) a.setAttribute('aria-current', 'page'); else a.removeAttribute('aria-current'); });
@@ -1143,5 +1248,6 @@ document.addEventListener('visibilitychange', () => { if (document.visibilitySta
 lastRoute = route().name + route().id;
 render();
 refreshJobs().then(() => { if (route().name === 'board') render(); });
+refreshRailTop(); setInterval(() => { if (document.visibilityState === 'visible') refreshRailTop(); }, 60000);
 refreshMe();
 })();
