@@ -883,3 +883,13 @@ html, body { overflow-x: clip; }
 .ek-wanted__star.is-on { background: var(--ek-gold); }
 .ek-person__actions { flex-wrap: wrap; }
 @media (max-width: 959px) { .ek-profile--me > :last-child { order: -1; } }
+
+/* Przykładowe zlecenia */
+.ek-samples { margin-top: var(--ek-s-8); padding: var(--ek-s-5); border: 2px dashed var(--ek-border-strong); border-radius: var(--ek-r-md); background: var(--ek-halftone); }
+.ek-samples__head { margin-bottom: var(--ek-s-5); display: grid; gap: 6px; }
+.ek-samples__head p { margin: 0; max-width: 60ch; }
+.ek-job--sample { border-style: dashed; background: color-mix(in srgb, var(--ek-surface-2) 70%, transparent); }
+.ek-job--sample:hover { border-color: var(--ek-accent); }
+.ek-job--sample:focus-visible { box-shadow: var(--ek-focus); }
+.ek-grid > .ek-job--sample { --_rot: 0deg; }
+.ek-job--sample { padding-top: 30px; }

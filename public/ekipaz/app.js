@@ -39,6 +39,41 @@ const FEATURES = [
   { id: 'events',     t: 'Wydarzenia ekip',          d: 'Zloty, turnieje wyścigowe i wspólne noce napadów z zapisami.' },
   { id: 'discordbot', t: 'Bot na Discorda',          d: 'Nowe zlecenia prosto na kanał Twojego serwera, z przyciskiem „Wchodzę”.' },
 ];
+/* Przykładowe zlecenia – szablony pokazywane, gdy tablica jest prawie pusta. Nie są prawdziwymi ogłoszeniami. */
+const SAMPLES = [
+  { activity: 'heist', title: 'Finał napadu – brakuje 2 osób', platform: 'ps5', slots: 4, inMin: 20, style: 'balanced', mic: true, details: 'Przygotówki zrobione, wchodzimy prosto w finał. Podział po równo.' },
+  { activity: 'race', title: 'Nocne wyścigi uliczne', platform: 'ps5', slots: 6, inMin: 90, style: 'chill', mic: false, details: 'Czyste jazdy, bez taranowania. Kto wygra, wybiera kolejną trasę.' },
+  { activity: 'business', title: 'Sprzedaż towaru – potrzebna obstawa', platform: 'xbox', slots: 3, inMin: 45, style: 'balanced', mic: true, details: 'Trzy dostawy przez miasto. Ty jedziesz, ja pilnuję tyłów.' },
+  { activity: 'heist', title: 'Przygotówki od zera, spokojnie', platform: 'pc', slots: 4, inMin: 180, style: 'chill', mic: false, details: 'Dla nowych w napadach – wszystko tłumaczę po drodze.' },
+  { activity: 'cars', title: 'Zlot aut na parkingu przy plaży', platform: 'ps5', slots: 8, inMin: 240, style: 'chill', mic: false, details: 'Przyjeżdżajcie czystymi furami, robimy zdjęcia o zachodzie.' },
+  { activity: 'pvp', title: 'Deathmatch drużynowy na wieczór', platform: 'pc', slots: 8, inMin: 120, style: 'tryhard', mic: true, details: 'Dwie drużyny po czterech, gramy do trzech wygranych.' },
+];
+function useSample(x) {
+  S.draft = { title: x.title, activity: x.activity, platform: (S.me && S.me.platform) || x.platform, slots: x.slots, when: x.inMin <= 120 ? [5, 15, 30, 60, 120].reduce((a, b) => Math.abs(b - x.inMin) < Math.abs(a - x.inMin) ? b : a) : 120, style: x.style, mic: x.mic, details: x.details };
+  location.hash = '#/dodaj';
+}
+function sampleCard(x, i) {
+  const a = ACT[x.activity];
+  const job = { slots: x.slots, taken: 1 };
+  const startAt = now() + x.inMin * 60;
+  return h('article', { class: 'ek-job ek-job--sample ek-rise', '--i': i, role: 'button', tabindex: '0', 'aria-label': 'Przykład: ' + x.title + '. Kliknij, żeby wystawić podobne zlecenie.', onclick: () => useSample(x), onkeydown: e => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); useSample(x); } } },
+    h('span', { class: 'ek-sticker ek-sticker--teal ek-job__mine' }, 'Przykład'),
+    h('div', { class: 'ek-job__head' }, h('div', null, h('div', { class: 'ek-job__activity' }, a.i + ' ' + a.l), h('h3', { class: 'ek-job__title' }, x.title))),
+    h('div', { class: 'ek-job__host' }, avatar({ nick: 'Ty', avatar: (S.me && S.me.avatar) || 0 }, 'sm', false), h('b', null, S.me ? S.me.nick : 'Twój nick'), h('span', { class: 'ek-meta' }, '· szef roboty')),
+    h('div', { class: 'ek-job__meta' }, platTag(x.platform), h('span', { class: 'ek-badge' }, STYLES[x.style]), x.mic ? h('span', { class: 'ek-badge ek-badge--mic' }, '🎙 Mikrofon') : null),
+    h('p', { class: 'ek-job__note' }, x.details),
+    h('div', { class: 'ek-job__foot' }, slots(job), h('span', { class: 'ek-cd-wrap' }, h('span', { class: 'ek-countdown__label' }, 'Start za'), h('span', { class: 'ek-countdown' }, x.inMin < 60 ? x.inMin + ' min' : Math.round(x.inMin / 60) + ' h')),
+      h('span', { class: 'ek-btn ek-btn--secondary ek-btn--sm' }, 'Wystaw podobne')));
+}
+function samplesSection(list) {
+  const f = S.filters;
+  let items = SAMPLES.filter(x => (!f.platform || x.platform === f.platform) && (!f.activity || x.activity === f.activity));
+  if (!items.length) items = SAMPLES;
+  return h('section', { class: 'ek-samples' },
+    h('div', { class: 'ek-samples__head' }, h('h3', { class: 'ek-h3' }, list.length ? 'Brakuje czegoś? Wystaw podobne' : 'Tak wyglądają zlecenia'),
+      h('p', { class: 'ek-meta' }, 'To przykłady, nie prawdziwe ogłoszenia. Kliknij kartę, a formularz wypełni się sam – zmienisz tylko to, co chcesz.')),
+    h('div', { class: 'ek-grid' }, items.slice(0, list.length ? 3 : 6).map(sampleCard)));
+}
 const REPORT_REASONS = { spam: 'Spam lub reklama', scam: 'Oszustwo / wyłudzenie', toxic: 'Toksyczne zachowanie', cheats: 'Cheaty, modmenu, handel kontami', other: 'Coś innego' };
 
 /* ------------------------------------------------------------ stan */
@@ -406,14 +441,14 @@ function renderBoardList() {
   const cnt = document.getElementById('jobCount'); if (cnt) cnt.textContent = list.length + ' ' + plural(list.length, 'zlecenie', 'zlecenia', 'zleceń');
   if (!list.length) {
     const anyJobs = S.jobs.length > 0;
-    host.replaceChildren(empty(anyJobs ? 'Nic pod te filtry' : 'Cisza w eterze',
+    host.replaceChildren(samplesSection(list), h('div', { style: { height: '24px' } }), empty(anyJobs ? 'Nic pod te filtry' : 'Cisza w eterze',
       anyJobs ? 'Poluzuj filtry albo wystaw własne zlecenie – ktoś na pewno szuka tego samego.' : 'Wystaw pierwsze zlecenie. Ktoś zaraz się odezwie – a Ty zgarniesz pierwszy respekt na mieście.',
       h('div', { class: 'ek-row', style: { justifyContent: 'center' } },
         h('a', { class: 'ek-btn ek-btn--primary', href: '#/dodaj' }, 'Wystaw zlecenie'),
         anyJobs ? h('button', { class: 'ek-btn ek-btn--ghost', onclick: () => { Object.assign(S.filters, { platform: '', activity: '', when: '', style: '', open: false }); store.set('ek_f_platform', ''); render(); } }, 'Wyczyść filtry') : null)));
     return;
   }
-  host.replaceChildren(h('div', { class: 'ek-grid' }, list.map(jobCard)));
+  host.replaceChildren(h('div', { class: 'ek-grid' }, list.map(jobCard)), list.length < 4 ? samplesSection(list) : null);
 }
 function viewBoard() {
   const st = S.stats || {};
